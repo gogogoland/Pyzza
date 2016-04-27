@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/27 20:02:29 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/04/27 21:03:34 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct			s_server
 	int					port;
 	int					socket;
 	int					time;
+	int					old_player_max;
 	int					player_max;
 	char				**team;
 }						t_server;
