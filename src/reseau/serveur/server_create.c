@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/27 20:28:06 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/04/29 18:24:07 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static const char			*error[] =
 	"Missing number of authorized client",
 	"Missing time divisor",
 	"Get Protocol error",
+	"Socket error",
 	"Bind error",
 	"Listen error",
 	"Unchecked port number",
@@ -56,9 +57,9 @@ static int		get_data(t_server *srv, int state, char *arg, int isdone)
 	e = 0;
 	if (state == 0 && (srv->port = ft_atoi(arg)) <= 0)
 		e = 0;
-	else if (state == 1 && (srv->plateau.size_x = ft_atoi(arg)) <= 0)
+	else if (state == 1 && (srv->plateau.x = ft_atoi(arg)) <= 0)
 		e = 1;
-	else if (state == 2 && (srv->plateau.size_y = ft_atoi(arg)) <= 0)
+	else if (state == 2 && (srv->plateau.y = ft_atoi(arg)) <= 0)
 		e = 2;
 	else if (state == 3 && !(srv->team = ft_txtadd(srv->team, arg)))
 		e = 3;
@@ -95,7 +96,7 @@ static t_server	*check_data(t_server *srv, int isdone)
 		e++;
 	}
 	while (++e < 12)
-		ft_putendl(error[e + 9]);
+		ft_putendl(error[e + 10]);
 	return (srv);
 }
 
@@ -139,20 +140,21 @@ t_server	*server_create(int argc, char **argv)
 		return (srv);
 	if (!(proto = getprotobyname("tcp")))
 	{
-		srv->socket = -2;
+		srv->socket = -1;
 		ft_putendl(error[12]);
 		return (srv);
 	}
-	srv->socket = socket(PF_INET, SOCK_STREAM, proto->p_proto);
+	if ((srv->socket = socket(PF_INET, SOCK_STREAM, proto->p_proto)) < 0)
+		ft_putendl(error[13]);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(srv->port);
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(srv->socket, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
 	{
-		srv->socket = -3;
-		ft_putendl(error[13]);
+		srv->socket = -1;
+		ft_putendl(error[14]);
 	}
 	else if (listen(srv->socket, srv->player_max) < 0 && (srv->socket = -4) < 0)
-		ft_putendl(error[14]);
+		ft_putendl(error[15]);
 	return (srv);
 }
