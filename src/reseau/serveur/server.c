@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/30 18:25:15 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/04/30 21:52:48 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static t_client	*set_clients_list(t_server *srv, t_client *clients)
 		{
 			cur = clients;
 			while (cur && cur->next)
-				*cur = *cur->next;
+				cur = cur->next;
 			if (!(new = (t_client *)malloc(sizeof(t_client))))
 				return (NULL);
 			new->socket = 0;
@@ -56,11 +56,8 @@ static t_client	*set_clients_list(t_server *srv, t_client *clients)
 
 static void	clear_and_set(t_fds *fds, t_server *srv, t_client *clients)
 {
-	int			i;
-	int			max_socket;
 	t_client	*cur;
 
-	i = -1;
 	FD_ZERO(&fds->rd);
 	FD_ZERO(&fds->wr);
 	FD_ZERO(&fds->ex);
@@ -87,12 +84,10 @@ static void	clear_and_set(t_fds *fds, t_server *srv, t_client *clients)
 static bool	recv_client(t_client *clt, t_fds *fds, t_server *srv, int ret)
 {
 	int			s;
-	int			new_sock;
-	t_client	*new_clt;
 
-	if (!ret)
-		return true;
 	s = -1;
+	if (ret <= 0)
+		return true;
 	while (++s < srv->player_max)
 	{
 		if (FD_ISSET(s, &fds->rd))
@@ -106,7 +101,6 @@ static bool	recv_client(t_client *clt, t_fds *fds, t_server *srv, int ret)
 	}
 	return false;
 }
-
 int			main(int argc, char **argv)
 {
 	t_server		*srv;

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/30 16:58:38 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/04/30 21:16:43 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int		get_data(t_server *srv, int state, char *arg, int isdone)
 		e = 2;
 	else if (state == 3 && !(srv->team = ft_txtadd(srv->team, arg)))
 		e = 3;
-	else if (state == 4 && (srv->player_max = ft_atoi(arg)) <= 0)
+	else if (state == 4 && (srv->player_max = ft_atoi(arg)) <= 2)
 		e = 4;
 	else if (state == 5 && (srv->time = ft_atoi(arg)) <= 0)
 		e = 5;
