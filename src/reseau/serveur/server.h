@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/29 19:53:08 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/04/30 16:54:48 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,6 @@ typedef struct			s_client
 
 t_server	*server_create(int argc, char **argv);
 void		client_connect(int s, t_client *clt, t_fds *fds, t_server *srv);
+void		client_command(int s, t_client *clt, t_fds *fds, t_server *srv);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/29 20:14:42 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/04/30 18:25:15 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static const char	*error_msg[] =
 {
-	"Bad argument, usage: ./serveur -p <port> -x <width> -y <height> -n <team> \
+	"Bad argument, usage: ./srv -p <port> -x <width> -y <height> -n <team> \
 ... <team> -c <nb> -t <t>",
 	"Select error",
 	"Malloc error"
@@ -26,7 +26,7 @@ static int	return_msg(const char *msg, int r)
 	return r;
 }
 
-static bool	set_clients_list(t_server *srv, t_client *clients)
+static t_client	*set_clients_list(t_server *srv, t_client *clients)
 {
 	int			i;
 	t_client    *new;
@@ -39,9 +39,9 @@ static bool	set_clients_list(t_server *srv, t_client *clients)
 		{
 			cur = clients;
 			while (cur && cur->next)
-			cur = cur->next;
+				*cur = *cur->next;
 			if (!(new = (t_client *)malloc(sizeof(t_client))))
-				return (return_msg(error_msg[2], 0));
+				return (NULL);
 			new->socket = 0;
 			new->next = NULL;
 			if ((new->prev = cur))
@@ -51,7 +51,7 @@ static bool	set_clients_list(t_server *srv, t_client *clients)
 		}
 	}
 	srv->old_player_max = srv->player_max;
-	return true;
+	return (clients);
 }
 
 static void	clear_and_set(t_fds *fds, t_server *srv, t_client *clients)
@@ -73,20 +73,25 @@ static void	clear_and_set(t_fds *fds, t_server *srv, t_client *clients)
 	{
 		if (cur->socket > fds->max)
 			fds->max = cur->socket;
-		FD_SET(cur->socket, &fds->rd);
-		FD_SET(cur->socket, &fds->wr);
-		FD_SET(cur->socket, &fds->ex);
+		if (cur->socket != 0)
+		{
+			FD_SET(cur->socket, &fds->rd);
+			FD_SET(cur->socket, &fds->wr);
+			FD_SET(cur->socket, &fds->ex);
+		}
 		cur = cur->next;
 	}
 	fds->max++;
 }
 
-static bool	recv_client(t_client *clt, t_fds *fds, t_server *srv)
+static bool	recv_client(t_client *clt, t_fds *fds, t_server *srv, int ret)
 {
 	int			s;
 	int			new_sock;
 	t_client	*new_clt;
 
+	if (!ret)
+		return true;
 	s = -1;
 	while (++s < srv->player_max)
 	{
@@ -94,8 +99,8 @@ static bool	recv_client(t_client *clt, t_fds *fds, t_server *srv)
 		{
 			if (s == srv->socket)
 				client_connect(s, clt, fds, srv);
-			/*else
-				client_command(s, clt, fds, srv);*/
+			else
+				client_command(s, clt, fds, srv);
 			return true;
 		}
 	}
@@ -104,24 +109,24 @@ static bool	recv_client(t_client *clt, t_fds *fds, t_server *srv)
 
 int			main(int argc, char **argv)
 {
-	t_server	*srv;
-	t_fds		*fds;
-	t_client	*clients;
-	int			ret;
+	t_server		*srv;
+	t_fds			*fds;
+	t_client		*clients;
+	int				ret;
 
 	clients = NULL;
 	fds = (t_fds *)malloc(sizeof(t_fds));
 	ret = 0;
 	if (!(srv = server_create(argc, argv)) || srv->socket < 0)
-		return (return_msg(error_msg[0], srv->socket));
+		return (return_msg(srv ? NULL : error_msg[0], srv ? srv->socket : -1));
 	while (ret >= 0)
 	{
-		if (!set_clients_list(srv, clients))
+		if (!(clients = set_clients_list(srv, clients)))
 			return (-1);
 		clear_and_set(fds, srv, clients);
 		if ((ret = select(fds->max, &fds->rd, &fds->wr, &fds->ex, NULL)) < 0)
 			return (return_msg(error_msg[1], ret));
-		else if (recv_client(clients, fds, srv))
+		else if (recv_client(clients, fds, srv, ret))
 			continue ;
 		/*else if (send_client(clients, fds, srv))
 			continue ;

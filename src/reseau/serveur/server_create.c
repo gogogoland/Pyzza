@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/29 18:24:07 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/04/30 16:58:38 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +109,11 @@ static t_server	*server_init_data(int argc, char **argv)
 	int			state;
 	t_server	*srv;
 
+	srv = NULL;
 	i = 0;
 	state = -1;
 	isdone = 0;
-	if (!(srv = (t_server *)malloc(sizeof(t_server))))
+	if (argc < 13 || !(srv = (t_server *)malloc(sizeof(t_server))))
 		return (srv);
 	srv->team = NULL;
 	while (++i < argc)
