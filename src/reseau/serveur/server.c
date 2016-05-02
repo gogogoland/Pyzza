@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/30 21:52:48 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/02 20:17:28 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,8 @@ static void	clear_and_set(t_fds *fds, t_server *srv, t_client *clients)
 	cur = clients;
 	while (cur)
 	{
-		if (cur->socket > fds->max)
-			fds->max = cur->socket;
-		if (cur->socket != 0)
+		fds->max = cur->socket > fds->max ? cur->socket : fds->max;
+		if (cur->socket > 0)
 		{
 			FD_SET(cur->socket, &fds->rd);
 			FD_SET(cur->socket, &fds->wr);
@@ -88,10 +87,12 @@ static bool	recv_client(t_client *clt, t_fds *fds, t_server *srv, int ret)
 	s = -1;
 	if (ret <= 0)
 		return true;
-	while (++s < srv->player_max)
+	while (++s < fds->max)
 	{
+//		printf("Is %d set ?\n", s);
 		if (FD_ISSET(s, &fds->rd))
 		{
+//			printf("\t\t%d, set it is.\n", s);
 			if (s == srv->socket)
 				client_connect(s, clt, fds, srv);
 			else
@@ -127,5 +128,5 @@ int			main(int argc, char **argv)
 		exception(clients, fds, srv);*/
 	}
 	//close_server(srv, fds, clients);
-	return (1);
+	return (ret);
 }

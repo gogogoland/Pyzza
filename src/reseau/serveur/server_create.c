@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/30 21:16:43 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/02 20:41:32 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static const char			*error[] =
 	"Missing time divisor",
 	"Get Protocol error",
 	"Socket error",
+	"Setsockopt error",
 	"Bind error",
 	"Listen error",
 	"Unchecked port number",
@@ -47,6 +48,13 @@ static const char			*error[] =
 	"Unchecked number of authorized client",
 	"Unchecked time divisor",
 };
+
+static t_server	*return_msg(const char *msg, int ret, t_server *srv)
+{
+	ft_putendl(msg);
+	srv->socket = ret;
+	return (srv);
+}
 
 static int		get_data(t_server *srv, int state, char *arg, int isdone)
 {
@@ -96,7 +104,7 @@ static t_server	*check_data(t_server *srv, int isdone)
 		e++;
 	}
 	while (++e < 12)
-		ft_putendl(error[e + 10]);
+		ft_putendl(error[e + 11]);
 	return (srv);
 }
 
@@ -133,29 +141,27 @@ static t_server	*server_init_data(int argc, char **argv)
 //	TODO IPv6
 t_server	*server_create(int argc, char **argv)
 {
+	int 				sso;
 	t_server			*srv;
 	struct protoent		*proto;
 	struct sockaddr_in	sin;
 
+	sso = 1;
 	if (!(srv = server_init_data(argc, argv)) || srv->socket == -1)
 		return (srv);
 	if (!(proto = getprotobyname("tcp")))
-	{
-		srv->socket = -1;
-		ft_putendl(error[12]);
-		return (srv);
-	}
+		return (return_msg(error[12], -1, srv));
 	if ((srv->socket = socket(PF_INET, SOCK_STREAM, proto->p_proto)) < 0)
-		ft_putendl(error[13]);
+		return (return_msg(error[13], srv->socket, srv));
+	if (setsockopt(srv->socket, SOL_SOCKET, 
+				SO_REUSEADDR, (char *)&sso, sizeof(sso)) < 0)
+		return (return_msg(error[14], -1, srv));
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(srv->port);
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(srv->socket, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
-	{
-		srv->socket = -1;
-		ft_putendl(error[14]);
-	}
+		return (return_msg(error[15], -1, srv));
 	else if (listen(srv->socket, srv->player_max) < 0 && (srv->socket = -4) < 0)
-		ft_putendl(error[15]);
+		return (return_msg(error[16], -1, srv));
 	return (srv);
 }
