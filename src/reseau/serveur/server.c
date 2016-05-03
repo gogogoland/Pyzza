@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/02 20:17:28 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/03 14:39:50 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static t_client	*set_clients_list(t_server *srv, t_client *clients)
 				cur = cur->next;
 			if (!(new = (t_client *)malloc(sizeof(t_client))))
 				return (NULL);
+			new->len = sizeof(struct sockaddr_in);
 			new->socket = 0;
 			new->next = NULL;
 			if ((new->prev = cur))
@@ -89,10 +90,8 @@ static bool	recv_client(t_client *clt, t_fds *fds, t_server *srv, int ret)
 		return true;
 	while (++s < fds->max)
 	{
-//		printf("Is %d set ?\n", s);
 		if (FD_ISSET(s, &fds->rd))
 		{
-//			printf("\t\t%d, set it is.\n", s);
 			if (s == srv->socket)
 				client_connect(s, clt, fds, srv);
 			else
@@ -102,6 +101,7 @@ static bool	recv_client(t_client *clt, t_fds *fds, t_server *srv, int ret)
 	}
 	return false;
 }
+
 int			main(int argc, char **argv)
 {
 	t_server		*srv;
