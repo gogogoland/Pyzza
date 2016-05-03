@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/30 21:34:13 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/03 18:53:17 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,13 @@ typedef char bool;
 typedef struct sockaddr_in  t_sokadr_in;
 typedef struct sockaddr     t_sokadr;
 typedef struct in_addr      t_i_adr;
+
+typedef struct			s_ring
+{
+	char				**command;
+	int					cur;
+	int					len;
+}						t_ring;
 
 typedef struct			s_coord
 {
@@ -64,12 +71,24 @@ typedef struct			s_client
 	unsigned int        len;
 	struct sockaddr_in  sin;
 	struct s_coord		pos;
+	struct s_ring		*ring;
 	struct s_client		*next;
 	struct s_client		*prev;
 }						t_client;
+
+void		ring_recv(char *command, t_ring *ring);
+char		*ring_send(t_ring *ring);
+t_ring		*ring_init(int len);
+void		ring_zero(t_ring *ring);
+void		ring_kill(t_ring *ring);
+
+t_client	*client_init(void);
+void		client_zero(t_client *clt, t_fds *fsd);
+void		client_kill(t_client *clt, t_fds *fsd);
 
 t_server	*server_create(int argc, char **argv);
 void		client_connect(int s, t_client *clt, t_fds *fds, t_server *srv);
 void		client_command(int s, t_client *clt, t_fds *fds, t_server *srv);
 
 #endif
+

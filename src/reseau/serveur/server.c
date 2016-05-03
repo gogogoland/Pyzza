@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/03 14:39:50 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/03 18:57:42 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,8 @@ static t_client	*set_clients_list(t_server *srv, t_client *clients)
 			cur = clients;
 			while (cur && cur->next)
 				cur = cur->next;
-			if (!(new = (t_client *)malloc(sizeof(t_client))))
+			if (!(new = client_init()))
 				return (NULL);
-			new->len = sizeof(struct sockaddr_in);
-			new->socket = 0;
-			new->next = NULL;
 			if ((new->prev = cur))
 				cur->next = new;
 			else

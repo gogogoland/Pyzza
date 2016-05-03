@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/04/29 19:49:43 by tbalea           ###   ########.fr        #
+#    Updated: 2016/05/03 18:27:28 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,13 +45,15 @@ SRC = ft_atoi.c\
 	  ft_strdup.c\
 	  server.c\
 	  server_create.c\
-	  server_client.c
+	  server_client.c\
+	  server_client_recv.c\
+	  server_ring.c
 
 OBJ = $(SRC:.c=.o)
 
 FLG = -Wall -Werror -Wextra
 
-GDB = -g3
+GDB = -g
 
 CCC = gcc
 
@@ -60,7 +62,7 @@ RMF = rm -f
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CCC) $(FLG) $(OBJ) -o $(NAME)
+	$(CCC) $(FLG) $(OBJ) $(GDB) -o $(NAME)
 
 clean:
 	$(RMF) $(OBJ)
