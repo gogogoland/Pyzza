@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/03 18:57:42 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/04 15:42:21 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	return_msg(const char *msg, int r)
 	return r;
 }
 
-static t_client	*set_clients_list(t_server *srv, t_client *clients)
+static t_client	*set_clients_list(t_server *srv)
 {
 	int			i;
 	t_client    *new;
@@ -37,7 +37,7 @@ static t_client	*set_clients_list(t_server *srv, t_client *clients)
 		i = srv->old_player_max;
 		while (i++ < srv->player_max)
 		{
-			cur = clients;
+			cur = srv->clt;
 			while (cur && cur->next)
 				cur = cur->next;
 			if (!(new = client_init()))
@@ -45,14 +45,14 @@ static t_client	*set_clients_list(t_server *srv, t_client *clients)
 			if ((new->prev = cur))
 				cur->next = new;
 			else
-				clients = new;
+				srv->clt = new;
 		}
 	}
 	srv->old_player_max = srv->player_max;
-	return (clients);
+	return (srv->clt);
 }
 
-static void	clear_and_set(t_fds *fds, t_server *srv, t_client *clients)
+static void	clear_and_set(t_fds *fds, t_server *srv)
 {
 	t_client	*cur;
 
@@ -63,7 +63,7 @@ static void	clear_and_set(t_fds *fds, t_server *srv, t_client *clients)
 	FD_SET(srv->socket, &fds->rd);
 	FD_SET(srv->socket, &fds->wr);
 	FD_SET(srv->socket, &fds->ex);
-	cur = clients;
+	cur = srv->clt;
 	while (cur)
 	{
 		fds->max = cur->socket > fds->max ? cur->socket : fds->max;
@@ -78,52 +78,29 @@ static void	clear_and_set(t_fds *fds, t_server *srv, t_client *clients)
 	fds->max++;
 }
 
-static bool	recv_client(t_client *clt, t_fds *fds, t_server *srv, int ret)
-{
-	int			s;
-
-	s = -1;
-	if (ret <= 0)
-		return true;
-	while (++s < fds->max)
-	{
-		if (FD_ISSET(s, &fds->rd))
-		{
-			if (s == srv->socket)
-				client_connect(s, clt, fds, srv);
-			else
-				client_command(s, clt, fds, srv);
-			return true;
-		}
-	}
-	return false;
-}
-
 int			main(int argc, char **argv)
 {
 	t_server		*srv;
 	t_fds			*fds;
-	t_client		*clients;
 	int				ret;
 
-	clients = NULL;
 	fds = (t_fds *)malloc(sizeof(t_fds));
 	ret = 0;
 	if (!(srv = server_create(argc, argv)) || srv->socket < 0)
 		return (return_msg(srv ? NULL : error_msg[0], srv ? srv->socket : -1));
 	while (ret >= 0)
 	{
-		if (!(clients = set_clients_list(srv, clients)))
+		if (!(srv->clt = set_clients_list(srv)))
 			return (-1);
-		clear_and_set(fds, srv, clients);
+		clear_and_set(fds, srv);
 		if ((ret = select(fds->max, &fds->rd, &fds->wr, &fds->ex, NULL)) < 0)
 			return (return_msg(error_msg[1], ret));
-		else if (recv_client(clients, fds, srv, ret))
+		else if (recv_client(fds, srv, ret))
 			continue ;
-		/*else if (send_client(clients, fds, srv))
+		/*else if (send_client(fds, srv))
 			continue ;
-		exception(clients, fds, srv);*/
+		exception(fds, srv);*/
 	}
-	//close_server(srv, fds, clients);
+	//close_server(srv, fds);
 	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/03 18:53:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/04 16:48:09 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,21 @@ typedef struct			s_fds
 	int					max;
 }						t_fds;
 
-typedef struct			s_server
+typedef struct			s_tmp
 {
-	struct s_coord		plateau;
-	int					port;
 	int					socket;
-	int					time;
-	int					old_player_max;
-	int					player_max;
-	char				**team;
-}						t_server;
+	unsigned int        len;
+	struct sockaddr_in  sin;
+}						t_tmp;
+
+typedef struct			s_gfx
+{
+	int					socket;
+	unsigned int        len;
+	struct sockaddr_in  sin;
+	struct s_gfx		*prev;
+	struct s_gfx		*next;
+}						t_gfx;
 
 typedef struct			s_client
 {
@@ -76,6 +81,19 @@ typedef struct			s_client
 	struct s_client		*prev;
 }						t_client;
 
+typedef struct			s_server
+{
+	struct s_coord		plateau;
+	int					port;
+	int					socket;
+	int					time;
+	int					old_player_max;
+	int					player_max;
+	char				**team;
+	struct s_gfx		*gfx;
+	struct s_client		*clt;
+}						t_server;
+
 void		ring_recv(char *command, t_ring *ring);
 char		*ring_send(t_ring *ring);
 t_ring		*ring_init(int len);
@@ -86,9 +104,10 @@ t_client	*client_init(void);
 void		client_zero(t_client *clt, t_fds *fsd);
 void		client_kill(t_client *clt, t_fds *fsd);
 
+t_gfx		*graphe_init(t_gfx *prev, t_tmp tmp);
+void		graphe_kill(t_gfx *gfx, t_fds *fsd);
+
 t_server	*server_create(int argc, char **argv);
-void		client_connect(int s, t_client *clt, t_fds *fds, t_server *srv);
-void		client_command(int s, t_client *clt, t_fds *fds, t_server *srv);
+bool		recv_client(t_fds *fds, t_server *srv, int ret);
 
 #endif
-

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/02 20:41:32 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/04 14:43:45 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ static t_server	*check_data(t_server *srv, int isdone)
 {
 	int			e;
 
+	srv->gfx = NULL;
+	srv->clt = NULL;
 	srv->socket = 0;
 	srv->old_player_max = 0;
 	if (isdone == 111111)
