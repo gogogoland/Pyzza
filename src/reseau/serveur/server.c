@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/04 15:42:21 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/05 13:17:26 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,38 @@ static t_client	*set_clients_list(t_server *srv)
 	return (srv->clt);
 }
 
+static void	fds_set(int socket, t_fds *fds)
+{
+	FD_SET(socket, &fds->rd);
+	FD_SET(socket, &fds->wr);
+	FD_SET(socket, &fds->ex);
+}
+
 static void	clear_and_set(t_fds *fds, t_server *srv)
 {
-	t_client	*cur;
+	t_client	*clt;
+	t_gfx		*gfx;
 
 	FD_ZERO(&fds->rd);
 	FD_ZERO(&fds->wr);
 	FD_ZERO(&fds->ex);
 	fds->max = srv->socket;
-	FD_SET(srv->socket, &fds->rd);
-	FD_SET(srv->socket, &fds->wr);
-	FD_SET(srv->socket, &fds->ex);
-	cur = srv->clt;
-	while (cur)
+	fds_set(srv->socket, fds);
+	clt = srv->clt;
+	gfx = srv->gfx;
+	while (clt)
 	{
-		fds->max = cur->socket > fds->max ? cur->socket : fds->max;
-		if (cur->socket > 0)
-		{
-			FD_SET(cur->socket, &fds->rd);
-			FD_SET(cur->socket, &fds->wr);
-			FD_SET(cur->socket, &fds->ex);
-		}
-		cur = cur->next;
+		fds->max = clt->socket > fds->max ? clt->socket : fds->max;
+		if (clt->socket > 0)
+			fds_set(clt->socket, fds);
+		clt = clt->next;
+	}
+	while (gfx)
+	{
+		fds->max = gfx->socket > fds->max ? gfx->socket : fds->max;
+		if (gfx->socket > 0)
+			fds_set(gfx->socket, fds);
+		gfx = gfx->next;
 	}
 	fds->max++;
 }
@@ -97,9 +107,9 @@ int			main(int argc, char **argv)
 			return (return_msg(error_msg[1], ret));
 		else if (recv_client(fds, srv, ret))
 			continue ;
-		/*else if (send_client(fds, srv))
+		else if (send_client(fds, srv, ret))
 			continue ;
-		exception(fds, srv);*/
+		/*exception(fds, srv);*/
 	}
 	//close_server(srv, fds);
 	return (ret);

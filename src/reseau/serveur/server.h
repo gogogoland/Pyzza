@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/04 16:48:09 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/05 12:57:22 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,20 +54,15 @@ typedef struct			s_fds
 	int					max;
 }						t_fds;
 
-typedef struct			s_tmp
-{
-	int					socket;
-	unsigned int        len;
-	struct sockaddr_in  sin;
-}						t_tmp;
-
 typedef struct			s_gfx
 {
 	int					socket;
 	unsigned int        len;
 	struct sockaddr_in  sin;
+	struct s_ring		*ring;
 	struct s_gfx		*prev;
 	struct s_gfx		*next;
+	bool				isgfx;
 }						t_gfx;
 
 typedef struct			s_client
@@ -104,10 +99,12 @@ t_client	*client_init(void);
 void		client_zero(t_client *clt, t_fds *fsd);
 void		client_kill(t_client *clt, t_fds *fsd);
 
-t_gfx		*graphe_init(t_gfx *prev, t_tmp tmp);
-void		graphe_kill(t_gfx *gfx, t_fds *fsd);
+t_gfx		*graphe_init(t_gfx *prev, t_fds *fds, int s);
+void		graphe_kill(t_gfx *gfx, t_fds *fsd, bool gfxtoclt);
 
 t_server	*server_create(int argc, char **argv);
+
 bool		recv_client(t_fds *fds, t_server *srv, int ret);
+bool		send_client(t_fds *fds, t_server *srv, int ret);
 
 #endif

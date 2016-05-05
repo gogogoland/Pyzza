@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/03 18:56:09 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/05 13:53:45 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void		client_zero(t_client *clt, t_fds *fds)
 {
 	getpeername(clt->socket, (struct sockaddr*)&clt->sin, \
 			(socklen_t*)&clt->len);
-	printf("Client disconnected , ip %s , port %d.\n", \
+	printf("Client from ip %s , port %d disconnect.\n", \
 			inet_ntoa(clt->sin.sin_addr) , ntohs(clt->sin.sin_port));
 	FD_CLR(clt->socket, &fds->rd);
 	FD_CLR(clt->socket, &fds->wr);

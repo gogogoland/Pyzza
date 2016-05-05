@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/05/04 15:38:08 by tbalea           ###   ########.fr        #
+#    Updated: 2016/05/04 18:43:50 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,8 @@ SRC = ft_atoi.c\
 	  server_create.c\
 	  server_client.c\
 	  server_graphe.c\
-	  server_client_recv.c\
+	  server_send.c\
+	  server_recv.c\
 	  server_ring.c
 
 OBJ = $(SRC:.c=.o)
