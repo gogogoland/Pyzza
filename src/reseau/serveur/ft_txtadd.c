@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/27 13:38:09 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/27 18:40:07 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/05 19:13:00 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**ft_txtadd(char **tab, char *elm)
 	i = 0;
 	while (tab && tab[i])
 		i++;
-	if (!(new = (char **)malloc((i + 1) * sizeof(char *))))
+	if (!(new = (char **)malloc((i + 2) * sizeof(char *))))
 		return (NULL);
 	max = ft_strlen(elm) + 2;
 	if (!(new[i] = (char *)malloc((max - 1) * sizeof(char))))

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 19:38:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/05 13:36:47 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/05 19:59:10 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,35 +18,7 @@ static const char	*scr[] =
 		"New client from ip %s, port %d.\n",
 		"Client tried to connect, but malloc failed.\n",
 		"Client discnnected , ip %s , port %d.\n"
-		//"Reached client limit's.\n",
-		//"Client from ip %s, port %d tried to connect, but limit of %d client is\
- reached.\n",
 };
-
-/*static void	player_connect(t_fds *fds, t_server *srv, t_gfx *gfx)
-{
-	t_client	*new;
-
-	new = srv->clt;
-	while (new && new->socket != 0)
-		new = new->next;
-	if (!new)
-	{
-		//send(gfx->socket, scr[0], strlen(scr[0]), 0);
-		printf(scr[1], inet_ntoa(gfx->sin.sin_addr), ntohs(gfx->sin.sin_port), \
-				srv->player_max);
-		graphe_kill(gfx, fds, false);
-	}
-	else
-	{
-		new->socket = gfx->socket;
-		new->sin = gfx->sin;
-		new->len = gfx->len;
-		printf(scr[3], inet_ntoa(new->sin.sin_addr) , ntohs(new->sin.sin_port));
-		fds->max = new->socket > fds->max-1 ? new->socket+1 : fds->max;
-		graphe_kill(gfx, fds, true);
-	}
-}*/
 
 static void client_command(t_fds *fds, t_server *srv, int s)
 {

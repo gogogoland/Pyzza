@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/04 14:43:45 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/05 19:47:18 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,15 @@ static int		get_data(t_server *srv, int state, char *arg, int isdone)
 	e = 0;
 	if (state == 0 && (srv->port = ft_atoi(arg)) <= 0)
 		e = 0;
-	else if (state == 1 && (srv->plateau.x = ft_atoi(arg)) <= 0)
+	else if (state == 1 && (srv->plateau.x = atoi(arg)) <= 0)
 		e = 1;
-	else if (state == 2 && (srv->plateau.y = ft_atoi(arg)) <= 0)
+	else if (state == 2 && (srv->plateau.y = atoi(arg)) <= 0)
 		e = 2;
 	else if (state == 3 && !(srv->team = ft_txtadd(srv->team, arg)))
 		e = 3;
-	else if (state == 4 && (srv->player_max = ft_atoi(arg)) <= 2)
+	else if (state == 4 && (srv->player_max = atoi(arg)) <= 2)
 		e = 4;
-	else if (state == 5 && (srv->time = ft_atoi(arg)) <= 0)
+	else if (state == 5 && (srv->time = atoi(arg)) <= 0)
 		e = 5;
 	while (state-- > 0)
 		p *= 10;
@@ -110,7 +110,8 @@ static t_server	*check_data(t_server *srv, int isdone)
 	return (srv);
 }
 
-//	TODO check if next argument begin with '-' character
+//	TODO
+//	*	check if next argument begin with '-' character
 static t_server	*server_init_data(int argc, char **argv)
 {
 	int 		i;
@@ -140,7 +141,20 @@ static t_server	*server_init_data(int argc, char **argv)
 	return (check_data(srv, isdone));
 }
 
-//	TODO IPv6
+/*static char	*tcp(void)
+{
+	char	*tcp_str;
+
+	if (!(tcp_str = (char *)malloc(4 * sizeof(char))))
+		return (NULL);
+	tcp_str = "tcp\0";
+	ft_putendl(tcp_str);
+	return (tcp_str);
+}*/
+
+//	TODO
+//	*	IPv6
+//	*	TCP error
 t_server	*server_create(int argc, char **argv)
 {
 	int 				sso;
@@ -148,10 +162,13 @@ t_server	*server_create(int argc, char **argv)
 	struct protoent		*proto;
 	struct sockaddr_in	sin;
 
+	char	*tcp;
+	tcp = strdup("tcp");
+
 	sso = 1;
 	if (!(srv = server_init_data(argc, argv)) || srv->socket == -1)
 		return (srv);
-	if (!(proto = getprotobyname("tcp")))
+	if (!(proto = getprotobyname(tcp)))
 		return (return_msg(error[12], -1, srv));
 	if ((srv->socket = socket(PF_INET, SOCK_STREAM, proto->p_proto)) < 0)
 		return (return_msg(error[13], srv->socket, srv));

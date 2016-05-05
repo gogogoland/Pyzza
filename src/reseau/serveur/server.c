@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/05 13:17:26 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/05 19:45:44 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,10 @@ static void	clear_and_set(t_fds *fds, t_server *srv)
 	fds->max++;
 }
 
+//	TODO
+//	*	check exception
+//	*	check signal
+//	*	close and free all
 int			main(int argc, char **argv)
 {
 	t_server		*srv;
@@ -105,10 +109,8 @@ int			main(int argc, char **argv)
 		clear_and_set(fds, srv);
 		if ((ret = select(fds->max, &fds->rd, &fds->wr, &fds->ex, NULL)) < 0)
 			return (return_msg(error_msg[1], ret));
-		else if (recv_client(fds, srv, ret))
-			continue ;
-		else if (send_client(fds, srv, ret))
-			continue ;
+		recv_client(fds, srv, ret);
+		send_client(fds, srv, ret);
 		/*exception(fds, srv);*/
 	}
 	//close_server(srv, fds);

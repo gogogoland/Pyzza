@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 15:04:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/05 13:31:28 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/05 19:47:44 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ t_gfx	*graphe_init(t_gfx *prev, t_fds *fds, int s)
 	return (gfx);
 }
 
+//	TODO
+//	*	set to NULL gfx->sin
 void		graphe_kill(t_gfx *gfx, t_fds *fds, bool gfxtoclt)
 {
 	FD_CLR(gfx->socket, &fds->rd);
@@ -61,7 +63,7 @@ void		graphe_kill(t_gfx *gfx, t_fds *fds, bool gfxtoclt)
 				ntohs(gfx->sin.sin_port));
 	}
 	gfx->isgfx = false;
-	gfx->len = 0;
+	gfx->len = 1;
 	//gfx->sin = NULL;
 	gfx->socket = 0;
 	if (gfx->prev)

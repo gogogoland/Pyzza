@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 15:45:44 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/03 19:05:10 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/05 18:43:56 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 static const char	*srv_ring_msg[] =
 {
-	"Malloc failed for set to ring.",
-	"Malloc failed for get in ring.",
-	"Malloc failed for ring (t_ring *.)",
-	"Malloc failed for ring->command (**char).",
-	"No data allocated in ring."
+	"Malloc failed for set to ring.\n",
+	"Malloc failed for get in ring.\n",
+	"Malloc failed for ring (t_ring *.)\n",
+	"Malloc failed for ring->command (**char).\n",
+	"No data allocated in ring.\n"
 };
 
 void		ring_recv(char *command, t_ring *ring)
@@ -35,7 +35,7 @@ void		ring_recv(char *command, t_ring *ring)
 	len = strlen(command);
 	if (!(ring->command[i] = (char *)malloc((len + 1) * sizeof(char))))
 	{
-		ft_putendl(srv_ring_msg[0]);
+		ft_putstr(srv_ring_msg[0]);
 		return ;
 	}
 	j = -1;
@@ -52,7 +52,7 @@ char		*ring_send(t_ring *ring)
 
 	if (!ring || !ring->command)
 	{
-		ft_putendl(srv_ring_msg[4]);
+		ft_putstr(srv_ring_msg[4]);
 		return (NULL);
 	}
 	else if (!ring->command[ring->cur])
@@ -60,7 +60,7 @@ char		*ring_send(t_ring *ring)
 	len = strlen(ring->command[ring->cur]);
 	if (!(command = (char *)malloc((len + 1) * sizeof(char))))
 	{
-		ft_putendl(srv_ring_msg[1]);
+		ft_putstr(srv_ring_msg[1]);
 		return (NULL);
 	}
 	j = -1;
@@ -79,13 +79,13 @@ t_ring		*ring_init(int len)
 
 	if (!(ring = (t_ring *)malloc(sizeof(t_ring))))
 	{
-		ft_putendl(srv_ring_msg[2]);
+		ft_putstr(srv_ring_msg[2]);
 		return (NULL);
 	}
 	if (!(ring->command = (char **)malloc(len * sizeof(char *))))
 	{
 		free(ring);
-		ft_putendl(srv_ring_msg[3]);
+		ft_putstr(srv_ring_msg[3]);
 		return (NULL);
 	}
 	ring->len = len;
