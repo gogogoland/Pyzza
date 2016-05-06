@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/05 19:56:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/06 11:42:53 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void		ring_zero(t_ring *ring);
 void		ring_kill(t_ring *ring);
 
 t_client	*client_init(void);
-void		player_fork(t_fds *fsd, t_server *srv, t_gfx *gfx);
+void		player_fork(t_fds *fsd, t_server *srv, t_gfx *gfx, char *cmd);
 void		client_zero(t_client *clt, t_fds *fsd);
 void		client_kill(t_client *clt, t_fds *fsd);
 

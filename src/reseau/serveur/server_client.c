@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/05 19:58:26 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/06 13:59:54 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static const char	*mcl[] =
 {
 		"Client from ip %s , port %d disconnect.\n",
 		"Reached client limit's.\n",
-		"New player from ip %s, port %d.\n",
 		"Player from ip %s, port %d tried to connect, but limit of %d client is\
- reached.\n"
+ reached.\n",
+		"New player from ip %s, port %d.\n"
 };
 
 t_client	*client_init(void)
@@ -67,10 +67,12 @@ void		client_zero(t_client *clt, t_fds *fds)
 
 //	TODO
 //	*	Send to client result of connection
-void		player_fork(t_fds *fds, t_server *srv, t_gfx *gfx)
+void		player_fork(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 {
 	t_client	*new;
 
+	if (strncmp(cmd, "client", 6) != 0)
+		return ;
 	new = srv->clt;
 	while (new && new->socket != 0)
 		new = new->next;

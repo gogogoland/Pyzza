@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 19:38:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/05 19:59:10 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/06 14:04:13 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,7 @@ static void client_command(t_fds *fds, t_server *srv, int s)
 	gfx = srv->gfx;
 	bzero(buffer, 1024);
 	if ((rd_len = recv(s, buffer, 1024, 0)) < 0)
-	{
 		return ;
-	}
 	while (clt && clt->socket != s)
 		clt = clt->next;
 	while (!clt && gfx && gfx->socket != s)
@@ -44,7 +42,7 @@ static void client_command(t_fds *fds, t_server *srv, int s)
 	if (rd_len == 0)
 		!clt ? graphe_kill(gfx, fds, false) : client_zero(clt, fds);
 	else
-		ring_recv(buffer, !gfx ? clt->ring : gfx->ring);
+		ring_recv(buffer, !clt ? gfx->ring : clt->ring);
 }
 
 static void	client_connect(t_fds *fds, t_server *srv, int s)

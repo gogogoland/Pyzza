@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 15:45:44 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/05 18:43:56 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/06 14:05:57 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void		ring_recv(char *command, t_ring *ring)
 	int	len;
 
 	i = 0;
-	while (i < ring->len && ring->command[i])
+	while (i < ring->len && ring->command && ring->command[i])
 		i++;
 	if (i == ring->len)
 		return ;
@@ -66,9 +66,9 @@ char		*ring_send(t_ring *ring)
 	j = -1;
 	while (++j < len)
 		command[j] = ring->command[ring->cur][j];
+	command[j] = '\0';
 	bzero(ring->command[ring->cur], len);
-	free(ring->command[ring->cur]);
-	ring->command[ring->cur] = NULL;
+	ft_memdel((void **)&ring->command[ring->cur]);
 	ring->cur = (ring->cur + 1) % ring->len;
 	return (command);
 }
