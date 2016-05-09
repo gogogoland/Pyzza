@@ -30,14 +30,16 @@ public class GenerateMap : MonoBehaviour {
 		{
 			for (int tileY = 0; tileY < height; tileY++)
 			{
-				r_noise = noise.FractalNoise2D(width, height, 3, 5, 0.1f);
+				r_noise = noise.FractalNoise2D(width, height, 3, 5, 0.1f) + 0.1f;
 				float rnd = Random.value;
-				if (rnd < 0.25f)
-					variant_materials[tileX, tileY] = materials[2];
-				else if (rnd < 0.50f)
-					variant_materials[tileX, tileY] = materials[1];
-				else if (rnd < 1.0f)
-					variant_materials[tileX, tileY] = materials[0];
+				if (r_noise > 0.0) {
+					if (rnd < 0.25f)
+						variant_materials[tileX, tileY] = materials[2];
+					else if (rnd < 0.50f)
+						variant_materials[tileX, tileY] = materials[1];
+					else if (rnd < 1.0f)
+						variant_materials[tileX, tileY] = materials[0];
+				}
 			}
 		}
 	}
