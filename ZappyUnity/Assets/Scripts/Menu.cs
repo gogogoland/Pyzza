@@ -5,11 +5,12 @@ using System.Collections;
 public class Menu : MonoBehaviour {
 
 	// Use this for initialization
-	private InputField		inputIP;
-	private InputField		inputPort;
-	private Text			error;
+	private InputField				inputIP;
+	private InputField				inputPort;
+	private Text					error;
 
-	private int				ip = 0;
+	private int						ip = 0;
+
 	void Start () {
 		inputIP = GameObject.Find("InputFieldIP").GetComponent<InputField>();
 		inputPort = GameObject.Find("InputFieldPort").GetComponent<InputField>();
@@ -18,25 +19,32 @@ public class Menu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (inputPort.text != "")
-			int.TryParse(inputPort.text, out ip);
-//			
+
 	}
 
 	public void Connect() {
-		NetworkConnectionError e;
+		error.text = "Loading ...";
+		error.color = Color.black;
 
 		int.TryParse(inputPort.text, out ip);
 		if (ip != 0 && inputIP.text != "")
-		{
-			e = Network.Connect(inputIP.text, ip);
-			if (string.Compare(e.ToString(), "NoError") != 0)
-				error.text = "Error : " + e;
-		}
+			Network.Connect(inputIP.text, ip);
 		else
+		{
+			error.color = Color.red;
 			error.text = "Error : Missing Ip or Port";
-		//		if (string.Compare((e = Network.Connect(inputIP.text, int.Parse (inputPort.text)))), "NoError")
-//			error.text = "Error : " + e;
+		}
+	}
 
+	void OnFailedToConnect(NetworkConnectionError err) {
+		error.color = Color.red;
+		if (string.Compare(err.ToString(), "NoError") != 0)
+			error.text = "Error : " + err;
+	}
+
+	void OnConnectedToServer() {
+		error.color = Color.green;
+		error.text = "Success !";
+		Application.LoadLevel("Game");
 	}
 }
