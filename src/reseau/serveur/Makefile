@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/05/04 18:43:50 by tbalea           ###   ########.fr        #
+#    Updated: 2016/05/10 16:34:53 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,21 @@ SRC = ft_atoi.c\
 	  server_graphe.c\
 	  server_send.c\
 	  server_recv.c\
-	  server_ring.c
+	  server_ring.c\
+	  server_map.c\
+	  command_death.c\
+	  command_eject.c\
+	  command_forward.c\
+	  command_inventory.c\
+	  command_left.c\
+	  command_lvlup.c\
+	  command_msg.c\
+	  command_pose.c\
+	  command_right.c\
+	  command_seek.c\
+	  command_take.c\
+	  command_graphe.c\
+	  command_map.c
 
 OBJ = $(SRC:.c=.o)
 

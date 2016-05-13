@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/06 12:32:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/13 17:36:45 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,26 @@ static t_client	*set_clients_list(t_server *srv)
 	t_client    *new;
 	t_client    *cur;
 
+ft_putendl("server.c		set_clt_lst	0");
 	if (srv->old_player_max != srv->player_max)
 	{
+ft_putendl("server.c		set_clt_lst	1");
 		i = srv->old_player_max;
 		while (i++ < srv->player_max)
 		{
+ft_putendl("server.c		set_clt_lst	2");
 			cur = srv->clt;
 			while (cur && cur->next)
 				cur = cur->next;
+ft_putendl("server.c		set_clt_lst	3");
 			if (!(new = client_init()))
 				return (NULL);
+ft_putendl("server.c		set_clt_lst	4");
 			if ((new->prev = cur))
 				cur->next = new;
 			else
 				srv->clt = new;
+ft_putendl("server.c		set_clt_lst	5");
 		}
 	}
 	srv->old_player_max = srv->player_max;
@@ -64,6 +70,8 @@ static void	clear_and_set(t_fds *fds, t_server *srv)
 	t_client	*clt;
 	t_gfx		*gfx;
 
+ft_putendl("server_");
+ft_putendl("server.c		clear_&_set	0");
 	FD_ZERO(&fds->rd);
 	FD_ZERO(&fds->wr);
 	FD_ZERO(&fds->ex);
@@ -71,6 +79,7 @@ static void	clear_and_set(t_fds *fds, t_server *srv)
 	fds_set(srv->socket, fds);
 	clt = srv->clt;
 	gfx = srv->gfx;
+ft_putendl("server.c		clear_&_set	1");
 	while (clt)
 	{
 		fds->max = clt->socket > fds->max ? clt->socket : fds->max;
@@ -78,13 +87,16 @@ static void	clear_and_set(t_fds *fds, t_server *srv)
 			fds_set(clt->socket, fds);
 		clt = clt->next;
 	}
+ft_putendl("server.c		clear_&_set	2");
 	while (gfx)
 	{
-		fds->max = gfx->socket > fds->max ? gfx->socket : fds->max;
-		if (gfx->socket > 0)
+ft_putendl("server.c		clear_&_set	3");
+		fds->max = gfx && (gfx->socket > fds->max) ? gfx->socket : fds->max;
+		if (gfx && gfx->socket > 0)
 			fds_set(gfx->socket, fds);
-		gfx = gfx->next;
+		gfx = gfx ? gfx->next : NULL;
 	}
+ft_putendl("server.c		clear_&_set	4");
 	fds->max++;
 }
 
@@ -92,6 +104,8 @@ static void	clear_and_set(t_fds *fds, t_server *srv)
 //	*	check exception
 //	*	check signal
 //	*	close and free all
+//	*	add sleep for connection and disconnect
+//	*	exit player
 int			main(int argc, char **argv)
 {
 	t_server		*srv;
@@ -104,12 +118,17 @@ int			main(int argc, char **argv)
 		return (return_msg(srv ? NULL : error_msg[0], srv ? srv->socket : -1));
 	while (ret >= 0)
 	{
+ft_putendl("server.c 		main			0");
 		if (!(srv->clt = set_clients_list(srv)))
 			return (-1);
+ft_putendl("server.c		main			1");
 		clear_and_set(fds, srv);
+ft_putendl("server.c 		main			2");
 		if ((ret = select(fds->max, &fds->rd, &fds->wr, &fds->ex, NULL)) < 0)
 			return (return_msg(error_msg[1], ret));
+ft_putendl("server.c 		main			3");
 		recv_client(fds, srv, ret);
+ft_putendl("server.c 		main			4");
 		send_client(fds, srv, ret);
 		/*exception(fds, srv);*/
 	}

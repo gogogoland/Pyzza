@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/06 11:42:53 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/12 18:45:27 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct			s_coord
 {
 	int					x;
 	int					y;
+	int					*rsc;
 }						t_coord;
 
 typedef struct			s_fds
@@ -71,6 +72,12 @@ typedef struct			s_client
 	unsigned int        len;
 	struct sockaddr_in  sin;
 	struct s_coord		pos;
+	int					sens;
+	int					team;
+	bool				fork;
+	int					*rsc;
+	int					lvl;
+	int					vie;
 	struct s_ring		*ring;
 	struct s_client		*next;
 	struct s_client		*prev;
@@ -84,6 +91,7 @@ typedef struct			s_server
 	int					time;
 	int					old_player_max;
 	int					player_max;
+	int					***map;
 	char				**team;
 	struct s_gfx		*gfx;
 	struct s_client		*clt;
@@ -103,9 +111,45 @@ void		client_kill(t_client *clt, t_fds *fsd);
 t_gfx		*graphe_init(t_gfx *prev, t_fds *fds, int s);
 void		graphe_kill(t_gfx *gfx, t_fds *fsd, bool gfxtoclt);
 
+void	    init_map(t_server *srv);
+void	    kill_map(t_server *srv);
+
 t_server	*server_create(int argc, char **argv);
 
 bool		recv_client(t_fds *fds, t_server *srv, int ret);
 bool		send_client(t_fds *fds, t_server *srv, int ret);
+void		send_client_data(t_client *clt);
+void		send_graphe_action(t_server *srv, t_client *clt, int n);
+
+void		command_forward(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_death(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_eject(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_forward(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_inventory(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_left(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_lvlup(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_msg(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_pose(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_right(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_seek(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_take(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+
+void		command_graphe(t_fds *fds, t_server *srv,
+							t_gfx *gfx, char *cmd);
+void		command_map(t_fds *fds, t_server *srv,
+							t_gfx *gfx, char *cmd);
+//void		command_(t_fds *fds, t_server *srv, t_ *, char *cmd);
 
 #endif
