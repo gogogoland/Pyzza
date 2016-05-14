@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GenerateMap : MonoBehaviour {
-
+	
 	public int 					height;
 	public int					width;
 	public int					seed;
@@ -12,18 +12,18 @@ public class GenerateMap : MonoBehaviour {
 	public GameObject			ressources_obj;
 	public Sprite				[]ressources_sprite;
 	public Material				[]materials;
-
+	
 	private Material			[,]variant_materials;
 	private GameObject			[,]variant_ressources;
-
-	private GameObject			[,]tiles;
+	
+	public GameObject			[,]tiles;
 	private GameObject			map;
 	private GameObject			[]border;
 	private GameObject			lineTmp;
 	private GameObject			[]lines;
-
+	
 	private int					nbrBorder = 0;
-
+	
 	// Use this for initialization
 	void Start ()
 	{
@@ -34,19 +34,19 @@ public class GenerateMap : MonoBehaviour {
 		if (height >= 11 && width >= 11)
 			GenerateBorder();
 		Destroy(lineTmp);
-
+		
 	}
-
+	
 	void InitMap()
 	{
 		map = new GameObject("Map");
 		lineTmp = new GameObject("Lines");
 		lines = new GameObject[height];
 		border = new GameObject[5];
-		for (int z = height - 1; z > -1; z--) {
+		for (int z = 0; z < height; z++) {
 			lines[z] = GameObject.Instantiate(lineTmp, map.transform.position, Quaternion.identity) as GameObject;
 			lines[z].transform.parent = map.transform;
-			lines[z].name = "Lines (" + (map.transform.childCount - 1) + ")";
+			lines[z].name = "Lines (" + z + ")";
 		}
 	}
 
@@ -88,10 +88,10 @@ public class GenerateMap : MonoBehaviour {
 		for (int b = 0; b < border.Length; b++)
 			border[b].AddComponent<RefreshBorderMap>();
 	}
-
+	
 	int		TestRessourcesRandom() {
 		float rnd = Random.value;
-
+		
 		if (rnd < 0.1f)
 			return (6);
 		else if (rnd < 0.30f)
@@ -112,15 +112,15 @@ public class GenerateMap : MonoBehaviour {
 		}
 		return (0);
 	}
-
+	
 	void	TestAssignResrc(float rnd, int tileX, int tileY) {
 		Vector3		vec = Vector3.zero;
-
+		
 		if (rnd < 0.15f)
 		{
 			vec.x = tileX * tile.transform.localScale.x * 10;
 			vec.y = 1.4f;
-			vec.z = tileY * tile.transform.localScale.z * 10;
+			vec.z = -tileY * tile.transform.localScale.z * 10;
 			if (variant_ressources[tileY, tileX] == null) {
 				variant_ressources[tileY, tileX] = GameObject.Instantiate(food_obj, vec, food_obj.transform.rotation) as GameObject;
 				variant_ressources[tileY, tileX].transform.parent = tiles[tileY, tileX] .transform;
@@ -130,7 +130,7 @@ public class GenerateMap : MonoBehaviour {
 		else if (rnd < 0.50f) {
 			vec.x = tileX * tile.transform.localScale.x * 10;
 			vec.y = 3.0f;
-			vec.z = tileY * tile.transform.localScale.z * 10;
+			vec.z = -tileY * tile.transform.localScale.z * 10;
 			int rd = TestRessourcesRandom();
 			if (rd != 0 && variant_ressources[tileY, tileX] == null)
 			{
@@ -139,9 +139,9 @@ public class GenerateMap : MonoBehaviour {
 				variant_ressources[tileY, tileX].GetComponent<SpriteRenderer>().sprite = ressources_sprite[rd];
 			}
 		}
-
+		
 	}
-
+	
 	void	TestAssignTile(float rnd, int tileX, int tileY) {
 		if (rnd < 0.25f)
 			variant_materials[tileY, tileX] = materials[2];
@@ -150,10 +150,10 @@ public class GenerateMap : MonoBehaviour {
 		else if (rnd < 1.0f)
 			variant_materials[tileY, tileX] = materials[0];
 	}
-
+	
 	void	Test() {
 		variant_materials = new Material[height, width];
-
+		
 		Random.seed = seed;
 		for (int tileX = 0; tileX < width; tileX++)
 		{
@@ -161,7 +161,7 @@ public class GenerateMap : MonoBehaviour {
 				TestAssignTile(Random.value, tileX, tileY);
 		}
 	}
-
+	
 	void	Test2() {
 		variant_ressources = new GameObject[height, width];
 		
@@ -172,31 +172,28 @@ public class GenerateMap : MonoBehaviour {
 				TestAssignResrc(Random.value, tileX, tileY);
 		}
 	}
-
+	
 	void	Generate(int h, int w) {
 		Vector3		vec = Vector3.zero;
 		tiles = new GameObject[height, width];
-
-		for (int z = height - 1; z > -1; z--)
+		
+		for (int z = 0; z < height; z++)
 		{
-			int j = 0;
 			for (int x = 0; x < width; x++)
 			{
 				vec.x = x * tile.transform.localScale.x * 10;
-				vec.z = z * tile.transform.localScale.z * 10;
+				vec.z = -z * tile.transform.localScale.z * 10;
 				tiles[z, x] = GameObject.Instantiate(tile, vec, tile.transform.rotation) as GameObject;
 				tiles[z, x].transform.parent = lines[z].transform;
-				tiles[z, x].transform.name = "Tile(" + j + ", " + x + ")";
+				tiles[z, x].transform.name = "Tile(" + z + ", " + x + ")";
 				tiles[z, x].GetComponent<Renderer>().material = variant_materials[z, x];
 			}
-			j++;
 		}
-
 	}
-
+	
 	// Update is called once per frame
 	void	Update ()
 	{
-
+		
 	}
 }
