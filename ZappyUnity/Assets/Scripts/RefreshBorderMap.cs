@@ -55,8 +55,7 @@ public class RefreshBorderMap : MonoBehaviour {
 				{
 					Debug.Log(tilesBorder[i, j]);
 					Debug.Log(scriptMap.tiles[z, x].transform.GetChild(child));
-					RessrcBorder[z, x, child] 
-					= scriptMap.tiles[z, x].transform.GetChild(child).gameObject;
+					RessrcBorder[i, j, child] = scriptMap.tiles[z, x].transform.GetChild(child).gameObject;
 					Debug.Log(child);
 				}
 
@@ -68,7 +67,7 @@ public class RefreshBorderMap : MonoBehaviour {
 	
 	// Update is called once per frame
 	void	Update () {
-		if (update || Input.anyKeyDown)
+		if (update)// || Input.anyKeyDown)
 		{
 			StockVariantRessourcesInit();
 		}	

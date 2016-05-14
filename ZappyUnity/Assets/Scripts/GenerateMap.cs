@@ -54,6 +54,12 @@ public class GenerateMap : MonoBehaviour {
 	{
 		border[nbrBorder] = new GameObject("Border" + nbrBorder);
 		border[nbrBorder].transform.position = position;
+		border[nbrBorder].AddComponent<RefreshBorderMap>();
+		RefreshBorderMap scriptBorder = border[nbrBorder].GetComponent<RefreshBorderMap>();
+		scriptBorder.columnMax = limitZ;
+		scriptBorder.columnMin = initZ;
+		scriptBorder.lineMax = limitX;
+		scriptBorder.lineMin = initX;
 		for (int z = initZ; z < limitZ; z++)
 		{
 			GameObject lineCpy = GameObject.Instantiate(lineTmp, border[nbrBorder].transform.position, Quaternion.identity) as GameObject;
@@ -85,8 +91,6 @@ public class GenerateMap : MonoBehaviour {
 		Border(posBorder3, 0, height - 11, 8, height);
 		Border(posBorder4, width - 8, 0, width, height);
 		Border(posBorder5, 0, 0, 8, height);
-		for (int b = 0; b < border.Length; b++)
-			border[b].AddComponent<RefreshBorderMap>();
 	}
 	
 	int		TestRessourcesRandom() {
