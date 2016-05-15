@@ -40,10 +40,10 @@ public class MoveCamera : MonoBehaviour {
 		if (width * 10 - tile_x < transform.position.x)
 			transform.position = new Vector3(-tile_x, transform.position.y, transform.position.z);
 
-		if (transform.position.z > 0 + tile_z - 10)
+		if (transform.position.z > tile_z - 10 / 2)
 			transform.position = new Vector3(transform.position.x, transform.position.y, -height * 10);
 		if (transform.position.z < -height * 10)
-			transform.position = new Vector3(transform.position.x, transform.position.y, + tile_z - 10);
+			transform.position = new Vector3(transform.position.x, transform.position.y, tile_z - 10 / 2);
 		Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
 	}
 }
