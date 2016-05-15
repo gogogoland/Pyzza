@@ -3,7 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GenerateMap : MonoBehaviour {
-	
+
+	public struct			s_resrc{
+		public int			x;
+		public int			z;
+		public int			type;
+		public int			nbr;
+		public GameObject	resrcObj;
+	};
+
+
 	public int 					height;
 	public int					width;
 	public int					seed;
@@ -12,11 +21,11 @@ public class GenerateMap : MonoBehaviour {
 	public GameObject			ressources_obj;
 	public Sprite				[]ressources_sprite;
 	public Material				[]materials;
-	
+	public GameObject			[,]tiles;
+
 	private Material			[,]variant_materials;
 	private GameObject			[,]variant_ressources;
-	
-	public GameObject			[,]tiles;
+	private List<s_resrc>		structResrc;
 	private GameObject			map;
 	private GameObject			[]border;
 	private GameObject			lineTmp;
@@ -102,7 +111,7 @@ public class GenerateMap : MonoBehaviour {
 		{
 			float rnd2 = Random.value;
 			if (rnd2 < 0.50f)
-				return (4);
+				return (5);
 			return (5);
 		}
 		else if (rnd < 0.50f)
@@ -114,12 +123,12 @@ public class GenerateMap : MonoBehaviour {
 				return (2);
 			return (1);
 		}
-		return (0);
+		return (-1);
 	}
 
 	Vector3	PositionTileRandom(int tileX, int tileY, GameObject resrc){
 		Vector3		vec = Vector3.zero;
-
+		
 		float rnd1 = Random.Range(-3f, 3f);
 		float rnd2 = Random.Range(-3f, 3f);
 		vec.x = tileX * tile.transform.localScale.x * 10 + rnd1;
@@ -127,31 +136,109 @@ public class GenerateMap : MonoBehaviour {
 		vec.z = -tileY * tile.transform.localScale.z * 10 + rnd2;
 		return (vec);
 	}
-	
-	void	TestAssignResrc(float rnd, int tileX, int tileY) {
-		Vector3		vec;
-		if (rnd < 0.15f)
+
+	void	RepositioningResrc(GameObject resrc, int id) {
+		Vector3		vec = Vector3.zero;
+		switch (id)
 		{
-			vec = PositionTileRandom(tileX, tileY, food_obj);
-
-			if (variant_ressources[tileY, tileX] == null) {
-				variant_ressources[tileY, tileX] = GameObject.Instantiate(food_obj, vec, food_obj.transform.rotation) as GameObject;
-				variant_ressources[tileY, tileX].transform.parent = tiles[tileY, tileX] .transform;
-				variant_ressources[tileY, tileX].GetComponent<SpriteRenderer>().sprite = ressources_sprite[0];
-			}
+		case 0 :
+			resrc.name = "Food";
+			vec = new Vector3(0.0f, resrc.transform.localPosition.y, 0.0f);
+			;break;
+		case 1 :
+			resrc.name = "Linemate";
+			vec = new Vector3(3.0f, resrc.transform.localPosition.y, 0.0f);
+			;break;
+		case 2 :
+			resrc.name = "Deraumere";
+			vec = new Vector3(3.0f, resrc.transform.localPosition.y, -3.0f);
+			;break;
+		case 3 :
+			resrc.name = "Sibur";
+			vec = new Vector3(3.0f, resrc.transform.localPosition.y, 3.0f);
+			;break;
+		case 4 :
+			resrc.name = "Mendiane";
+			vec = new Vector3(-3.0f, resrc.transform.localPosition.y, 3.0f);
+			;break;
+		case 5 :
+			resrc.name = "Phiras";
+			vec = new Vector3(-3.0f, resrc.transform.localPosition.y, 0.0f);
+			;break;
+		case 6 :
+			resrc.name = "Thystame";
+			vec = new Vector3(-3.0f, resrc.transform.localPosition.y, -3.0f);
+			;break;
 		}
-		else if (rnd < 0.50f) {
-			vec = PositionTileRandom(tileX, tileY, ressources_obj);
+		resrc.transform.localPosition = vec;
+	}
+	
+	void	AddStructResrc(int tileX, int tileY, int type, int nbr){
+		s_resrc		tmp = new s_resrc();
+		Vector3		vec = Vector3.zero;
 
+		tmp.nbr = nbr + 1;
+		tmp.x = tileX;
+		tmp.z = tileY;
+		tmp.type = type;
+		if (type == 0)
+		{
+			vec = new Vector3(0, food_obj.transform.position.y, 0);
+			tmp.resrcObj = GameObject.Instantiate(food_obj, vec, Quaternion.identity) as GameObject;
+			tmp.resrcObj.transform.localScale *= 20;
+		}
+		else if (type >= 1)
+		{
+			vec = new Vector3(0, ressources_obj.transform.position.y, 0);
+			tmp.resrcObj = GameObject.Instantiate(ressources_obj, vec, Quaternion.identity) as GameObject;
+			tmp.resrcObj.transform.localScale *= 5;
+		}
+		tmp.resrcObj.transform.parent = tiles[tileY, tileX].transform;
+		tmp.resrcObj.GetComponent<SpriteRenderer>().sprite = ressources_sprite[type];
+		RepositioningResrc(tmp.resrcObj, type);
+		structResrc.Add(tmp);
+	}
+
+	
+	void	TestAssignResrc(float rnd, int tileX, int tileY, int nbr) {
+
+		if (rnd < 0.15f)
+			AddStructResrc(tileX, tileY, 0, nbr);
+		else if (rnd < 0.50f)
+		{
 			int rd = TestRessourcesRandom();
-			if (rd != 0 && variant_ressources[tileY, tileX] == null)
-			{
-				variant_ressources[tileY, tileX] = GameObject.Instantiate(ressources_obj, vec, ressources_obj.transform.rotation) as GameObject;
-				variant_ressources[tileY, tileX].transform.parent = tiles[tileY, tileX].transform;
-				variant_ressources[tileY, tileX].GetComponent<SpriteRenderer>().sprite = ressources_sprite[rd];
-			}
+			if (rd != -1)
+				AddStructResrc(tileX, tileY, rd, nbr);
 		}
-		
+//		if (rnd < 0.15f)
+//		{
+//			rd = 0;
+//			vec.x = tileX * tile.transform.localScale.x * 10;
+//			vec.y = food_obj.transform.position.y;
+//			vec.z = -tileY * tile.transform.localScale.z * 10;
+//			AddStructResrc(tileX, tileY, rd);
+//			if (variant_ressources[tileY, tileX] == null) {
+//				variant_ressources[tileY, tileX] = GameObject.Instantiate(food_obj, vec, food_obj.transform.rotation) as GameObject;
+//				variant_ressources[tileY, tileX].transform.parent = tiles[tileY, tileX] .transform;
+//				variant_ressources[tileY, tileX].GetComponent<SpriteRenderer>().sprite = ressources_sprite[rd];
+//			}
+//		}
+//		else if (rnd < 0.50f) {
+//			vec.x = tileX * tile.transform.localScale.x * 10;
+//			vec.y = ressources_obj.transform.position.y;
+//			vec.z = -tileY * tile.transform.localScale.z * 10;
+//			rd = TestRessourcesRandom();
+//			AddStructResrc(tileX, tileY, rd);
+//			if (rd != -1 && variant_ressources[tileY, tileX] == null)
+//			{
+//				variant_ressources[tileY, tileX] = GameObject.Instantiate(ressources_obj, vec, ressources_obj.transform.rotation) as GameObject;
+//				variant_ressources[tileY, tileX].transform.parent = tiles[tileY, tileX].transform;
+//				variant_ressources[tileY, tileX].GetComponent<SpriteRenderer>().sprite = ressources_sprite[rd];
+//
+//			}
+//		}
+//		if (rd != -1 && variant_ressources[tileY, tileX] != null)
+//			RepositioningResrc(variant_ressources[tileY, tileX], rd);
 	}
 	
 	void	TestAssignTile(float rnd, int tileX, int tileY) {
@@ -170,18 +257,25 @@ public class GenerateMap : MonoBehaviour {
 		for (int tileX = 0; tileX < width; tileX++)
 		{
 			for (int tileY = 0; tileY < height; tileY++)
+			{
 				TestAssignTile(Random.value, tileX, tileY);
+			}
 		}
 	}
 	
 	void	Test2() {
 		variant_ressources = new GameObject[height, width];
+		structResrc = new List<s_resrc>();
 		
 		Random.seed = seed;
 		for (int tileX = 0; tileX < width; tileX++)
 		{
 			for (int tileY = 0; tileY < height; tileY++)
-				TestAssignResrc(Random.value, tileX, tileY);
+			{
+				int rnd = Random.Range (1, 4);
+				for (int nbr = 0; nbr < rnd; nbr++)
+					TestAssignResrc(Random.value, tileX, tileY, nbr);
+			}
 		}
 	}
 	
