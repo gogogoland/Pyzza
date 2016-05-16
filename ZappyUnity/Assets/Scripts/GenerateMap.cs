@@ -40,8 +40,8 @@ public class GenerateMap : MonoBehaviour {
 		Test();
 		Generate(height, width);
 		Test2();
-		if (height >= 11 && width >= 11)
-			GenerateBorder();
+//		if (height >= 11 && width >= 11)
+//			GenerateBorder();
 		Destroy(lineTmp);
 		
 	}
@@ -87,20 +87,7 @@ public class GenerateMap : MonoBehaviour {
 		nbrBorder++;
 	}
 
-	void GenerateBorder()
-	{
-		Vector3		posBorder1 = new Vector3(width * -10, 0, height * 10);
-		Vector3		posBorder2 = new Vector3(0, 0, height * 10);
-		Vector3		posBorder3 = new Vector3(width * 10, 0, height * 10);
-		Vector3		posBorder4 = new Vector3(width * -10, 0, 0);
-		Vector3		posBorder5 = new Vector3(width * 10, 0, 0);
 
-		Border(posBorder1, width - 8, height - 11, width, height);
-		Border(posBorder2, 0, height - 11, width, height);
-		Border(posBorder3, 0, height - 11, 8, height);
-		Border(posBorder4, width - 8, 0, width, height);
-		Border(posBorder5, 0, 0, 8, height);
-	}
 	
 	int		TestRessourcesRandom() {
 		float rnd = Random.value;

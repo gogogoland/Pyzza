@@ -78,7 +78,6 @@
 -define:UNITY_EDITOR_OSX
 'Assets/Scripts/Client.cs'
 'Assets/Scripts/GenerateMap.cs'
-'Assets/Scripts/GenerateMap2.cs'
 'Assets/Scripts/Menu.cs'
 'Assets/Scripts/MoveCamera.cs'
 'Assets/Scripts/RefreshBorderMap.cs'
