@@ -58,7 +58,7 @@ public class GenerateMap : MonoBehaviour {
 			lines[z].name = "Lines (" + z + ")";
 		}
 	}
-
+/*
 	void	Border(Vector3 position, int initX, int initZ, int limitX, int limitZ)
 	{
 		border[nbrBorder] = new GameObject("Border" + nbrBorder);
@@ -86,7 +86,7 @@ public class GenerateMap : MonoBehaviour {
 		}
 		nbrBorder++;
 	}
-
+*/
 
 	
 	int		TestRessourcesRandom() {
