@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/12 18:45:27 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/16 14:41:56 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,8 @@ void		player_fork(t_fds *fsd, t_server *srv, t_gfx *gfx, char *cmd);
 void		client_zero(t_client *clt, t_fds *fsd);
 void		client_kill(t_client *clt, t_fds *fsd);
 
-t_gfx		*graphe_init(t_gfx *prev, t_fds *fds, int s);
+t_gfx		*graphe_init(void);
+t_gfx		*graphe_news(t_gfx *prev, t_fds *fds, int s);
 void		graphe_kill(t_gfx *gfx, t_fds *fsd, bool gfxtoclt);
 
 void	    init_map(t_server *srv);
