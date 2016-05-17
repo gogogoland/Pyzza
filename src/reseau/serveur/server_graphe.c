@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 15:04:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/16 14:53:27 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/17 14:49:11 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ void		graphe_kill(t_gfx *gfx, t_fds *fds, bool gfxtoclt)
 		gfx->prev->next = gfx->next;
 	if (gfx->next)
 		gfx->next->prev = gfx->prev;
-	//gfx->prev = NULL;
-	//gfx->next = NULL;
+	gfx->prev = NULL;
+	gfx->next = NULL;
 	free(gfx);
 	gfx = next;
 }

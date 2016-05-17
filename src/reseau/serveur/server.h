@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/16 14:41:56 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/17 17:41:33 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,18 @@ typedef char bool;
 # define false 0
 
 # include "libft.h"
-# include <stdio.h>
-# include <unistd.h>
-# include <sys/socket.h>
-# include <sys/types.h>
-# include <sys/dir.h>
-# include <sys/stat.h>
+
+# include <arpa/inet.h>
+# include <fcntl.h>
 # include <netdb.h>
 # include <netinet/in.h>
-# include <fcntl.h>
-# include <arpa/inet.h>
+# include <stdio.h>
+# include <sys/dir.h>
+# include <sys/socket.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <time.h>
+# include <unistd.h>
 
 typedef struct sockaddr_in  t_sokadr_in;
 typedef struct sockaddr     t_sokadr;
@@ -77,7 +79,8 @@ typedef struct			s_client
 	bool				fork;
 	int					*rsc;
 	int					lvl;
-	int					vie;
+	float				health;
+	float				time;
 	struct s_ring		*ring;
 	struct s_client		*next;
 	struct s_client		*prev;
@@ -116,15 +119,14 @@ void	    init_map(t_server *srv);
 void	    kill_map(t_server *srv);
 
 t_server	*server_create(int argc, char **argv);
+void		server_log(const char *msg);
 
 bool		recv_client(t_fds *fds, t_server *srv, int ret);
-bool		send_client(t_fds *fds, t_server *srv, int ret);
+void		send_client(t_fds *fds, t_server *srv, float tom);
 void		send_client_data(t_client *clt);
 void		send_graphe_action(t_server *srv, t_client *clt, int n);
 
 void		command_forward(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
-void		command_death(t_fds *fds, t_server *srv,
 							t_client *clt, char *cmd);
 void		command_eject(t_fds *fds, t_server *srv,
 							t_client *clt, char *cmd);
@@ -145,6 +147,12 @@ void		command_right(t_fds *fds, t_server *srv,
 void		command_seek(t_fds *fds, t_server *srv,
 							t_client *clt, char *cmd);
 void		command_take(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_incant(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_fork(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_nbr_co(t_fds *fds, t_server *srv,
 							t_client *clt, char *cmd);
 
 void		command_graphe(t_fds *fds, t_server *srv,

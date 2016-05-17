@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/16 14:50:06 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/17 17:43:35 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static const char	*mcl[] =
 {
-		"Client from ip %s , port %d disconnect.\n",
+		"Player client from ip %s , port %d has disconnected.\n",
 		"Reached client limit's.\n",
 		"Player from ip %s, port %d tried to connect, but limit of %d client is\
  reached.\n",
@@ -25,16 +25,28 @@ t_client	*client_init(void)
 {
 	t_client	*clt;
 
-	if (!(clt = (t_client *)malloc(sizeof(t_client))))
+	if (!(clt = (t_client *)malloc(sizeof(t_client)))
+		|| !(clt->pos.rsc = (int *)malloc(8 * sizeof(int)))
+		||	!(clt->ring = ring_init(10)))
+	{
+		clt != NULL && clt->ring != NULL ? free(clt->ring) : NULL;
+		clt != NULL && clt->pos.rsc != NULL ? free(clt->pos.rsc) : NULL;
+		clt != NULL ? free(clt) : NULL;
 		return (clt);
-	clt->socket = 0;
+	}
+	clt->socket = 8;
+	clt->pos.rsc[clt->socket - 1] = -1;
+	while (--clt->socket > 0)
+		clt->pos.rsc[clt->socket - 1] = 0;
 	clt->len = sizeof(struct sockaddr_in);
-	clt->ring = ring_init(10);
 	clt->next = NULL;
 	clt->pos.x = 0;
 	clt->pos.y = 0;
 	clt->sens = 0;
 	clt->team = 0;
+	clt->lvl = 1;
+	clt->time = 0.0f;
+	clt->health = 1260.0f;
 	return (clt);
 }
 
@@ -45,11 +57,17 @@ void		client_kill(t_client *clt, t_fds *fds)
 	FD_CLR(clt->socket, &fds->ex);
 	ring_kill(clt->ring);
 	close(clt->socket);
-	clt->socket = 0;
+	clt->socket = 9;
+	while (--clt->socket > 0)
+		clt->pos.rsc[clt->socket - 1] = 0;
+	free(clt->pos.rsc);
 	clt->pos.x = 0;
 	clt->pos.y = 0;
 	clt->sens = 0;
 	clt->team = 0;
+	clt->lvl = 0;
+	clt->time = 0;
+	clt->health = 0;
 	free(clt);
 	clt = NULL;
 }
@@ -58,17 +76,25 @@ void		client_zero(t_client *clt, t_fds *fds)
 {
 	getpeername(clt->socket, (struct sockaddr*)&clt->sin, \
 			(socklen_t*)&clt->len);
-	printf(mcl[0], inet_ntoa(clt->sin.sin_addr) , ntohs(clt->sin.sin_port));
-	FD_CLR(clt->socket, &fds->rd);
-	FD_CLR(clt->socket, &fds->wr);
-	FD_CLR(clt->socket, &fds->ex);
+	printf(mcl[0], inet_ntoa(clt->sin.sin_addr), ntohs(clt->sin.sin_port));
+	if (fds)
+	{
+		FD_CLR(clt->socket, &fds->rd);
+		FD_CLR(clt->socket, &fds->wr);
+		FD_CLR(clt->socket, &fds->ex);
+	}
 	ring_zero(clt->ring);
 	close(clt->socket);
-	clt->socket = 0;
+	clt->socket = 8;
+	while (--clt->socket > 0)
+		clt->pos.rsc[clt->socket - 1] = 0;
 	clt->pos.x = 0;
 	clt->pos.y = 0;
 	clt->sens = 0;
+	clt->lvl = 1;
 	clt->team = 0;
+	clt->time = 0;
+	clt->health = 0;
 }
 
 //	TODO
@@ -77,7 +103,7 @@ void		player_fork(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 {
 	t_client	*new;
 
-	if (strncmp(cmd, "client", 6) != 0)
+	if (strncmp(cmd, "client", 6) != 0 || gfx->isgfx)
 		return ;
 	new = srv->clt;
 	while (new && new->socket != 0)

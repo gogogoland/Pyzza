@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/16 14:50:47 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/16 15:16:03 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static const char			*error[] =
 
 static t_server	*return_msg(const char *msg, int ret, t_server *srv)
 {
-	ft_putendl(msg);
+	server_log(msg);
 	srv->socket = ret;
 	return (srv);
 }
@@ -81,7 +81,7 @@ static int		get_data(t_server *srv, int state, char *arg, int isdone)
 		p = 0;
 	if (e == 0)
 		return (p);
-	ft_putendl(error[e]);
+	server_log(error[e]);
 	return (0);
 }
 
@@ -102,12 +102,12 @@ static t_server	*check_data(t_server *srv, int isdone)
 	while (isdone > 0)
 	{
 		if (isdone % 10 == 0)
-			ft_putendl(error[e]);
+			server_log(error[e]);
 		isdone /= 10;
 		e++;
 	}
 	while (++e < 12)
-		ft_putendl(error[e + 11]);
+		server_log(error[e + 11]);
 	return (srv);
 }
 
@@ -149,7 +149,7 @@ static t_server	*server_init_data(int argc, char **argv)
 	if (!(tcp_str = (char *)malloc(4 * sizeof(char))))
 		return (NULL);
 	tcp_str = "tcp\0";
-	ft_putendl(tcp_str);
+	server_log(tcp_str);
 	return (tcp_str);
 }*/
 
