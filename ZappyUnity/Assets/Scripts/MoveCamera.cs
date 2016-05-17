@@ -7,6 +7,7 @@ public class MoveCamera : MonoBehaviour {
 	public float		speedRot;
 	public GameObject	cameraBorder;
 	public GameObject	[]cloneBorderCamera;
+	public GameObject	select;
 
 	private GenerateMap	scriptmap;
 	private float		tile_x;
@@ -15,7 +16,7 @@ public class MoveCamera : MonoBehaviour {
 	private int			height;
 	private Vector3		[]PosCameras;
 	private GameObject	orientationCam;
-	
+
 	void	CenterCamera() {
 		float x = (width * scriptmap.tile.transform.localScale.x * 10 / 2 ) - (scriptmap.tile.transform.localScale.x * 10 / 2);
 		transform.position = new Vector3(x, transform.position.y, transform.position.z);
@@ -88,6 +89,7 @@ public class MoveCamera : MonoBehaviour {
 		{
 			cloneBorderCamera[cam] = GameObject.Instantiate(cameraBorder, PosCameras[cam], Quaternion.Euler(rotate)) as GameObject;
 			cloneBorderCamera[cam].transform.SetParent(this.transform);
+			cloneBorderCamera[cam].GetComponent<SelectTile>().select = select;
 			if (cam > 0)
 				cloneBorderCamera[cam].GetComponent<AudioListener>().enabled = false;
 			switch (cam)

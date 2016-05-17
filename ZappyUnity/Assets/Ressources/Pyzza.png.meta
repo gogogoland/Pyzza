@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 226148b6996964fb48714e49cf8d6b5f
-timeCreated: 1462799613
+timeCreated: 1463514739
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -134,50 +134,50 @@ TextureImporter:
         serializedVersion: 2
         x: 9
         y: 969
-        width: 54
-        height: 54
+        width: 44
+        height: 55
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_1
       rect:
         serializedVersion: 2
         x: 64
         y: 969
-        width: 54
-        height: 54
+        width: 45
+        height: 55
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_2
       rect:
         serializedVersion: 2
         x: 121
         y: 968
-        width: 54
-        height: 54
+        width: 49
+        height: 56
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_3
       rect:
         serializedVersion: 2
         x: 183
         y: 969
-        width: 54
-        height: 54
+        width: 52
+        height: 55
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_4
       rect:
         serializedVersion: 2
         x: 246
         y: 969
-        width: 54
-        height: 54
+        width: 53
+        height: 55
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_5
       rect:
@@ -187,7 +187,7 @@ TextureImporter:
         width: 54
         height: 54
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_6
       rect:
@@ -197,7 +197,7 @@ TextureImporter:
         width: 76
         height: 118
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_7
       rect:
@@ -207,7 +207,7 @@ TextureImporter:
         width: 140
         height: 140
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_8
       rect:
@@ -217,7 +217,7 @@ TextureImporter:
         width: 140
         height: 140
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_9
       rect:
@@ -227,67 +227,67 @@ TextureImporter:
         width: 140
         height: 140
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_10
       rect:
         serializedVersion: 2
-        x: 6
+        x: 9
         y: 895
-        width: 54
-        height: 54
-      alignment: 9
-      pivot: {x: .47274363, y: .445485443}
+        width: 44
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_11
       rect:
         serializedVersion: 2
         x: 64
-        y: 894
-        width: 54
-        height: 54
+        y: 895
+        width: 45
+        height: 53
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_12
       rect:
         serializedVersion: 2
         x: 121
-        y: 894
-        width: 54
-        height: 54
+        y: 895
+        width: 49
+        height: 53
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_13
       rect:
         serializedVersion: 2
         x: 183
-        y: 894
-        width: 54
-        height: 54
+        y: 895
+        width: 52
+        height: 52
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_14
       rect:
         serializedVersion: 2
         x: 246
-        y: 894
-        width: 54
-        height: 54
+        y: 895
+        width: 53
+        height: 53
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_15
       rect:
         serializedVersion: 2
         x: 312
-        y: 894
+        y: 896
         width: 54
-        height: 54
+        height: 51
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_16
       rect:
@@ -297,7 +297,7 @@ TextureImporter:
         width: 53
         height: 62
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_17
       rect:
@@ -307,7 +307,7 @@ TextureImporter:
         width: 60
         height: 56
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_18
       rect:
@@ -317,7 +317,7 @@ TextureImporter:
         width: 73
         height: 64
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_19
       rect:
@@ -327,7 +327,7 @@ TextureImporter:
         width: 76
         height: 65
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_20
       rect:
@@ -337,7 +337,7 @@ TextureImporter:
         width: 66
         height: 50
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_21
       rect:
@@ -347,7 +347,7 @@ TextureImporter:
         width: 65
         height: 71
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_22
       rect:
@@ -357,7 +357,7 @@ TextureImporter:
         width: 55
         height: 51
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_23
       rect:
@@ -367,7 +367,7 @@ TextureImporter:
         width: 52
         height: 57
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_24
       rect:
@@ -377,7 +377,7 @@ TextureImporter:
         width: 64
         height: 70
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_25
       rect:
@@ -387,7 +387,7 @@ TextureImporter:
         width: 67
         height: 75
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_26
       rect:
@@ -397,7 +397,7 @@ TextureImporter:
         width: 65
         height: 49
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_27
       rect:
@@ -407,7 +407,7 @@ TextureImporter:
         width: 63
         height: 48
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_28
       rect:
@@ -417,7 +417,7 @@ TextureImporter:
         width: 44
         height: 55
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_29
       rect:
@@ -427,7 +427,7 @@ TextureImporter:
         width: 43
         height: 53
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_30
       rect:
@@ -437,7 +437,7 @@ TextureImporter:
         width: 77
         height: 65
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_31
       rect:
@@ -447,7 +447,7 @@ TextureImporter:
         width: 79
         height: 64
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_32
       rect:
@@ -457,7 +457,7 @@ TextureImporter:
         width: 68
         height: 52
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_33
       rect:
@@ -467,7 +467,7 @@ TextureImporter:
         width: 59
         height: 55
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_34
       rect:
@@ -477,7 +477,7 @@ TextureImporter:
         width: 45
         height: 52
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_35
       rect:
@@ -487,7 +487,7 @@ TextureImporter:
         width: 45
         height: 51
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_36
       rect:
@@ -497,7 +497,7 @@ TextureImporter:
         width: 68
         height: 69
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_37
       rect:
@@ -507,7 +507,7 @@ TextureImporter:
         width: 67
         height: 68
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_38
       rect:
@@ -517,7 +517,7 @@ TextureImporter:
         width: 66
         height: 53
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_39
       rect:
@@ -527,7 +527,7 @@ TextureImporter:
         width: 60
         height: 50
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_40
       rect:
@@ -537,7 +537,7 @@ TextureImporter:
         width: 10
         height: 48
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_41
       rect:
@@ -547,7 +547,7 @@ TextureImporter:
         width: 5
         height: 33
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_42
       rect:
@@ -557,7 +557,7 @@ TextureImporter:
         width: 10
         height: 22
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_43
       rect:
@@ -567,7 +567,7 @@ TextureImporter:
         width: 32
         height: 112
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_44
       rect:
@@ -577,7 +577,7 @@ TextureImporter:
         width: 32
         height: 114
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_45
       rect:
@@ -587,7 +587,7 @@ TextureImporter:
         width: 17
         height: 92
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_46
       rect:
@@ -597,7 +597,7 @@ TextureImporter:
         width: 9
         height: 60
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_47
       rect:
@@ -607,7 +607,7 @@ TextureImporter:
         width: 7
         height: 42
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_48
       rect:
@@ -617,7 +617,7 @@ TextureImporter:
         width: 52
         height: 51
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_49
       rect:
@@ -627,7 +627,7 @@ TextureImporter:
         width: 51
         height: 51
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_50
       rect:
@@ -637,7 +637,7 @@ TextureImporter:
         width: 77
         height: 52
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_51
       rect:
@@ -647,7 +647,7 @@ TextureImporter:
         width: 44
         height: 54
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_52
       rect:
@@ -657,7 +657,7 @@ TextureImporter:
         width: 42
         height: 56
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_53
       rect:
@@ -667,7 +667,7 @@ TextureImporter:
         width: 60
         height: 64
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_54
       rect:
@@ -677,7 +677,7 @@ TextureImporter:
         width: 50
         height: 84
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_55
       rect:
@@ -687,7 +687,7 @@ TextureImporter:
         width: 50
         height: 84
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_56
       rect:
@@ -697,7 +697,7 @@ TextureImporter:
         width: 50
         height: 84
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_57
       rect:
@@ -707,7 +707,7 @@ TextureImporter:
         width: 50
         height: 84
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_58
       rect:
@@ -717,7 +717,7 @@ TextureImporter:
         width: 50
         height: 84
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_59
       rect:
@@ -727,15 +727,15 @@ TextureImporter:
         width: 50
         height: 84
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_60
       rect:
         serializedVersion: 2
-        x: 8
-        y: 104
-        width: 18
-        height: 16
+        x: 10
+        y: 99
+        width: 21
+        height: 18
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -747,7 +747,7 @@ TextureImporter:
         width: 28
         height: 30
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_62
       rect:
@@ -757,7 +757,7 @@ TextureImporter:
         width: 28
         height: 30
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_63
       rect:
@@ -767,7 +767,7 @@ TextureImporter:
         width: 28
         height: 30
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_64
       rect:
@@ -777,7 +777,7 @@ TextureImporter:
         width: 28
         height: 30
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_65
       rect:
@@ -787,7 +787,7 @@ TextureImporter:
         width: 28
         height: 30
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pyzza_66
       rect:
@@ -797,127 +797,7 @@ TextureImporter:
         width: 28
         height: 30
       alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_67
-      rect:
-        serializedVersion: 2
-        x: 38
-        y: 104
-        width: 18
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_68
-      rect:
-        serializedVersion: 2
-        x: 68
-        y: 104
-        width: 18
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_69
-      rect:
-        serializedVersion: 2
-        x: 98
-        y: 104
-        width: 18
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_70
-      rect:
-        serializedVersion: 2
-        x: 127
-        y: 104
-        width: 18
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_71
-      rect:
-        serializedVersion: 2
-        x: 157
-        y: 104
-        width: 18
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_72
-      rect:
-        serializedVersion: 2
-        x: 188
-        y: 104
-        width: 18
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_73
-      rect:
-        serializedVersion: 2
-        x: 218
-        y: 104
-        width: 18
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_74
-      rect:
-        serializedVersion: 2
-        x: 248
-        y: 104
-        width: 18
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_75
-      rect:
-        serializedVersion: 2
-        x: 333
-        y: 105
-        width: 27
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_76
-      rect:
-        serializedVersion: 2
-        x: 277
-        y: 104
-        width: 18
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_77
-      rect:
-        serializedVersion: 2
-        x: 307
-        y: 105
-        width: 18
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Pyzza_78
-      rect:
-        serializedVersion: 2
-        x: 363
-        y: 105
-        width: 27
-        height: 16
-      alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
