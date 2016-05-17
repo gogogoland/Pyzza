@@ -22,26 +22,25 @@ public class GenerateMap : MonoBehaviour {
 	public Sprite				[]ressources_sprite;
 	public Material				[]materials;
 	public GameObject			[,]tiles;
+	public List<s_resrc>		structResrc;
 
 	private Material			[,]variant_materials;
 	private GameObject			[,]variant_ressources;
-	private List<s_resrc>		structResrc;
+
 	private GameObject			map;
 	private GameObject			[]border;
 	private GameObject			lineTmp;
 	private GameObject			[]lines;
-	
 	private int					nbrBorder = 0;
 	
 	// Use this for initialization
 	void Start ()
 	{
+		structResrc = new List<s_resrc>();
 		InitMap();
 		Test();
 		Generate(height, width);
 		Test2();
-//		if (height >= 11 && width >= 11)
-//			GenerateBorder();
 		Destroy(lineTmp);
 		
 	}
@@ -58,37 +57,7 @@ public class GenerateMap : MonoBehaviour {
 			lines[z].name = "Lines (" + z + ")";
 		}
 	}
-/*
-	void	Border(Vector3 position, int initX, int initZ, int limitX, int limitZ)
-	{
-		border[nbrBorder] = new GameObject("Border" + nbrBorder);
-		border[nbrBorder].transform.position = position;
-		border[nbrBorder].AddComponent<RefreshBorderMap>();
-		RefreshBorderMap scriptBorder = border[nbrBorder].GetComponent<RefreshBorderMap>();
-		scriptBorder.columnMax = limitZ;
-		scriptBorder.columnMin = initZ;
-		scriptBorder.lineMax = limitX;
-		scriptBorder.lineMin = initX;
-		for (int z = initZ; z < limitZ; z++)
-		{
-			GameObject lineCpy = GameObject.Instantiate(lineTmp, border[nbrBorder].transform.position, Quaternion.identity) as GameObject;
-			lineCpy.transform.parent = border[nbrBorder].transform;
-			lineCpy.name = "Lines (" + z + ")";
-			for (int x = initX; x < limitX; x++)
-			{
-				GameObject tile_current = map.transform.GetChild (z).transform.GetChild(x).gameObject;
-				GameObject tile_clone = GameObject.Instantiate(tile_current,
-				                                               tile_current.transform.localPosition + border[nbrBorder].transform.position,
-				                                               Quaternion.identity) as GameObject;
-				tile_clone.name = "Tile(" + z + ", " + x + ")";
-				tile_clone.transform.parent = lineCpy.transform;
-			}
-		}
-		nbrBorder++;
-	}
-*/
 
-	
 	int		TestRessourcesRandom() {
 		float rnd = Random.value;
 		
@@ -197,35 +166,6 @@ public class GenerateMap : MonoBehaviour {
 			if (rd != -1)
 				AddStructResrc(tileX, tileY, rd, nbr);
 		}
-//		if (rnd < 0.15f)
-//		{
-//			rd = 0;
-//			vec.x = tileX * tile.transform.localScale.x * 10;
-//			vec.y = food_obj.transform.position.y;
-//			vec.z = -tileY * tile.transform.localScale.z * 10;
-//			AddStructResrc(tileX, tileY, rd);
-//			if (variant_ressources[tileY, tileX] == null) {
-//				variant_ressources[tileY, tileX] = GameObject.Instantiate(food_obj, vec, food_obj.transform.rotation) as GameObject;
-//				variant_ressources[tileY, tileX].transform.parent = tiles[tileY, tileX] .transform;
-//				variant_ressources[tileY, tileX].GetComponent<SpriteRenderer>().sprite = ressources_sprite[rd];
-//			}
-//		}
-//		else if (rnd < 0.50f) {
-//			vec.x = tileX * tile.transform.localScale.x * 10;
-//			vec.y = ressources_obj.transform.position.y;
-//			vec.z = -tileY * tile.transform.localScale.z * 10;
-//			rd = TestRessourcesRandom();
-//			AddStructResrc(tileX, tileY, rd);
-//			if (rd != -1 && variant_ressources[tileY, tileX] == null)
-//			{
-//				variant_ressources[tileY, tileX] = GameObject.Instantiate(ressources_obj, vec, ressources_obj.transform.rotation) as GameObject;
-//				variant_ressources[tileY, tileX].transform.parent = tiles[tileY, tileX].transform;
-//				variant_ressources[tileY, tileX].GetComponent<SpriteRenderer>().sprite = ressources_sprite[rd];
-//
-//			}
-//		}
-//		if (rd != -1 && variant_ressources[tileY, tileX] != null)
-//			RepositioningResrc(variant_ressources[tileY, tileX], rd);
 	}
 	
 	void	TestAssignTile(float rnd, int tileX, int tileY) {
@@ -252,7 +192,7 @@ public class GenerateMap : MonoBehaviour {
 	
 	void	Test2() {
 		variant_ressources = new GameObject[height, width];
-		structResrc = new List<s_resrc>();
+
 		
 		Random.seed = seed;
 		for (int tileX = 0; tileX < width; tileX++)
@@ -287,6 +227,6 @@ public class GenerateMap : MonoBehaviour {
 	// Update is called once per frame
 	void	Update ()
 	{
-		
+
 	}
 }
