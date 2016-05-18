@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:50:09 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/13 14:48:53 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/18 19:06:45 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,20 +67,19 @@ void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	msg = msg_contain(cmd);
 	while (cur)
 	{
-		if (!cur->socket || cur->socket == clt->socket)
+		if (cur->socket && cur->socket != clt->socket)
 		{
-			cur = cur->next;
-			continue ;
+			min = command_msg_min(srv, clt, cur);
+			p.x = cur->pos.x - clt->pos.x < 0 ? 0 : 2;
+			p.y = cur->pos.y - clt->pos.y < 0 ? 0 : 2;
+			p.x = (min.x + (cur->pos.x == clt->pos.x ? 1 : p.x)) % 3;
+			p.y = (min.y + (cur->pos.y == clt->pos.y ? 1 : p.y)) % 3;
+			pos = msg_from(p.y * 3 + p.x, cmd);
+			send(cur->socket, pos, strlen(pos), 0);
+			ft_memdel((void **)&pos);
 		}
-		min = command_msg_min(srv, clt, cur);
-		p.x = cur->pos.x - clt->pos.x < 0 ? 0 : 2;
-		p.y = cur->pos.y - clt->pos.y < 0 ? 0 : 2;
-		p.x = (min.x + (cur->pos.x == clt->pos.x ? 1 : p.x)) % 3;
-		p.y = (min.y + (cur->pos.y == clt->pos.y ? 1 : p.y)) % 3;
-		pos = msg_from(p.y * 3 + p.x, cmd);
-		send(cur->socket, pos, strlen(pos), 0);
-		ft_memdel((void **)&pos);
 		cur = cur->next;
 	}
+	send_client_action(clt, true);
 	send_graphe_action(srv, clt, 0);
 }

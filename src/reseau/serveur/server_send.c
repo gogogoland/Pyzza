@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/17 17:44:23 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/18 19:05:48 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,10 @@ static const ex_clt tfc[] =
 	command_pose,
 	command_eject,
 	command_msg,
-	command_msg,
-	command_msg,
-	command_msg
-	//command_incant,
-	//command_fork,
-	//command_nbr_co
+	command_incant,
+	command_fork,
+	command_nbr_co,
+	command_death
 };
 
 static const char	*gfx_cmd[] =
@@ -81,21 +79,22 @@ static const float	cmd_time[] =
 	0.0f
 };
 
-//TODO
-//Kill player
-static void	time_lapse(int n, t_client *clt, float tim, t_server *srv)
+static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 {
+	int	action;
+
 	if (!clt)
-		return ;
-	if ((clt->time = (12 > n && n > -1) ?
+		return (0);
+	action = 0;
+	if (clt->time == 0.0f)
+		clt->action = n < 12 ? n + 1 : 0;
+	if (!clt->action && (clt->time = (12 > n && n > -1) ?
 			cmd_time[n] * (1.0f / (float)srv->time) : clt->time - tim) < 0.0f)
 		clt->time = 0.0f;
+	action = (clt->time == 0.0f) ? clt->action : 0;
 	if ((clt->health -= tim) <= 0.0f)
-	{
-		send_client_data(clt);
-		send_graphe_action(srv, clt, 0);
-		client_zero(clt, NULL);
-	}
+		return (13);
+	return (action);
 }
 
 void		send_client(t_fds *fds, t_server *srv, float tim)
@@ -106,30 +105,31 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 	t_client	*clt;
 
 	cmd = NULL;
-	while (tim > 0.0f && --fds->max > 0 && (n = -1) == -1)
+	while (tim >= 0.0f && --fds->max > 0 && (n = -1) == -1)
 	{
-		if (!(clt = srv->clt) && !FD_ISSET(fds->max, & fds->wr))
+		if (!(clt = srv->clt) && !FD_ISSET(fds->max, &fds->wr))
 			continue ;
 		while (clt != NULL && clt->socket != fds->max)
 			clt = clt->next;
 		gfx = srv->gfx;
 		while (gfx != NULL && gfx->socket != fds->max)
 			gfx = gfx->next;
-		if ((clt && clt->ring && !clt->time) || (!clt && gfx && gfx->ring))
+		if ((clt && clt->time == 0.0f) || (!clt && gfx))
 			cmd = (!clt ? ring_send(gfx->ring) : ring_send(clt->ring));
 		while (cmd && ++n < (!clt ? 3 : 12) && strncmp(cmd, (!clt ? gfx_cmd[n]\
 				: clt_cmd[n]), strlen(!clt ? gfx_cmd[n] : clt_cmd[n])) != 0)
 			;
-		if (0 <= n && (!clt ? n < 3 : n < 12))
-			!clt ? tfg[n](fds, srv, gfx, cmd) : tfc[n](fds, srv, clt, cmd);
-		time_lapse(n, clt, tim, srv);
+		(!clt && 0 <= n && n < 3) ? tfg[n](fds, srv, gfx, cmd) : NULL;
+		if ((n = time_lapse(n, clt, tim, srv)) > 0)
+			tfc[n - 1](fds, srv, clt, cmd);
 		ft_memdel((void **)&cmd);
 	}
 }
 
-void		send_client_data(t_client *clt)
+void		send_client_action(t_client *clt, bool ok)
 {
-	send(clt->socket, "Ok\n", 3, 0);
+	if (clt && clt->socket)
+		send(clt->socket, ok ? "ok\n" : "ko\n", 3, 0);
 }
 
 void		send_graphe_action(t_server *srv, t_client *clt, int n)

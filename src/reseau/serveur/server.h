@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/17 17:41:33 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/18 19:13:48 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,9 @@ typedef struct			s_client
 	bool				fork;
 	int					*rsc;
 	int					lvl;
-	float				health;
+	int					action;
 	float				time;
+	float				health;
 	struct s_ring		*ring;
 	struct s_client		*next;
 	struct s_client		*prev;
@@ -123,7 +124,7 @@ void		server_log(const char *msg);
 
 bool		recv_client(t_fds *fds, t_server *srv, int ret);
 void		send_client(t_fds *fds, t_server *srv, float tom);
-void		send_client_data(t_client *clt);
+void		send_client_action(t_client *clt, bool ok);
 void		send_graphe_action(t_server *srv, t_client *clt, int n);
 
 void		command_forward(t_fds *fds, t_server *srv,
@@ -153,6 +154,8 @@ void		command_incant(t_fds *fds, t_server *srv,
 void		command_fork(t_fds *fds, t_server *srv,
 							t_client *clt, char *cmd);
 void		command_nbr_co(t_fds *fds, t_server *srv,
+							t_client *clt, char *cmd);
+void		command_death(t_fds *fds, t_server *srv,
 							t_client *clt, char *cmd);
 
 void		command_graphe(t_fds *fds, t_server *srv,

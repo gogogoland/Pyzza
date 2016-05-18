@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:14:43 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/13 14:42:37 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/18 18:58:44 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,5 @@ void	command_forward(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	clt->pos.x += mv.x;
 	clt->pos.y += mv.y;
 	send_graphe_action(srv, clt, 0);
+	send_client_action(clt, true);
 }

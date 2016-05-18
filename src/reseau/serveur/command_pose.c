@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 15:18:57 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/13 14:46:22 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/18 19:09:25 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,11 @@ void	command_pose(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	int		i;
 	int		rsc;
+	bool	ook;
 	char	**tab;
 
 	i = 0;
+	ook = false;
 	tab = ft_strsplit(cmd, ' ');
 	while (tab && tab[++i])
 	{
@@ -38,9 +40,11 @@ void	command_pose(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 			rsc++;
 		if (rsc == 7 || clt->pos.rsc[rsc] == 0)
 			continue ;
+		ook = true;
 		srv->map[clt->pos.x][clt->pos.y][rsc] = clt->pos.rsc[rsc];
 		clt->pos.rsc[rsc] = 0;
 		send_graphe_action(srv, clt, 0);
 	}
+	send_client_action(clt, ook);
 	ft_tabdel(tab);
 }

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/17 17:43:35 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/18 15:25:56 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,18 @@ static const char	*mcl[] =
  reached.\n",
 		"New player from ip %s, port %d.\n"
 };
+
+static void	client_init_data(t_client *clt)
+{
+	clt->action = 0;
+	clt->pos.x = 0;
+	clt->pos.y = 0;
+	clt->sens = 0;
+	clt->team = 0;
+	clt->lvl = 1;
+	clt->time = 0.0f;
+	clt->health = 0.0f;
+}
 
 t_client	*client_init(void)
 {
@@ -40,13 +52,7 @@ t_client	*client_init(void)
 		clt->pos.rsc[clt->socket - 1] = 0;
 	clt->len = sizeof(struct sockaddr_in);
 	clt->next = NULL;
-	clt->pos.x = 0;
-	clt->pos.y = 0;
-	clt->sens = 0;
-	clt->team = 0;
-	clt->lvl = 1;
-	clt->time = 0.0f;
-	clt->health = 1260.0f;
+	client_init_data(clt);
 	return (clt);
 }
 
@@ -61,13 +67,8 @@ void		client_kill(t_client *clt, t_fds *fds)
 	while (--clt->socket > 0)
 		clt->pos.rsc[clt->socket - 1] = 0;
 	free(clt->pos.rsc);
-	clt->pos.x = 0;
-	clt->pos.y = 0;
-	clt->sens = 0;
-	clt->team = 0;
+	client_init_data(clt);
 	clt->lvl = 0;
-	clt->time = 0;
-	clt->health = 0;
 	free(clt);
 	clt = NULL;
 }
@@ -88,13 +89,7 @@ void		client_zero(t_client *clt, t_fds *fds)
 	clt->socket = 8;
 	while (--clt->socket > 0)
 		clt->pos.rsc[clt->socket - 1] = 0;
-	clt->pos.x = 0;
-	clt->pos.y = 0;
-	clt->sens = 0;
-	clt->lvl = 1;
-	clt->team = 0;
-	clt->time = 0;
-	clt->health = 0;
+	client_init_data(clt);
 }
 
 //	TODO
@@ -116,9 +111,11 @@ void		player_fork(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	}
 	else
 	{
+		client_init_data(new);
 		new->socket = gfx->socket;
 		new->sin = gfx->sin;
 		new->len = gfx->len;
+		new->health = 1260.0f / (float)srv->time;
 		printf(mcl[3], inet_ntoa(new->sin.sin_addr) , ntohs(new->sin.sin_port));
 		fds->max = new->socket > fds->max-1 ? new->socket+1 : fds->max;
 		graphe_kill(gfx, fds, true);

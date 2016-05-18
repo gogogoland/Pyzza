@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/05/16 15:18:52 by tbalea           ###   ########.fr        #
+#    Updated: 2016/05/18 19:14:35 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,6 +63,9 @@ SRC = ft_atoi.c\
 	  command_right.c\
 	  command_seek.c\
 	  command_take.c\
+	  command_fork.c\
+	  command_incant.c\
+	  command_nbr_co.c\
 	  command_graphe.c\
 	  command_map.c
 

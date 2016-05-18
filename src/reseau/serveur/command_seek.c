@@ -6,27 +6,30 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/10 17:52:41 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/18 18:14:14 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static char	*command_seek_transfer(char *wt, char *arg, int n)
+static char	*command_seek_transfer(char *wt, int n, char *arg)
 {
-	bool	i;
+	bool	new;
 	char	*ret;
 
+	new = false;
 	if (!arg)
 		arg = ft_itoa(n);
+	else
+		new = !new;
 	ret = ft_strcjoin(wt, arg, ' ');
 	ft_memdel((void **)&wt);
-	if (i)
+	if (!new)
 		ft_memdel((void **)&arg);
 	return (ret);
 }
 
-static char	*command_seek_add(t_server *srv, t_coord pos, int n, char *wt)
+static char	*command_seek_add(t_server *srv, t_coord pos, int s, char *wt)
 {
 	int			i;
 	char		*arg;
@@ -34,31 +37,35 @@ static char	*command_seek_add(t_server *srv, t_coord pos, int n, char *wt)
 
 	i = -1;
 	if (wt)
-		wt = command_seek_transfer(wt, "| ", 0);
-	wt = command_seek_transfer(wt, NULL, n);
+		wt = command_seek_transfer(wt, 0, "| ");
 	while (++i < 7)
 	{
 		clt = srv->clt;
-		wt = command_seek_transfer(wt, NULL, srv->map[pos.y][pos.x][i]);
-		while (clt)
+		wt = command_seek_transfer(wt, srv->map[pos.y][pos.x][i], NULL);
+	}
+	while (clt)
+	{
+		if (clt->socket && clt->socket != s
+			&& clt->pos.x == pos.x && clt->pos.y == pos.y)
 		{
-			if (clt->socket && clt->pos.x == pos.x && clt->pos.y == pos.y)
-			{
-				wt = command_seek_transfer(wt, NULL, clt->socket);
-				wt = command_seek_transfer(wt, NULL, clt->team);
-			}
-			clt = clt->next;
+			wt = command_seek_transfer(wt, clt->socket, NULL);
+			wt = command_seek_transfer(wt, clt->team, NULL);
 		}
+		clt = clt->next;
 	}
 	return (wt);
 }
 
 static int	command_seek_int(int sens, int pos, t_coord see, int srv)
 {
-	int	r;
+	int		r;
+	bool	deep;
+	int		pos_neg;
 
-	r = !sens ? pos + see.x - see.y : pos + see.y * sens;
-	r = r < 0 ? r - srv : pos;
+	deep = (sens % 2) ? false : true;
+	pos_neg = (sens == 4 || !sens) ? 1 : -1;
+	r = deep ? (see.y * pos_neg) + pos : ((see.x - see.y) * pos_neg) + pos;
+	r = r < 0 ? r + srv : r;
 	r = r >= srv ? r - srv : r;
 	return (r);
 }
@@ -69,12 +76,11 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	t_coord	sens;
 	t_coord	pos;
 	char	*wt;
-	int		n;
 
 	wt = NULL;
 	see.y = -1;
-	sens.x = (clt->sens - 2) % 2;
-	sens.y = (clt->sens - 1) % 2;
+	sens.x = (clt->sens + 1) % 4;
+	sens.y = (clt->sens + 2) % 4;
 	while (++see.y <= clt->lvl)
 	{
 		see.x = -1;
@@ -82,6 +88,7 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		{
 			pos.x = command_seek_int(sens.x, clt->pos.x, see, srv->plateau.x);
 			pos.y = command_seek_int(sens.y, clt->pos.y, see, srv->plateau.y);
+			wt = command_seek_add(srv, pos, clt->socket, wt);
 		}
 	}
 	send(clt->socket, wt, strlen(wt), 0);

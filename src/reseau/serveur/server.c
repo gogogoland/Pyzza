@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/17 16:18:11 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/18 15:18:03 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int			main(int argc, char **argv)
 	float		clk;
 	t_fds		*fds;
 	int			ret;
-
+float loli;
 	fds = (t_fds *)malloc(sizeof(t_fds));
 	ret = 0;
 	if (!(srv = server_create(argc, argv)) || srv->socket < 0)
@@ -113,7 +113,7 @@ int			main(int argc, char **argv)
 		if ((ret = select(fds->max, &fds->rd, &fds->wr, &fds->ex, NULL)) < 0)
 			return (return_msg(error_msg[1], ret));
 		recv_client(fds, srv, ret);
-		clk = ret > 0 ? (float)((clock() - tim) / CLOCKS_PER_SEC) : (float)ret;
+		clk = ret > 0 ? (float)((clock() - tim) / CLOCKS_PER_SEC) : -1.0f;
 		send_client(fds, srv, clk);
 		tim = ((clock() - tim) / CLOCKS_PER_SEC) < 0.000001 ? tim : clock();
 		/*exception(fds, srv);*/
