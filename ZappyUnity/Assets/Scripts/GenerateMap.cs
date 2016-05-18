@@ -25,13 +25,10 @@ public class GenerateMap : MonoBehaviour {
 	public List<s_resrc>		structResrc;
 
 	private Material			[,]variant_materials;
-	private GameObject			[,]variant_ressources;
 
 	private GameObject			map;
-	private GameObject			[]border;
 	private GameObject			lineTmp;
 	private GameObject			[]lines;
-	private int					nbrBorder = 0;
 	
 	// Use this for initialization
 	void Start ()
@@ -50,7 +47,6 @@ public class GenerateMap : MonoBehaviour {
 		map = new GameObject("Map");
 		lineTmp = new GameObject("Lines");
 		lines = new GameObject[height];
-		border = new GameObject[5];
 		for (int z = 0; z < height; z++) {
 			lines[z] = GameObject.Instantiate(lineTmp, map.transform.position, Quaternion.identity) as GameObject;
 			lines[z].transform.parent = map.transform;
@@ -190,10 +186,7 @@ public class GenerateMap : MonoBehaviour {
 		}
 	}
 	
-	void	Test2() {
-		variant_ressources = new GameObject[height, width];
-
-		
+	void	Test2() {		
 		Random.seed = seed;
 		for (int tileX = 0; tileX < width; tileX++)
 		{
