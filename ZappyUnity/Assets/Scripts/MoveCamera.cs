@@ -60,10 +60,10 @@ public class MoveCamera : MonoBehaviour {
 			transform.position = new Vector3(width * 10 - tile_x, transform.position.y, transform.position.z);
 		if (width * 10 - tile_x < transform.position.x)
 			transform.position = new Vector3(-tile_x, transform.position.y, transform.position.z);
-		if (transform.position.z > tile_z - 10 / 2)
+		if (transform.position.z > tile_z - 1)//0
 			transform.position = new Vector3(transform.position.x, transform.position.y, -height * 10);
-		if (transform.position.z < -height * 10)
-			transform.position = new Vector3(transform.position.x, transform.position.y, tile_z - 10 / 2);
+		if (transform.position.z < -height * 10)//150
+			transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 	}
 	
 	void	GenerateCameras()

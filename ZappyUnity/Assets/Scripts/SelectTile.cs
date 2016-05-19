@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class SelectTile : MonoBehaviour {
 
@@ -17,14 +18,14 @@ public class SelectTile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Mouse0)){
+		if (Input.GetKeyDown (KeyCode.Mouse0) && EventSystem.current.IsPointerOverGameObject() == false){
 			if (cloneselect != null) {
 				Destroy(GameObject.Find ("Selection(Clone)"));
-				scriptUI.ClearInfoCase();
+				scriptUI.CaseInfo(false, null);
 			}
 			GameObject hit = SelectCase ();
-			if (hit != null)
-				scriptUI.tile = hit;
+//			if (hit != null)
+//				scriptUI.tile = hit;
 		}
 
 	}
@@ -33,14 +34,19 @@ public class SelectTile : MonoBehaviour {
 	{
 		RaycastHit hit;
 		Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-		if (Physics.Raycast(ray, out hit) && hit.collider != null) {
-			if (cloneselect == null)
+		if (Physics.Raycast (ray, out hit) && hit.collider != null) {
+			if (cloneselect == null) {
 				cloneselect = GameObject.Instantiate(select, select.transform.position + hit.transform.position, select.transform.rotation) as GameObject;
+				scriptUI.CaseInfo(true, hit.transform.gameObject);
+			}
 			else
 			{
 				Destroy(GameObject.Find ("Selection(Clone)"));
-				if (hit.transform.gameObject != cloneselect)
+				scriptUI.CaseInfo(false, null);
+				if (hit.transform.gameObject != cloneselect) {
 					cloneselect = GameObject.Instantiate(select, select.transform.position + hit.transform.position, select.transform.rotation) as GameObject;
+					scriptUI.CaseInfo(true, hit.transform.gameObject);
+				}
 			}
 			return (hit.transform.gameObject);
 		}
