@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:04:01 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/16 14:50:59 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/20 18:22:10 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	init_map(t_server *srv)
 	}
 	if (!ok)
 		kill_map(srv);
+	else
+		generate_map(srv, NBR_RESRC_CASE_MAX);
 }
 
 void	kill_map(t_server *srv)

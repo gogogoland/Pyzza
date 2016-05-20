@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/18 19:13:48 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/20 18:18:27 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ typedef char bool;
 # include <sys/types.h>
 # include <time.h>
 # include <unistd.h>
+
+# define NBR_RESRC_CASE_MAX 7
 
 typedef struct sockaddr_in  t_sokadr_in;
 typedef struct sockaddr     t_sokadr;
@@ -118,6 +120,8 @@ void		graphe_kill(t_gfx *gfx, t_fds *fsd, bool gfxtoclt);
 
 void	    init_map(t_server *srv);
 void	    kill_map(t_server *srv);
+
+void		generate_map(t_server *srv, int nbr_resrc_case);
 
 t_server	*server_create(int argc, char **argv);
 void		server_log(const char *msg);
