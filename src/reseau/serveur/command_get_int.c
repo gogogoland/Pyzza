@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_graphe.c                                   :+:      :+:    :+:   */
+/*   command_get_int.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/05/10 16:33:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/30 18:25:43 by tbalea           ###   ########.fr       */
+/*   Created: 2016/05/30 20:55:25 by tbalea            #+#    #+#             */
+/*   Updated: 2016/05/30 20:59:46 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*cmd_new_g =
+int	command_get_int(int i, char *cmd)
 {
-	"New graphical client from ip %s, port %d.\n"
-};
+	int	ret;
 
-void	command_graphe(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
-{
-	gfx->isgfx = true;
-	printf(cmd_new_g, inet_ntoa(gfx->sin.sin_addr) , ntohs(gfx->sin.sin_port));
+	ret = -1;
+	while (cmd[++i] >= '0' && cmd[i] <= '9')
+	{
+		if (ret == -1)
+			ret = 0;
+		ret = (ret * 10) + (cmd[i] - 48);
+	}
+	return (ret);
 }

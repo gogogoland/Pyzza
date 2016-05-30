@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/20 18:18:27 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/30 21:12:11 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ typedef char bool;
 # include "libft.h"
 
 # include <arpa/inet.h>
+# include <ctype.h>
 # include <fcntl.h>
 # include <netdb.h>
 # include <netinet/in.h>
@@ -109,63 +110,81 @@ t_ring		*ring_init(int len);
 void		ring_zero(t_ring *ring);
 void		ring_kill(t_ring *ring);
 
+
 t_client	*client_init(void);
 void		player_fork(t_fds *fsd, t_server *srv, t_gfx *gfx, char *cmd);
 void		client_zero(t_client *clt, t_fds *fsd);
 void		client_kill(t_client *clt, t_fds *fsd);
 
+
 t_gfx		*graphe_init(void);
 t_gfx		*graphe_news(t_gfx *prev, t_fds *fds, int s);
 void		graphe_kill(t_gfx *gfx, t_fds *fsd, bool gfxtoclt);
 
+
 void	    init_map(t_server *srv);
 void	    kill_map(t_server *srv);
 
+
 void		generate_map(t_server *srv, int nbr_resrc_case);
+
 
 t_server	*server_create(int argc, char **argv);
 void		server_log(const char *msg);
+
 
 bool		recv_client(t_fds *fds, t_server *srv, int ret);
 void		send_client(t_fds *fds, t_server *srv, float tom);
 void		send_client_action(t_client *clt, bool ok);
 void		send_graphe_action(t_server *srv, t_client *clt, int n);
 
+
 void		command_forward(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_eject(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_forward(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_inventory(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_left(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_lvlup(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_msg(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_pose(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_right(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_seek(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_take(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_incant(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_fork(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_nbr_co(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
 void		command_death(t_fds *fds, t_server *srv,
-							t_client *clt, char *cmd);
+								t_client *clt, char *cmd);
+
 
 void		command_graphe(t_fds *fds, t_server *srv,
-							t_gfx *gfx, char *cmd);
+								t_gfx *gfx, char *cmd);
+void		command_player_inv(t_fds *fds, t_server *srv,
+								t_gfx *gfx, char *cmd);
+void		command_player_lvl(t_fds *fds, t_server *srv,
+								t_gfx *gfx, char *cmd);
+void		command_player_pos(t_fds *fds, t_server *srv,
+								t_gfx *gfx, char *cmd);
 void		command_map(t_fds *fds, t_server *srv,
-							t_gfx *gfx, char *cmd);
+								t_gfx *gfx, char *cmd);
+void        command_box(t_fds *fds, t_server *srv,
+								t_gfx *gfx, char *cmd);
+int			command_get_int(int i, char *cmd);
+void	    command_box_content(t_gfx *gfx, int x, int y, int *box);
 //void		command_(t_fds *fds, t_server *srv, t_ *, char *cmd);
 
 #endif

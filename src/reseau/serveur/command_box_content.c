@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_graphe.c                                   :+:      :+:    :+:   */
+/*   command_box_content.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/05/10 16:33:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/30 18:25:43 by tbalea           ###   ########.fr       */
+/*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
+/*   Updated: 2016/05/30 21:05:30 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*cmd_new_g =
+void	command_box_content(t_gfx *gfx, int x, int y, int *box)
 {
-	"New graphical client from ip %s, port %d.\n"
-};
+	char	*content;
 
-void	command_graphe(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
-{
-	gfx->isgfx = true;
-	printf(cmd_new_g, inet_ntoa(gfx->sin.sin_addr) , ntohs(gfx->sin.sin_port));
+	content = NULL;
+	asprintf(&content, "bct %i %i %i %i %i %i %i %i %i %i\n",
+		x, y, box[0], box[1], box[2], box[3], box[4], box[5], box[6], box[7]);
+	if (content)
+		send(gfx->socket, content, strlen(content), 0);
+	ft_memdel((void **)&content);
 }

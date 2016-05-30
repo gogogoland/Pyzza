@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/05/20 18:13:36 by tbalea           ###   ########.fr        #
+#    Updated: 2016/05/30 21:13:20 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,13 @@ SRC = ft_atoi.c\
 	  command_incant.c\
 	  command_nbr_co.c\
 	  command_graphe.c\
+	  command_get_int.c\
 	  command_map.c\
+	  command_box.c\
+	  command_box_content.c\
+	  command_player_inv.c\
+	  command_player_lvl.c\
+	  command_player_pos.c\
 	  generate_map.c
 
 OBJ = $(SRC:.c=.o)

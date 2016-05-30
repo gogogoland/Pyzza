@@ -1,34 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_map.c                                      :+:      :+:    :+:   */
+/*   command_player_pos.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/30 21:05:23 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/30 21:09:53 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-void		command_map(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
+void		command_player_pos(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 {
-	int			x;
-	int			y;
-//	int			child;
-	char		*box;
+	int			i;
 	t_client	*clt;
+	int			player;
+	char		*box;
 
-	/*if ((child = fork()) < 0)
+	box = NULL;
+	clt = srv->clt;
+	while (cmd[i] != '\0' && cmd[i] != '#')
+		i++;
+	if ((player = command_get_int(i, cmd)) < 1)
 		return ;
-	else if (child != 0)
-		return ;*/
-	x = -1;
-	while (++x < srv->plateau.x)
+	while (clt)
 	{
-		y = -1;
-		while (++y < srv->plateau.y)
-			command_box_content(gfx, x, y,srv->map[x][y]);
+		if (clt->socket == player) 
+			break ;
+		clt = clt->next;
 	}
+	if (!clt)
+		return ;
+	asprintf(&box, "ppo #%i %i %i %i\n",
+			clt->socket, clt->pos.x, clt->pos.y, clt->sens);
+	if (box)
+		send(gfx->socket, box, strlen(box), 0);
+	ft_memdel((void **)&box);
 }

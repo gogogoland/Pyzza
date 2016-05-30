@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/18 19:05:48 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/05/30 18:21:03 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ static const ex_gfx tfg[] =
 {
 	player_fork,
 	command_graphe,
-	command_map
+	command_map,
+	command_player_inv,
+	command_player_lvl,
+	command_player_pos
 };
 
 typedef void (*ex_clt)(t_fds *fds, t_server *srv, t_client *clt, char *cmd);
@@ -44,7 +47,10 @@ static const char	*gfx_cmd[] =
 {
 	"client",
 	"graphe",
-	"contenue"
+	"contenue",
+	"pin #",
+	"plv #",
+	"ppo #"
 };
 
 static const char	*clt_cmd[] =
@@ -116,10 +122,10 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 			gfx = gfx->next;
 		if ((clt && clt->time == 0.0f) || (!clt && gfx))
 			cmd = (!clt ? ring_send(gfx->ring) : ring_send(clt->ring));
-		while (cmd && ++n < (!clt ? 3 : 12) && strncmp(cmd, (!clt ? gfx_cmd[n]\
+		while (cmd && ++n < (!clt ? 6 : 12) && strncmp(cmd, (!clt ? gfx_cmd[n]\
 				: clt_cmd[n]), strlen(!clt ? gfx_cmd[n] : clt_cmd[n])) != 0)
 			;
-		(!clt && 0 <= n && n < 3) ? tfg[n](fds, srv, gfx, cmd) : NULL;
+		(!clt && 0 <= n && n < 6) ? tfg[n](fds, srv, gfx, cmd) : NULL;
 		if ((n = time_lapse(n, clt, tim, srv)) > 0)
 			tfc[n - 1](fds, srv, clt, cmd);
 		ft_memdel((void **)&cmd);
