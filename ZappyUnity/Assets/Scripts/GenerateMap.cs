@@ -11,8 +11,7 @@ public class GenerateMap : MonoBehaviour {
 		public int			nbr;
 		public GameObject	resrcObj;
 	};
-
-
+	
 	public int 					height;
 	public int					width;
 	public int					seed;
@@ -29,16 +28,23 @@ public class GenerateMap : MonoBehaviour {
 	private GameObject			map;
 	private GameObject			lineTmp;
 	private GameObject			[]lines;
+	private Client				_scriptClient;
 	
 	// Use this for initialization
+	void Awake(){
+		_scriptClient = GameObject.Find ("Client(Clone)").GetComponent<Client>();
+		height = _scriptClient.height;
+		width = _scriptClient.width;
+	}
+
 	void Start ()
 	{
 		structResrc = new List<s_resrc>();
-		InitMap();
-		Test();
-		Generate(height, width);
-		Test2();
-		Destroy(lineTmp);
+		InitMap ();
+		Test ();
+		Generate (height, width);
+		Test2 ();
+		Destroy (lineTmp);
 		
 	}
 	
