@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/30 18:21:03 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 19:03:30 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ static const ex_gfx tfg[] =
 	command_map,
 	command_player_inv,
 	command_player_lvl,
-	command_player_pos
+	command_player_pos,
+	command_size,
+	command_time_server,
+	command_time_change
 };
 
 typedef void (*ex_clt)(t_fds *fds, t_server *srv, t_client *clt, char *cmd);
@@ -46,27 +49,30 @@ static const ex_clt tfc[] =
 static const char	*gfx_cmd[] =
 {
 	"client",
-	"graphe",
-	"contenue",
+	"GRAPHIC",
+	"mct\n",
 	"pin #",
 	"plv #",
-	"ppo #"
+	"ppo #",
+	"msz\n",
+	"sgt\n",
+	"sst "
 };
 
 static const char	*clt_cmd[] =
 {
-	"avance",
-	"droite",
-	"gauche",
-	"voir",
-	"inventaire",
-	"prend",
-	"pose",
-	"expulse",
-	"broadcast",
-	"incantation",
-	"fork",
-	"connect_nbr"
+	"avance\n",
+	"droite\n",
+	"gauche\n",
+	"voir\n",
+	"inventaire\n",
+	"prend\n",
+	"pose\n",
+	"expulse\n",
+	"broadcast\n",
+	"incantation\n",
+	"fork\n",
+	"connect_nbr\n"
 };
 
 static const float	cmd_time[] =
@@ -122,10 +128,10 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 			gfx = gfx->next;
 		if ((clt && clt->time == 0.0f) || (!clt && gfx))
 			cmd = (!clt ? ring_send(gfx->ring) : ring_send(clt->ring));
-		while (cmd && ++n < (!clt ? 6 : 12) && strncmp(cmd, (!clt ? gfx_cmd[n]\
+		while (cmd && ++n < (!clt ? 9 : 12) && strncmp(cmd, (!clt ? gfx_cmd[n]\
 				: clt_cmd[n]), strlen(!clt ? gfx_cmd[n] : clt_cmd[n])) != 0)
 			;
-		(!clt && 0 <= n && n < 6) ? tfg[n](fds, srv, gfx, cmd) : NULL;
+		(!clt && 0 <= n && n < 9) ? tfg[n](fds, srv, gfx, cmd) : NULL;
 		if ((n = time_lapse(n, clt, tim, srv)) > 0)
 			tfc[n - 1](fds, srv, clt, cmd);
 		ft_memdel((void **)&cmd);

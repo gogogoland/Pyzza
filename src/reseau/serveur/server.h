@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/30 21:12:11 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 19:01:03 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,12 @@ void		command_death(t_fds *fds, t_server *srv,
 
 
 void		command_graphe(t_fds *fds, t_server *srv,
+								t_gfx *gfx, char *cmd);
+void        command_size(t_fds *fds, t_server *srv,
+								t_gfx *gfx, char *cmd);
+void		command_time_server(t_fds *fds, t_server *srv,
+								t_gfx *gfx, char *cmd);
+void		command_time_change(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
 void		command_player_inv(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
