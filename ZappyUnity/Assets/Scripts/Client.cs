@@ -18,6 +18,8 @@ public class Client : MonoBehaviour {
 		public int			z;
 		public int			type;
 		public int			nbr;
+		public int			tileColor;
+		public GameObject	resrc;
 	};
 	public List<s_datamap>	structDataMap;
 	public int				unitTime;
@@ -39,7 +41,6 @@ public class Client : MonoBehaviour {
 	};
 	public List<s_egg>		eggs;
 
-	private int				[,]_recvDataMap;
 	private const string	GRAPHIC =	"GRAPHIC\n";
 	private const string	MSZ =		"msz\n";
 	private const string	BCT =		"bct\n";
@@ -50,10 +51,6 @@ public class Client : MonoBehaviour {
 	private const string	PIN =		"pin\n";
 	private const string	SGT =		"sgt\n";
 	private const string	SST =		"sst\n";
-	private const int		READWRITE =	3;
-	private const int		READ =		2;
-	private const int		WRITE =		1;
-	private const int		ERROR =		-1;
 	private string			rtfContent = null;
 
 /*	public string[]command_recv = {
@@ -80,20 +77,6 @@ public class Client : MonoBehaviour {
 	private GameObject		_loading_panel;
 
 	// Use this for initialization
-	
-	int		Select(){
-		if (_socket.Poll (-1, SelectMode.SelectWrite)) {
-			if (_socket.Poll (-1, SelectMode.SelectRead)) {
-				Debug.Log ("toto");
-				return (READWRITE);
-			} else
-				return (WRITE);
-		} else if (_socket.Poll (-1, SelectMode.SelectRead))
-			return (READ);
-		else if (_socket.Poll (-1, SelectMode.SelectError))
-			return (ERROR);
-		return (0);
-	}
 
 	string		Receive()
 	{
@@ -118,15 +101,6 @@ public class Client : MonoBehaviour {
 		}
 	}
 
-//	IEnumerator	LaunchGame() {
-//		error.text = "Success !";
-//		error.color = Color.green;
-//		yield return new WaitForSeconds(3);
-//		Application.LoadLevel("Game");
-//		_loading_panel = GameObject.Find ("Loading");
-//		_in_game = true;
-//	}
-
 	void		MapSize(string []cmd) {
 		if (cmd.Length != 3)
 			throw new Exception("Donnees de la map erronees");
@@ -135,8 +109,8 @@ public class Client : MonoBehaviour {
 	}
 
 	void		TileContent(string []cmd){
-		if (cmd.Length != 10)
-			throw new Exception("Donnees de tuiles erronees");
+		if (cmd.Length < 10 && cmd.Length > 11)
+			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
 		for (int data = 0; data < 7; data++) {
 			s_datamap	tmp = new s_datamap();
 
@@ -144,6 +118,10 @@ public class Client : MonoBehaviour {
 			tmp.z = int.Parse (cmd[2]);
 			tmp.type = data;
 			tmp.nbr = int.Parse (cmd[3+data]);
+			if (cmd.Length == 10)
+				tmp.tileColor = 0;
+			else
+				tmp.tileColor = int.Parse(cmd[10]);
 			structDataMap.Add(tmp);
 		}
 	}
@@ -161,10 +139,11 @@ public class Client : MonoBehaviour {
 	}
 
 	void		PlayerNetwork(string []cmd){
+		s_player tmp;
+
 		if (cmd.Length != 7)
 			throw new Exception("Donnees d'un joueur erronees");
-		s_player	tmp = new s_player();
-
+		tmp = new s_player();
 		tmp.id = int.Parse (cmd[1] + 1);
 		tmp.pos_x = int.Parse (cmd[2]);
 		tmp.pos_y = int.Parse (cmd[3]);
@@ -175,10 +154,11 @@ public class Client : MonoBehaviour {
 	}
 
 	void		EggNetwork(string []cmd){
+		s_egg tmp;
+
 		if (cmd.Length != 5)
 			throw new Exception("Donnees d'un oeuf erronees");
-		s_egg	tmp = new s_egg();
-		
+		tmp = new s_egg();
 		tmp.id = int.Parse (cmd[1] + 1);
 		tmp.id_player = int.Parse (cmd[2] + 1);
 		tmp.pos_x = int.Parse (cmd[3]);
@@ -195,18 +175,13 @@ public class Client : MonoBehaviour {
 			if (_socket.Available > 0){
 				string recv;
 				while (_socket.Available > 0){
-					try
-					{
-						byte[] msg=new Byte[_socket.Available];
-						//Réception des données
-						_socket.Receive(msg,0,_socket.Available,SocketFlags.None);
+					try {
+						byte[] msg=new Byte[_socket.ReceiveBufferSize];
+						_socket.Receive(msg,0,_socket.ReceiveBufferSize,SocketFlags.None);
 						recv=System.Text.Encoding.UTF8.GetString(msg).Trim();
-						//On concatène les données reues(max 4ko) dans
-						//une variable de la classe
 						rtfContent+=recv;
 					}
-					catch(SocketException E)
-					{
+					catch(SocketException E) {
 						throw new Exception("CheckData read"+E.Message);
 					}
 				}
@@ -216,7 +191,7 @@ public class Client : MonoBehaviour {
 	}
 
 	void DataDistribution(){
-		string [] cutBlockData = rtfContent.Split ('\n');
+		string	[]cutBlockData = rtfContent.Split ('\n');
 		structDataMap = new List<s_datamap> ();
 		teamName = new List<string> ();
 		players = new List<s_player> ();
@@ -230,7 +205,8 @@ public class Client : MonoBehaviour {
 			case "tna"	: TeamName(cutCmd);break;
 			case "pnw"	: PlayerNetwork(cutCmd);break;
 			case "enw"	: EggNetwork(cutCmd);break;
-			default: throw new Exception("Donnees non recevable :" + cutCmd[0]);break;
+			case "\0"	: Debug.Log("oui");break;
+			default		: break;
 			}
 		}
 	}
@@ -242,19 +218,23 @@ public class Client : MonoBehaviour {
 //			_socket.Connect(inputIP, ip);
 			_socket.Connect("127.0.0.1", 4242);
 //			StartCoroutine(LaunchGame());
+
 			WhoIAm();
 			StartCoroutine(CheckData());
 			if (rtfContent != null)
+			{
+				Debug.Log (rtfContent);
 				DataDistribution();
-//			WhoIAm();
-//			SizeMap();
-//			SizeMapContent();
-			DontDestroyOnLoad(gameObject);
+				DontDestroyOnLoad(gameObject);
+				Application.LoadLevel("Game");
+				_in_game = true;
+			}
 		}
 		catch (Exception e) 
 		{
 			error.text = "Error : " + e;
 			error.color = Color.red;
+			_socket.Disconnect(true);
 			Debug.LogError(e);
 			Destroy(gameObject);
 		}
