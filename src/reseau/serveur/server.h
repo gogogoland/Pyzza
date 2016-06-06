@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 19:01:03 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/06 20:51:04 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef char bool;
 # include <unistd.h>
 
 # define NBR_RESRC_CASE_MAX 7
+# define TIME_MAX 10000
 
 typedef struct sockaddr_in  t_sokadr_in;
 typedef struct sockaddr     t_sokadr;
@@ -79,6 +80,7 @@ typedef struct			s_client
 	struct s_coord		pos;
 	int					sens;
 	int					team;
+	int					name;
 	bool				fork;
 	int					*rsc;
 	int					lvl;
@@ -112,7 +114,7 @@ void		ring_kill(t_ring *ring);
 
 
 t_client	*client_init(void);
-void		player_fork(t_fds *fsd, t_server *srv, t_gfx *gfx, char *cmd);
+void	    client_init_data(t_client *clt);
 void		client_zero(t_client *clt, t_fds *fsd);
 void		client_kill(t_client *clt, t_fds *fsd);
 
@@ -171,6 +173,8 @@ void		command_death(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 
 
+void		command_player(t_fds *fsd, t_server *srv,
+								t_gfx *gfx, char *cmd);
 void		command_graphe(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
 void        command_size(t_fds *fds, t_server *srv,

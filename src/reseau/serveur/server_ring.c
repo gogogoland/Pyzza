@@ -6,13 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 15:45:44 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/16 15:17:47 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/06 17:48:50 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*srv_ring_msg[] =
+static const char	*g_srv_ring_msg[] =
 {
 	"Malloc failed for set to ring.",
 	"Malloc failed for get in ring.",
@@ -35,7 +35,7 @@ void		ring_recv(char *command, t_ring *ring)
 	len = strlen(command);
 	if (!(ring->command[i] = (char *)malloc((len + 1) * sizeof(char))))
 	{
-		server_log(srv_ring_msg[0]);
+		server_log(g_srv_ring_msg[0]);
 		return ;
 	}
 	j = -1;
@@ -52,7 +52,7 @@ char		*ring_send(t_ring *ring)
 
 	if (!ring || !ring->command)
 	{
-		server_log(srv_ring_msg[4]);
+		server_log(g_srv_ring_msg[4]);
 		return (NULL);
 	}
 	else if (!ring->command[ring->cur])
@@ -60,7 +60,7 @@ char		*ring_send(t_ring *ring)
 	len = strlen(ring->command[ring->cur]);
 	if (!(command = (char *)malloc((len + 1) * sizeof(char))))
 	{
-		server_log(srv_ring_msg[1]);
+		server_log(g_srv_ring_msg[1]);
 		return (NULL);
 	}
 	j = -1;
@@ -79,13 +79,13 @@ t_ring		*ring_init(int len)
 
 	if (!(ring = (t_ring *)malloc(sizeof(t_ring))))
 	{
-		server_log(srv_ring_msg[2]);
+		server_log(g_srv_ring_msg[2]);
 		return (NULL);
 	}
 	if (!(ring->command = (char **)malloc(len * sizeof(char *))))
 	{
 		free(ring);
-		server_log(srv_ring_msg[3]);
+		server_log(g_srv_ring_msg[3]);
 		return (NULL);
 	}
 	ring->len = len;

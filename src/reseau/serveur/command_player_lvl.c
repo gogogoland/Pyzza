@@ -6,11 +6,16 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/30 21:24:09 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:31:31 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+static const char	*g_cmd_plv =
+{
+	"plv #%i %i\n"
+};
 
 void		command_player_lvl(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 {
@@ -27,13 +32,13 @@ void		command_player_lvl(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 		return ;
 	while (clt)
 	{
-		if (clt->socket == player) 
+		if (clt->socket == player)
 			break ;
 		clt = clt->next;
 	}
 	if (!clt)
 		return ;
-	asprintf(&box, "plv #%i %i\n", clt->socket, clt->lvl);
+	asprintf(&box, g_cmd_plv, clt->socket, clt->lvl);
 	if (box)
 		send(gfx->socket, box, strlen(box), 0);
 	ft_memdel((void **)&box);

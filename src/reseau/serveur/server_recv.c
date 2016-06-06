@@ -6,13 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 19:38:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/16 14:45:10 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:56:23 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*scr[] =
+static const char	*g_scr[] =
 {
 		"Error accept %d client\n",
 		"New client from ip %s, port %d.\n",
@@ -64,10 +64,10 @@ static void	client_connect(t_fds *fds, t_server *srv, int s)
 bool		recv_client(t_fds *fds, t_server *srv, int ret)
 {
 	int	s;
-	
+
 	s = -1;
 	if (ret <= 0)
-		return true;
+		return (true);
 	while (++s < fds->max)
 	{
 		if (FD_ISSET(s, &fds->rd))
@@ -76,8 +76,8 @@ bool		recv_client(t_fds *fds, t_server *srv, int ret)
 				client_connect(fds, srv, s);
 			else
 				client_command(fds, srv, s);
-			return true;
+			return (true);
 		}
 	}
-	return false;
+	return (false);
 }

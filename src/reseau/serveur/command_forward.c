@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:14:43 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/18 18:58:44 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/06 21:44:51 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@ void	command_forward(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 
 	mv.x = (clt->sens - 2) % 2;
 	mv.y = (clt->sens - 1) % 2;
-	mv.x = (clt->pos.x + mv.x) < 0 ? srv->plateau.x 
-		: (clt->pos.x + mv.x)% srv->plateau.x;
-	mv.y = (clt->pos.y + mv.y) < 0 ? srv->plateau.y 
-		: (clt->pos.y + mv.y) % srv->plateau.y;
-	clt->pos.x += mv.x;
-	clt->pos.y += mv.y;
+	mv.x = (clt->pos.x + mv.x) < 0 ? srv->plateau.x - 1 : mv.x;
+	mv.y = (clt->pos.y + mv.y) < 0 ? srv->plateau.y - 1 : mv.y;
+	clt->pos.x = (clt->pos.x + mv.x) % srv->plateau.x;
+	clt->pos.y = (clt->pos.y + mv.y) % srv->plateau.y;
 	send_graphe_action(srv, clt, 0);
 	send_client_action(clt, true);
 }

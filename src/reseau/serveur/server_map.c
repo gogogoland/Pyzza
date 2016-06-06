@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:04:01 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/20 18:22:10 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:50:52 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	init_map(t_server *srv)
 	srv->map = NULL;
 	if ((!srv || !srv->plateau.y || !srv->plateau.x)
 			|| (!(srv->map = (int ***)malloc(srv->plateau.y * sizeof(int **)))))
-		ok = !ok ;
+		ok = !ok;
 	y = -1;
 	while (ok && ++y < srv->plateau.y && (x = -1) < 0)
 	{
@@ -37,10 +37,7 @@ void	init_map(t_server *srv)
 				srv->map[y][x][z] = 0;
 		}
 	}
-	if (!ok)
-		kill_map(srv);
-	else
-		generate_map(srv, NBR_RESRC_CASE_MAX);
+	!ok ? kill_map(srv) : generate_map(srv, NBR_RESRC_CASE_MAX);
 }
 
 void	kill_map(t_server *srv)

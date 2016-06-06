@@ -6,13 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/16 15:16:03 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/06 17:34:58 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char			*c_arg[] =
+static const char			*g_c_arg[] =
 {
 	"-p",
 	"-x",
@@ -22,7 +22,7 @@ static const char			*c_arg[] =
 	"-t"
 };
 
-static const char			*error[] =
+static const char			*g_error[] =
 {
 	"Wrong port number",
 	"Wrong data for World's weight",
@@ -81,7 +81,7 @@ static int		get_data(t_server *srv, int state, char *arg, int isdone)
 		p = 0;
 	if (e == 0)
 		return (p);
-	server_log(error[e]);
+	server_log(g_error[e]);
 	return (0);
 }
 
@@ -93,21 +93,23 @@ static t_server	*check_data(t_server *srv, int isdone)
 	srv->clt = NULL;
 	srv->socket = 0;
 	srv->old_player_max = 0;
-	init_map(srv);
 	if (isdone == 111111)
+	{
+		init_map(srv);
 		return (srv);
+	}
 	srv->socket = -1;
 	ft_tabdel(srv->team);
 	e = 6;
 	while (isdone > 0)
 	{
 		if (isdone % 10 == 0)
-			server_log(error[e]);
+			server_log(g_error[e]);
 		isdone /= 10;
 		e++;
 	}
 	while (++e < 12)
-		server_log(error[e + 11]);
+		server_log(g_error[e + 11]);
 	return (srv);
 }
 
@@ -131,7 +133,7 @@ static t_server	*server_init_data(int argc, char **argv)
 	while (++i < argc)
 	{
 		arg = 0;
-		while (arg < 6 && ft_strcmp(c_arg[arg], argv[i]) != 0)
+		while (arg < 6 && ft_strcmp(g_c_arg[arg], argv[i]) != 0)
 			arg++;
 		if (arg != 6 && (state = arg) == arg)
 			i++;
@@ -170,19 +172,19 @@ t_server	*server_create(int argc, char **argv)
 	if (!(srv = server_init_data(argc, argv)) || srv->socket == -1)
 		return (srv);
 	if (!(proto = getprotobyname("tcp")))
-		return (return_msg(error[12], -1, srv));
+		return (return_msg(g_error[12], -1, srv));
 	if ((srv->socket = socket(PF_INET, SOCK_STREAM, proto->p_proto)) < 0)
-		return (return_msg(error[13], srv->socket, srv));
-	if (setsockopt(srv->socket, SOL_SOCKET, 
+		return (return_msg(g_error[13], srv->socket, srv));
+	if (setsockopt(srv->socket, SOL_SOCKET,
 				SO_REUSEADDR, (char *)&sso, sizeof(sso)) < 0)
-		return (return_msg(error[14], -1, srv));
+		return (return_msg(g_error[14], -1, srv));
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(srv->port);
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(srv->socket, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
-		return (return_msg(error[15], -1, srv));
+		return (return_msg(g_error[15], -1, srv));
 	else if (listen(srv->socket, srv->player_max) < 0 && (srv->socket = -4) < 0)
-		return (return_msg(error[16], -1, srv));
+		return (return_msg(g_error[16], -1, srv));
 	srv->gfx = graphe_init();
 	return (srv);
 }

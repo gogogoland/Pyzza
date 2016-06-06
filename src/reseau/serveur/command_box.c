@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/30 20:32:23 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/30 21:05:26 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:11:35 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,6 @@ void		command_box(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	while (cmd[i] != '\0' && !isdigit(cmd[i]))
 		i++;
 	y = command_get_int(i - 1, cmd);
-	if (x >= 0 && x < srv->plateau.x && y >=0 && y < srv->plateau.y)
+	if (x >= 0 && x < srv->plateau.x && y >= 0 && y < srv->plateau.y)
 		command_box_content(gfx, x, y, srv->map[x][y]);
 }

@@ -6,15 +6,17 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:33:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/02 17:05:24 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:28:01 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*cmd_new_g =
+static const char	*g_cmd_gfx[] =
 {
-	"New graphical client from ip %s, port %d.\n"
+	"New graphical client from ip %s, port %d.\n",
+	"pnw #%d %d %d %d %d %d\n",
+	"enw #%d %d %d %d\n"
 };
 
 static void	command_graphe_client_co(int socket, t_client *clt, int type)
@@ -24,13 +26,13 @@ static void	command_graphe_client_co(int socket, t_client *clt, int type)
 	msg = NULL;
 	if (type)
 	{
-		asprintf(&msg, "pnw #%d %d %d %d %d %d\n", clt->socket, clt->pos.x,
-				clt->pos.y, clt->sens, clt->lvl, clt->team);
+		asprintf(&msg, g_cmd_gfx[1], clt->socket, clt->pos.x, clt->pos.y,
+				clt->sens, clt->lvl, clt->team);
 	}
 	else
 	{
-		asprintf(&msg, "enw #%d %d %d %d\n", clt->socket, clt->pos.x,
-				clt->pos.y, clt->team);
+		asprintf(&msg, g_cmd_gfx[2], clt->socket, clt->pos.x, clt->pos.y,
+				clt->team);
 	}
 	if (msg)
 	{
@@ -45,7 +47,8 @@ void		command_graphe(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	t_client	*clt;
 
 	gfx->isgfx = true;
-	printf(cmd_new_g, inet_ntoa(gfx->sin.sin_addr) , ntohs(gfx->sin.sin_port));
+	printf(g_cmd_gfx[0],
+			inet_ntoa(gfx->sin.sin_addr), ntohs(gfx->sin.sin_port));
 	clt = srv->clt;
 	command_size(fds, srv, gfx, cmd);
 	//command_team(fds, srv, gfx, cmd);

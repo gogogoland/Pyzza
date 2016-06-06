@@ -6,13 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 15:18:57 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/18 19:09:25 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:33:49 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*cmd_pose[] =
+static const char	*g_cmd_pose[] =
 {
 	"nourriture",
 	"linemate",
@@ -36,7 +36,7 @@ void	command_pose(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	while (tab && tab[++i])
 	{
 		rsc = 0;
-		while (rsc < 7 && strcmp(cmd_pose[rsc], tab[i]))
+		while (rsc < 7 && strcmp(g_cmd_pose[rsc], tab[i]))
 			rsc++;
 		if (rsc == 7 || clt->pos.rsc[rsc] == 0)
 			continue ;

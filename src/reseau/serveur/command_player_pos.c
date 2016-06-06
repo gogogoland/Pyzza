@@ -6,11 +6,16 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/30 21:09:53 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:31:25 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+static const char	*g_cmd_pos =
+{
+	"ppo #%i %i %i %i\n"
+};
 
 void		command_player_pos(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 {
@@ -27,13 +32,13 @@ void		command_player_pos(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 		return ;
 	while (clt)
 	{
-		if (clt->socket == player) 
+		if (clt->socket == player)
 			break ;
 		clt = clt->next;
 	}
 	if (!clt)
 		return ;
-	asprintf(&box, "ppo #%i %i %i %i\n",
+	asprintf(&box, g_cmd_pos,
 			clt->socket, clt->pos.x, clt->pos.y, clt->sens);
 	if (box)
 		send(gfx->socket, box, strlen(box), 0);

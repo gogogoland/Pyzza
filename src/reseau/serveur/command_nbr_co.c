@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:20:37 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/18 18:30:27 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:19:23 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,20 @@
 void	command_nbr_co(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	int			co;
-	char		*nc;
-	char		*tmp;
+	char		*msg;
 	t_client	*cur;
 
 	cur = srv->clt;
+	msg = NULL;
 	co = 0;
 	while (cur)
 	{
 		co += (!cur->socket && (!cur->team || cur->team == clt->team)) ? 1 : 0;
 		cur = cur->next;
 	}
-	tmp = ft_itoa(co);
-	nc = ft_strjoin(NULL, tmp);
-	send(clt->socket, nc, strlen(nc), 0);
-	ft_memdel((void **)&tmp);
-	ft_memdel((void **)&nc);
+	if (asprintf(&msg, "%i\n", co) > 0)
+	{
+		send(clt->socket, msg, strlen(msg), 0);
+		ft_memdel((void **)&msg);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:50:09 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/18 19:06:45 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:37:19 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char		*msg_contain(char *cmd)
 	msg = (char *)malloc((strlen(cmd) - 10) * sizeof(char));
 	i = 9;
 	while (msg && cmd[i++])
-		msg[i-10] = cmd[i];
+		msg[i - 10] = cmd[i];
 	return (msg);
 }
 
@@ -49,7 +49,7 @@ static char		*msg_from(int org, char *msg)
 	char		*pos;
 
 	tmp = ft_itoa(org);
-	pos = ft_strjoin(tmp , msg);
+	pos = ft_strjoin(tmp, msg);
 	ft_memdel((void **)&tmp);
 	ft_memdel((void **)&msg);
 	return (pos);

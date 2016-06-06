@@ -6,11 +6,16 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/03 18:45:53 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 18:58:44 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:54:00 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+static const char	*g_cmd_time_server =
+{
+	"sgt %d\n"
+};
 
 void		command_time_server(t_fds *fds,
 								t_server *srv,
@@ -20,7 +25,7 @@ void		command_time_server(t_fds *fds,
 	char		*box;
 
 	box = NULL;
-	asprintf(&box, "sgt %d\n", srv->time);
+	asprintf(&box, g_cmd_time_server, srv->time);
 	send(gfx->socket, box, strlen(box), 0);
 	ft_memdel((void **)&box);
 }

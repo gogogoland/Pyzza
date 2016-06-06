@@ -6,30 +6,29 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:40:06 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/18 19:15:22 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:53:29 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*cmd_lvling =
+static const char	*g_cmd_incant =
 {
-	"elevation en cours niveau actuel : "
+	"elevation en cours niveau actuel : %i\n"
 };
 
 //TODO
 //	consomme ressource
 void	command_incant(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
-	char	*str;
-	char	*lvl;
+	char	*msg;
 
+	msg = NULL;
 	if (++clt->lvl > 8)
 		clt->lvl = 8;
-	lvl = ft_itoa(clt->lvl);
-	str = ft_strjoin(cmd_lvling, lvl);
-	send(clt->socket, str, strlen(str), 0);
-	ft_memdel((void **)&lvl);
-	ft_memdel((void **)&str);
-	return ;	
+	if (asprintf(&msg, g_cmd_incant, clt->lvl) > 0)
+	{
+		send(clt->socket, msg, strlen(msg), 0);
+		ft_memdel((void **)&msg);
+	}
 }

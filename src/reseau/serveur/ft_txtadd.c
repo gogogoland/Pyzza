@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/27 13:38:09 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/05 19:13:00 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/03 21:38:24 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	**ft_txtadd(char **tab, char *elm)
 		return (NULL);
 	while (max-- > 0)
 		new[i][max] = elm[max];
-	new[i+1] = NULL;
+	new[i + 1] = NULL;
 	while (--i >= 0)
 	{
 		max = ft_strlen(tab[i]) + 2;

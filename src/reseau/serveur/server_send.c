@@ -6,17 +6,16 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 19:03:30 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/06 20:51:36 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-typedef void (*ex_gfx)(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd);
+typedef void	(*t_x_gfx)(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd);
 
-static const ex_gfx tfg[] =
+static const t_x_gfx g_tfg[] =
 {
-	player_fork,
 	command_graphe,
 	command_map,
 	command_player_inv,
@@ -24,12 +23,13 @@ static const ex_gfx tfg[] =
 	command_player_pos,
 	command_size,
 	command_time_server,
-	command_time_change
+	command_time_change,
+	command_player
 };
 
-typedef void (*ex_clt)(t_fds *fds, t_server *srv, t_client *clt, char *cmd);
+typedef void	(*t_x_clt)(t_fds *fds, t_server *srv, t_client *clt, char *cmd);
 
-static const ex_clt tfc[] =
+static const t_x_clt g_tfc[] =
 {
 	command_forward,
 	command_right,
@@ -46,9 +46,8 @@ static const ex_clt tfc[] =
 	command_death
 };
 
-static const char	*gfx_cmd[] =
+static const char	*g_gfx_cmd[] =
 {
-	"client",
 	"GRAPHIC",
 	"mct\n",
 	"pin #",
@@ -59,7 +58,7 @@ static const char	*gfx_cmd[] =
 	"sst "
 };
 
-static const char	*clt_cmd[] =
+static const char	*g_clt_cmd[] =
 {
 	"avance\n",
 	"droite\n",
@@ -75,7 +74,7 @@ static const char	*clt_cmd[] =
 	"connect_nbr\n"
 };
 
-static const float	cmd_time[] =
+static const float	g_cmd_time[] =
 {
 	7.0f,
 	7.0f,
@@ -101,7 +100,7 @@ static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 	if (clt->time == 0.0f)
 		clt->action = n < 12 ? n + 1 : 0;
 	if (!clt->action && (clt->time = (12 > n && n > -1) ?
-			cmd_time[n] * (1.0f / (float)srv->time) : clt->time - tim) < 0.0f)
+			g_cmd_time[n] * (1.0f / (float)srv->time) : clt->time - tim) < 0.0f)
 		clt->time = 0.0f;
 	action = (clt->time == 0.0f) ? clt->action : 0;
 	if ((clt->health -= tim) <= 0.0f)
@@ -117,7 +116,7 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 	t_client	*clt;
 
 	cmd = NULL;
-	while (tim >= 0.0f && --fds->max > 0 && (n = -1) == -1)
+	while (tim >= 0.0f && --fds->max > 0 && !(n = 0))
 	{
 		if (!(clt = srv->clt) && !FD_ISSET(fds->max, &fds->wr))
 			continue ;
@@ -128,12 +127,12 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 			gfx = gfx->next;
 		if ((clt && clt->time == 0.0f) || (!clt && gfx))
 			cmd = (!clt ? ring_send(gfx->ring) : ring_send(clt->ring));
-		while (cmd && ++n < (!clt ? 9 : 12) && strncmp(cmd, (!clt ? gfx_cmd[n]\
-				: clt_cmd[n]), strlen(!clt ? gfx_cmd[n] : clt_cmd[n])) != 0)
-			;
-		(!clt && 0 <= n && n < 9) ? tfg[n](fds, srv, gfx, cmd) : NULL;
-		if ((n = time_lapse(n, clt, tim, srv)) > 0)
-			tfc[n - 1](fds, srv, clt, cmd);
+		while (cmd && n < (!clt ? 8 : 12) && strncmp(cmd, (!clt ? g_gfx_cmd[n] :
+				g_clt_cmd[n]), strlen(!clt ? g_gfx_cmd[n] : g_clt_cmd[n])) != 0)
+			n++;
+		(!clt && cmd && 0 <= n && n < 9) ? g_tfg[n](fds, srv, gfx, cmd) : NULL;
+		if (cmd && (n = time_lapse(n, clt, tim, srv)) > 0)
+			g_tfc[n - 1](fds, srv, clt, cmd);
 		ft_memdel((void **)&cmd);
 	}
 }
@@ -155,7 +154,7 @@ void		send_graphe_action(t_server *srv, t_client *clt, int n)
 	tmp1 = ft_itoa(clt->socket);
 	tmp2 = ft_strjoin("action ", tmp1);
 	ft_memdel((void **)&tmp1);
-	action = ft_strcjoin(tmp2, clt_cmd[n], ' ');
+	action = ft_strcjoin(tmp2, g_clt_cmd[n], ' ');
 	ft_memdel((void **)&tmp2);
 	while (gfx)
 	{
