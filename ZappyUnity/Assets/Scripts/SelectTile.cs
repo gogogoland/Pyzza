@@ -15,41 +15,19 @@ public class SelectTile : MonoBehaviour {
 		cam = GetComponent<Camera>();
 		scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI> ();
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.Mouse0) && EventSystem.current.IsPointerOverGameObject() == false){
 			if (cloneselect != null) {
-				Destroy(GameObject.Find ("Selection(Clone)"));
-				scriptUI.CaseInfo(false, null);
+				Destroy(cloneselect);
+				scriptUI.information_case.SetActive(false);
 			}
-			GameObject hit = SelectCase ();
-//			if (hit != null)
-//				scriptUI.tile = hit;
-		}
-
-	}
-
-	GameObject SelectCase()
-	{
-		RaycastHit hit;
-		Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-		if (Physics.Raycast (ray, out hit) && hit.collider != null) {
-			if (cloneselect == null) {
+			RaycastHit	hit;
+			Ray			ray = cam.ScreenPointToRay(Input.mousePosition);
+			if (Physics.Raycast (ray, out hit) && hit.collider != null && hit.transform.gameObject != cloneselect) {
 				cloneselect = GameObject.Instantiate(select, select.transform.position + hit.transform.position, select.transform.rotation) as GameObject;
-				scriptUI.CaseInfo(true, hit.transform.gameObject);
+				cloneselect.GetComponent<InfoCaseUI>().tile = hit.transform.gameObject;
 			}
-			else
-			{
-				Destroy(GameObject.Find ("Selection(Clone)"));
-				scriptUI.CaseInfo(false, null);
-				if (hit.transform.gameObject != cloneselect) {
-					cloneselect = GameObject.Instantiate(select, select.transform.position + hit.transform.position, select.transform.rotation) as GameObject;
-					scriptUI.CaseInfo(true, hit.transform.gameObject);
-				}
-			}
-			return (hit.transform.gameObject);
 		}
-		return (null);
 	}
 }
