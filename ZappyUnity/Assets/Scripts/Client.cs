@@ -228,6 +228,7 @@ public class Client : MonoBehaviour {
 				DontDestroyOnLoad(gameObject);
 				Application.LoadLevel("Game");
 				_in_game = true;
+				rtfContent = null;
 			}
 		}
 		catch (Exception e) 
@@ -240,11 +241,45 @@ public class Client : MonoBehaviour {
 		}
 //		_loading_panel.SetActive (false);
 	}
-	
+
+	void	DemandInfo() {
+//		switch (cutCmd[0]) {
+//		case "msz"	: MapSize(cutCmd);break;
+//		case "bct"	: TileContent(cutCmd);break;
+//		case "sgt"	: ServerGetTime(cutCmd);break;
+//		case "tna"	: TeamName(cutCmd);break;
+//		case "pnw"	: PlayerNetwork(cutCmd);break;
+//		case "enw"	: EggNetwork(cutCmd);break;
+//		case "\0"	: Debug.Log("oui");break;
+//		default		: break;
+//		}
+	}
+
+	void	ReceptionInfo(){
+		if (rtfContent != null) {
+			string	[]cutBlockData = rtfContent.Split ('\n');
+			for (int line = 0; line < cutBlockData.Length; line++) {
+				string []cutCmd = cutBlockData[line].Split(' ');
+				switch (cutCmd[0]) {
+				case "msz"	: MapSize(cutCmd);break;
+				case "bct"	: TileContent(cutCmd);break;
+				case "sgt"	: ServerGetTime(cutCmd);break;
+				case "tna"	: TeamName(cutCmd);break;
+				case "pnw"	: PlayerNetwork(cutCmd);break;
+				case "enw"	: EggNetwork(cutCmd);break;
+				case "\0"	: Debug.Log("oui");break;
+				default		: break;
+				}
+			}
+			rtfContent = null;
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (_in_game) {
-
+			DemandInfo();
+			ReceptionInfo();
 		}
 	}
 }
