@@ -13,13 +13,13 @@ public class InfoCaseUI : MonoBehaviour {
 	private GameObject		_contentInfo;
 	private GenerateMap		_scriptMap;
 	private GameUI			_scriptUI;
-	private struct s_info
+	private class			c_info
 	{
 		public int			[]nbr;
 		public string		[]ressources;
 		public Sprite		[]sprite;	
 	};
-	private s_info			_info;
+	private c_info			_info;
 
 	// Use this for initialization
 	void	Start () {
@@ -42,7 +42,7 @@ public class InfoCaseUI : MonoBehaviour {
 	}
 		
 	void	InitStructInfo(){
-		_info = new s_info ();
+		_info = new c_info ();
 		_info.nbr = new int[7];
 		_info.ressources = new string[7];
 		_info.ressources [0] = "Food";
