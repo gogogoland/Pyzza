@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/06 21:22:11 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/07 22:12:10 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ static const char	*g_cmd_plr[] =
 {
 	"Player from ip %s, port %d tried to connect, but limit of %d client is\
 reached.\n",
-	"New player from ip %s, port %d.\n"
+	"New player #%d from ip %s, port %d.\n",
+	"suc\n"
 };
 
 static int		command_player_get_team(t_server *srv, char *cmd)
@@ -39,6 +40,14 @@ static t_client	*command_player_get_valide_client(int t, t_server *srv)
 	return (new);
 }
 
+static bool		command_player_is_graphical(t_gfx *gfx)
+{
+	if (!gfx->isgfx)
+		return (false);
+	send(gfx->socket, g_cmd_plr[2], strlen(g_cmd_plr[2]), 0);
+	return (true);
+}
+
 //	TODO
 //	*	Send to client
 //	*	*	<nb-client>\n
@@ -49,25 +58,24 @@ void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	char		*team;
 	t_client	*new;
 
-	if (!srv->team[(t = command_player_get_team(srv, cmd))] || gfx->isgfx)
+	if (!srv->team[(t = command_player_get_team(srv, cmd))]
+			|| command_player_is_graphical(gfx))
 		return ;
 	if (!(new = command_player_get_valide_client(t, srv)))
 	{
 		printf(g_cmd_plr[0], inet_ntoa(gfx->sin.sin_addr),
 				ntohs(gfx->sin.sin_port), srv->player_max);
 		graphe_kill(gfx, fds, false);
+		return ;
 	}
-	else
-	{
-		client_init_data(new);
-		new->socket = gfx->socket;
-		new->sin = gfx->sin;
-		new->len = gfx->len;
-		new->team = t;
-		new->health = 1260.0f / (float)srv->time;
-		printf(g_cmd_plr[1], inet_ntoa(new->sin.sin_addr),
-				ntohs(new->sin.sin_port));
-		fds->max = new->socket > fds->max - 1 ? new->socket + 1 : fds->max;
-		graphe_kill(gfx, fds, true);
-	}
+	client_init_data(new);
+	new->socket = gfx->socket;
+	new->sin = gfx->sin;
+	new->len = gfx->len;
+	new->team = t;
+	new->health = 1260.0f / (float)srv->time;
+	printf(g_cmd_plr[1], new->name, inet_ntoa(new->sin.sin_addr),
+			ntohs(new->sin.sin_port));
+	fds->max = new->socket > fds->max - 1 ? new->socket + 1 : fds->max;
+	graphe_kill(gfx, fds, true);
 }

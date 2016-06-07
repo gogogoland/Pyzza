@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/06 17:34:58 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/07 22:02:26 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,5 +186,6 @@ t_server	*server_create(int argc, char **argv)
 	else if (listen(srv->socket, srv->player_max) < 0 && (srv->socket = -4) < 0)
 		return (return_msg(g_error[16], -1, srv));
 	srv->gfx = graphe_init();
+	srv->name = 0;
 	return (srv);
 }

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:33:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 21:28:01 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/07 22:07:21 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ static void	command_graphe_client_co(int socket, t_client *clt, int type)
 	msg = NULL;
 	if (type)
 	{
-		asprintf(&msg, g_cmd_gfx[1], clt->socket, clt->pos.x, clt->pos.y,
+		asprintf(&msg, g_cmd_gfx[1], clt->name, clt->pos.x, clt->pos.y,
 				clt->sens, clt->lvl, clt->team);
 	}
 	else
 	{
-		asprintf(&msg, g_cmd_gfx[2], clt->socket, clt->pos.x, clt->pos.y,
+		asprintf(&msg, g_cmd_gfx[2], clt->name, clt->pos.x, clt->pos.y,
 				clt->team);
 	}
 	if (msg)

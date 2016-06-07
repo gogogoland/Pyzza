@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/06 20:51:04 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/07 22:43:25 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct			s_client
 	bool				fork;
 	int					*rsc;
 	int					lvl;
+	int					tolvl;
 	int					action;
 	float				time;
 	float				health;
@@ -97,6 +98,7 @@ typedef struct			s_server
 	struct s_coord		plateau;
 	int					port;
 	int					socket;
+	int					name;
 	int					time;
 	int					old_player_max;
 	int					player_max;
@@ -113,7 +115,7 @@ void		ring_zero(t_ring *ring);
 void		ring_kill(t_ring *ring);
 
 
-t_client	*client_init(void);
+t_client	*client_init(t_server *srv);
 void	    client_init_data(t_client *clt);
 void		client_zero(t_client *clt, t_fds *fsd);
 void		client_kill(t_client *clt, t_fds *fsd);
@@ -165,6 +167,7 @@ void		command_take(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 void		command_incant(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
+bool		incant_process(t_client *cllt, t_server *srv);
 void		command_fork(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 void		command_nbr_co(t_fds *fds, t_server *srv,
@@ -195,6 +198,8 @@ void        command_box(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
 int			command_get_int(int i, char *cmd);
 void	    command_box_content(t_gfx *gfx, int x, int y, int *box);
+void		command_graphical_bad_parameters(t_fds *fds, t_server *srv,
+											t_gfx *gfx, char *cmd);
 //void		command_(t_fds *fds, t_server *srv, t_ *, char *cmd);
 
 #endif

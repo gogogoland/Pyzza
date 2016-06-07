@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:25:40 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/19 14:21:50 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/07 22:41:30 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	command_fork(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	new = srv->clt;
 	while (new)
 		new = new->next;
-	if (!(new = client_init()))
+	if (!(new = client_init(srv)))
 		return ;
 	new->pos.x = clt->pos.x;
 	new->pos.y = clt->pos.y;

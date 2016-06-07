@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/06 20:08:57 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/07 22:40:57 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static t_client	*set_clients_list(t_server *srv)
 			cur = srv->clt;
 			while (cur && cur->next)
 				cur = cur->next;
-			if (!(new = client_init()))
+			if (!(new = client_init(srv)))
 				return (NULL);
 			if ((new->prev = cur))
 				cur->next = new;

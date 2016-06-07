@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/06 20:58:49 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/07 22:41:17 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,12 @@ void	client_init_data(t_client *clt)
 	clt->sens = 0;
 	clt->team = -1;
 	clt->lvl = 1;
+	clt->tolvl = 0;
 	clt->time = 0.0f;
 	clt->health = 0.0f;
 }
 
-t_client	*client_init(void)
+t_client	*client_init(t_server *srv)
 {
 	t_client	*clt;
 
@@ -50,6 +51,7 @@ t_client	*client_init(void)
 	clt->len = sizeof(struct sockaddr_in);
 	clt->next = NULL;
 	client_init_data(clt);
+	clt->name = ++srv->name;
 	return (clt);
 }
 

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 21:31:25 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/07 22:19:09 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ void		command_player_pos(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 		return ;
 	while (clt)
 	{
-		if (clt->socket == player)
+		if (clt->name == player)
 			break ;
 		clt = clt->next;
 	}
 	if (!clt)
-		return ;
+		return command_graphical_bad_parameters(fds, srv, gfx, cmd);
 	asprintf(&box, g_cmd_pos,
-			clt->socket, clt->pos.x, clt->pos.y, clt->sens);
+			clt->name, clt->pos.x, clt->pos.y, clt->sens);
 	if (box)
 		send(gfx->socket, box, strlen(box), 0);
 	ft_memdel((void **)&box);

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/06 20:51:36 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/07 22:46:39 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,12 @@ static const float	g_cmd_time[] =
 	0.0f
 };
 
+//	TODO:
+//	*	add correct text
+static const char	*g_action[] =
+{
+};
+
 static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 {
 	int	action;
@@ -102,7 +108,8 @@ static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 	if (!clt->action && (clt->time = (12 > n && n > -1) ?
 			g_cmd_time[n] * (1.0f / (float)srv->time) : clt->time - tim) < 0.0f)
 		clt->time = 0.0f;
-	action = (clt->time == 0.0f) ? clt->action : 0;
+	if ((action = (clt->time == 0.0f) ? clt->action : 0) == 9)
+		clt->tolvl = clt->lvl + 1;
 	if ((clt->health -= tim) <= 0.0f)
 		return (13);
 	return (action);
@@ -125,7 +132,7 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 		gfx = srv->gfx;
 		while (gfx != NULL && gfx->socket != fds->max)
 			gfx = gfx->next;
-		if ((clt && clt->time == 0.0f) || (!clt && gfx))
+		if (incant_process(clt, srv) || (!clt && gfx))
 			cmd = (!clt ? ring_send(gfx->ring) : ring_send(clt->ring));
 		while (cmd && n < (!clt ? 8 : 12) && strncmp(cmd, (!clt ? g_gfx_cmd[n] :
 				g_clt_cmd[n]), strlen(!clt ? g_gfx_cmd[n] : g_clt_cmd[n])) != 0)
@@ -143,20 +150,17 @@ void		send_client_action(t_client *clt, bool ok)
 		send(clt->socket, ok ? "ok\n" : "ko\n", 3, 0);
 }
 
+//	TODO:
+//	*	add correct action
 void		send_graphe_action(t_server *srv, t_client *clt, int n)
 {
 	t_gfx	*gfx;
 	char	*action;
-	char	*tmp1;
-	char	*tmp2;
 
+	action = NULL;
 	gfx = srv->gfx;
-	tmp1 = ft_itoa(clt->socket);
-	tmp2 = ft_strjoin("action ", tmp1);
-	ft_memdel((void **)&tmp1);
-	action = ft_strcjoin(tmp2, g_clt_cmd[n], ' ');
-	ft_memdel((void **)&tmp2);
-	while (gfx)
+	asprintf(&action, "action #%d %d\n", clt->name, n);
+	while (action && gfx)
 	{
 		send(gfx->socket, action, strlen(action), 0);
 		gfx = gfx->next;
