@@ -24,6 +24,5 @@ public class Menu : MonoBehaviour {
 		clientclone = GameObject.Instantiate(client, Vector3.zero, Quaternion.identity) as GameObject;
 		clientclone.GetComponent<Client>().inputIP = inputIP.text;
 		int.TryParse(inputPort.text, out clientclone.GetComponent<Client>().ip);
-
 	}
 }

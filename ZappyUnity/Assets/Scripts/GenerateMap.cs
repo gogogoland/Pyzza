@@ -19,7 +19,7 @@ public class GenerateMap : MonoBehaviour {
 	private GameObject				map;
 	private GameObject				lineTmp;
 	private GameObject				[]lines;
-	private Client					_scriptClient;
+	private DataGame				_scriptData;
 
 	private int						FOOD = 0;
 	private int						RESRC = 1;
@@ -31,9 +31,9 @@ public class GenerateMap : MonoBehaviour {
 
 		for (int x = 0;x < width;x++) {
 			for (int z = 0;z < height;z++) {
-				if (z == _scriptClient.structDataMap [data].z && x == _scriptClient.structDataMap [data].x) {
-					variant_materials[z, x] = materials[_scriptClient.structDataMap [data].tileColor];
-					while (data < _scriptClient.structDataMap.Count - 1 && (z == _scriptClient.structDataMap [data].z && x == _scriptClient.structDataMap [data].x))
+				if (z == _scriptData.structDataMap [data].z && x == _scriptData.structDataMap [data].x) {
+					variant_materials[z, x] = materials[_scriptData.structDataMap [data].tileColor];
+					while (data < _scriptData.structDataMap.Count - 1 && (z == _scriptData.structDataMap [data].z && x == _scriptData.structDataMap [data].x))
 						data++;
 				}
 			}
@@ -42,9 +42,9 @@ public class GenerateMap : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake(){
-		_scriptClient = GameObject.Find ("Client(Clone)").GetComponent<Client>();
-		height = _scriptClient.height;
-		width = _scriptClient.width;
+		_scriptData = GameObject.Find ("Client(Clone)").GetComponent<DataGame>();
+		height = _scriptData.height;
+		width = _scriptData.width;
 		AssignTileColor();
 	}
 	
@@ -125,24 +125,24 @@ public class GenerateMap : MonoBehaviour {
 	void	NbrResrcPerTile(GameObject modelToClone, int index, int resize){
 		Vector3		vec = Vector3.zero;
 
-		for (int nbr = 0; nbr < _scriptClient.structDataMap[index].nbr; nbr++) {
+		for (int nbr = 0; nbr < _scriptData.structDataMap[index].nbr; nbr++) {
 			GameObject	tmp;
 			vec = new Vector3(0, modelToClone.transform.position.y, 0);
 			tmp = GameObject.Instantiate(modelToClone, vec, Quaternion.identity) as GameObject;
 			tmp.transform.localScale *= resize;
-			tmp.transform.SetParent(tiles[_scriptClient.structDataMap[index].z,_scriptClient.structDataMap[index].x].transform);
-			tmp.GetComponent<SpriteRenderer>().sprite = ressources_sprite[_scriptClient.structDataMap[index].type];
-			RepositioningResrc(tmp, _scriptClient.structDataMap[index].type);
+			tmp.transform.SetParent(tiles[_scriptData.structDataMap[index].z,_scriptData.structDataMap[index].x].transform);
+			tmp.GetComponent<SpriteRenderer>().sprite = ressources_sprite[_scriptData.structDataMap[index].type];
+			RepositioningResrc(tmp, _scriptData.structDataMap[index].type);
 			resrcs.Add(tmp);
 		}
 	}
 
 	void	GenerateResrc(){
 		resrcs = new List<GameObject> ();
-		for (int data = 0; data < _scriptClient.structDataMap.Count; data++) {
-			if (_scriptClient.structDataMap[data].type == FOOD)
+		for (int data = 0; data < _scriptData.structDataMap.Count; data++) {
+			if (_scriptData.structDataMap[data].type == FOOD)
 				NbrResrcPerTile(food_obj, data, 20);
-			else if (_scriptClient.structDataMap[data].type >= RESRC)
+			else if (_scriptData.structDataMap[data].type >= RESRC)
 				NbrResrcPerTile(ressources_obj, data, 5);
 		}
 	}
