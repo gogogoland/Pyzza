@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:40:06 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/07 22:48:55 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/08 19:52:26 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,12 @@ void		command_incant(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 bool		incant_process(t_client *clt, t_server *srv)
 {
 	if (clt && clt->time == 0.0f)
-		return (true);
-	else if (!clt || (clt->action != 9 && !incant_interrupt(clt, srv)))
 		return (false);
-	clt->action = 0;
-	return (false);
+	else if (clt && clt->action == 9 && !incant_interrupt(clt, srv))
+	{
+		clt->action = 0;
+		clt->time = 0.0f;
+		return (false);
+	}
+	return (true);
 }

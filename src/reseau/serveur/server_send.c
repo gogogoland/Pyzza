@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/07 22:46:39 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/06/08 20:39:37 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ static const char	*g_action[] =
 {
 };
 
+//	TODO:
+//	*	modify time remain if time server change
 static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 {
 	int	action;
@@ -105,11 +107,11 @@ static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 	action = 0;
 	if (clt->time == 0.0f)
 		clt->action = n < 12 ? n + 1 : 0;
-	if (!clt->action && (clt->time = (12 > n && n > -1) ?
-			g_cmd_time[n] * (1.0f / (float)srv->time) : clt->time - tim) < 0.0f)
-		clt->time = 0.0f;
 	if ((action = (clt->time == 0.0f) ? clt->action : 0) == 9)
 		clt->tolvl = clt->lvl + 1;
+	if ((clt->time = (clt->time == 0.0f && n < 12) ?
+			g_cmd_time[n] * (1.0f / (float)srv->time) : clt->time - tim) < 0.0f)
+		clt->time = 0.0f;
 	if ((clt->health -= tim) <= 0.0f)
 		return (13);
 	return (action);
@@ -132,13 +134,13 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 		gfx = srv->gfx;
 		while (gfx != NULL && gfx->socket != fds->max)
 			gfx = gfx->next;
-		if (incant_process(clt, srv) || (!clt && gfx))
+		if (!incant_process(clt, srv) || (!clt && gfx))
 			cmd = (!clt ? ring_send(gfx->ring) : ring_send(clt->ring));
 		while (cmd && n < (!clt ? 8 : 12) && strncmp(cmd, (!clt ? g_gfx_cmd[n] :
 				g_clt_cmd[n]), strlen(!clt ? g_gfx_cmd[n] : g_clt_cmd[n])) != 0)
 			n++;
 		(!clt && cmd && 0 <= n && n < 9) ? g_tfg[n](fds, srv, gfx, cmd) : NULL;
-		if (cmd && (n = time_lapse(n, clt, tim, srv)) > 0)
+		if ((n = time_lapse(n, clt, tim, srv)) > 0 && cmd)
 			g_tfc[n - 1](fds, srv, clt, cmd);
 		ft_memdel((void **)&cmd);
 	}
