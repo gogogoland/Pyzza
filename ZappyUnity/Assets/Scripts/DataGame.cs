@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 public class DataGame : MonoBehaviour {
 
+	public Animator							anim;
+	public GameObject						egg_obj;
+	public GameObject						player_obj;
 	public int								height;
 	public int								width;
 	public class							c_datamap {
@@ -26,6 +29,7 @@ public class DataGame : MonoBehaviour {
 		public int							level;
 		public string						teamName;
 		public int							[]inventory;
+		public GameObject					stock_player;
 	};
 	public List<c_player>					players;
 	public class							c_egg{
@@ -33,8 +37,11 @@ public class DataGame : MonoBehaviour {
 		public int							id_player;
 		public int							pos_x;
 		public int							pos_y;
+		public GameObject					stock_eggs;
 	};
 	public List<c_egg>						eggs;
+	private GameObject						clone_player;
+	private GameObject						clone_egg;
 
 	public void		Init(){
 		structDataMap = new List<c_datamap> ();
@@ -48,6 +55,15 @@ public class DataGame : MonoBehaviour {
 			throw new Exception("Donnees de la map erronees");
 		width = int.Parse (cmd [1]);
 		height = int.Parse (cmd [2]);
+	}
+
+	public Vector3	CoordCase(int x, int y){
+		Vector3 coord = Vector3.zero;
+		coord.x = x * 10;
+		coord.z = -y * 10;
+		coord.y = player_obj.transform.localScale.y / 2;
+
+		return coord;
 	}
 
 	public void		TileContent(string []cmd) {
@@ -87,6 +103,8 @@ public class DataGame : MonoBehaviour {
 		tmp.level = int.Parse (cmd[5]);
 		tmp.teamName = cmd[6];
 		tmp.inventory = new int[7];
+		clone_player = GameObject.Instantiate(player_obj, CoordCase(tmp.pos_x, tmp.pos_y), Quaternion.identity) as GameObject;
+		tmp.stock_player = clone_player;
 		players.Add(tmp);
 	}
 
@@ -233,6 +251,7 @@ public class DataGame : MonoBehaviour {
 		tmp.id_player = int.Parse (cmd[2] + 1);
 		tmp.pos_x = int.Parse (cmd[3]);
 		tmp.pos_y = int.Parse (cmd[4]);
+
 		eggs.Add(tmp);
 	}
 

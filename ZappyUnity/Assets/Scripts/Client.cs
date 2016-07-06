@@ -67,6 +67,7 @@ public class Client : MonoBehaviour {
 				while (_socket.Available > 0){
 					try {
 						recv=Receive();
+						Debug.Log (recv);
 						rtfContent+=recv;
 					}
 					catch(SocketException E) {
@@ -166,7 +167,7 @@ public class Client : MonoBehaviour {
 					send += SGT;
 	//				if (_scriptData.unitTime != _scriptUI.value_slider)
 	//					send += SST + _scriptUI.value_slider;
-	//				Debug.Log(send);
+					Debug.Log(send);
 					Send (send);
 				}
 			} catch (Exception e) {
@@ -178,8 +179,8 @@ public class Client : MonoBehaviour {
 
 	// Update is called once per frame
 	void		Update () {
-//		if (_in_game) {
-//			DemandInfo();
-//		}
+		if (_in_game) {
+			StartCoroutine("DemandInfo");
+		}
 	}
 }
