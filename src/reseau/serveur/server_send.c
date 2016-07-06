@@ -104,10 +104,10 @@ static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 
 	if (!clt)
 		return (0);
-	action = 0;
+	action = (clt->time == 0.0f) ? clt->action : 0;
 	if (clt->time == 0.0f)
 		clt->action = n < 12 ? n + 1 : 0;
-	if ((action = (clt->time == 0.0f) ? clt->action : 0) == 9)
+	if (clt->time == 0.0f && clt->action == 9)
 		clt->tolvl = clt->lvl + 1;
 	if ((clt->time = (clt->time == 0.0f && n < 12) ?
 			g_cmd_time[n] * (1.0f / (float)srv->time) : clt->time - tim) < 0.0f)
@@ -140,7 +140,7 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 				g_clt_cmd[n]), strlen(!clt ? g_gfx_cmd[n] : g_clt_cmd[n])) != 0)
 			n++;
 		(!clt && cmd && 0 <= n && n < 9) ? g_tfg[n](fds, srv, gfx, cmd) : NULL;
-		if ((n = time_lapse(n, clt, tim, srv)) > 0 && cmd)
+		if ((n = time_lapse((cmd ? n : 12), clt, tim, srv)) > 0)
 			g_tfc[n - 1](fds, srv, clt, cmd);
 		ft_memdel((void **)&cmd);
 	}

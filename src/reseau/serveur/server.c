@@ -117,7 +117,7 @@ int				main(int argc, char **argv)
 		recv_client(fds, srv, ret);
 		clk = ret > 0 ? (float)((clock() - tim) / CLOCKS_PER_SEC) : -1.0f;
 		send_client(fds, srv, clk);
-		tim = ((clock() - tim) / CLOCKS_PER_SEC) < 0.000001 ? tim : clock();
+		tim = !((clock() - tim) / CLOCKS_PER_SEC) ? tim : clock();
 		/*exception(fds, srv);*/
 	}
 	//close_server(srv, fds);

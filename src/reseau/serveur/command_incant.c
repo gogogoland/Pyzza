@@ -39,11 +39,11 @@ static bool	incant_interrupt(t_client *clt, t_server *srv)
 	i = 0;
 	player = srv->clt;
 	stop = (clt->lvl < 8) ? false : true;
-	while (player)
+	while (!stop && player)
 	{
 		if (player->name > 0 && player->lvl == clt->lvl
 				&& player->pos.x == clt->pos.x && player->pos.y == clt->pos.y)
-		   n_player++;
+			n_player++;
 		player = player->next;
 	}
 	stop = (n_player >= g_cmd_incant[clt->lvl - 1][i]) ? stop : true;

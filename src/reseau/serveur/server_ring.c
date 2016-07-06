@@ -23,14 +23,16 @@ static const char	*g_srv_ring_msg[] =
 
 void		ring_recv(char *command, t_ring *ring)
 {
+	int	limit;
 	int	i;
 	int	j;
 	int	len;
 
-	i = 0;
-	while (i < ring->len && ring->command && ring->command[i])
-		i++;
-	if (i == ring->len)
+	limit = -1;
+	i = ring->cur;
+	while (++limit < ring->len && ring->command && ring->command[i])
+		i = (i + 1) % ring->len;
+	if (limit == ring->len)
 		return ;
 	len = strlen(command);
 	if (!(ring->command[i] = (char *)malloc((len + 1) * sizeof(char))))

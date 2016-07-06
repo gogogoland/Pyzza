@@ -35,22 +35,19 @@ static char	*command_seek_add(t_server *srv, t_coord pos, int s, char *wt)
 	char		*arg;
 	t_client	*clt;
 
-	i = -1;
+	i = 0;
+	clt = srv->clt;
 	if (wt)
-		wt = command_seek_transfer(wt, 0, "| ");
-	while (++i < 7)
-	{
-		clt = srv->clt;
-		wt = command_seek_transfer(wt, srv->map[pos.y][pos.x][i], NULL);
-	}
+		asprintf(&wt, "%s | %i", wt, srv->map[pos.y][pos.x][0]);
+	else
+		asprintf(&wt, "%i", srv->map[pos.y][pos.x][0]);
+	while (++i < 6)
+		asprintf(&wt, "%s %i", wt, srv->map[pos.y][pos.x][i]);
 	while (clt)
 	{
 		if (clt->socket && clt->socket != s
 			&& clt->pos.x == pos.x && clt->pos.y == pos.y)
-		{
-			wt = command_seek_transfer(wt, clt->socket, NULL);
-			wt = command_seek_transfer(wt, clt->team, NULL);
-		}
+			asprintf(&wt, "%s %i %i", clt->name, clt->team);
 		clt = clt->next;
 	}
 	return (wt);
@@ -93,6 +90,7 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 			wt = command_seek_add(srv, pos, clt->socket, wt);
 		}
 	}
+	asprintf(&wt, "%s\n", wt);
 	send(clt->socket, wt, strlen(wt), 0);
 	send_graphe_action(srv, clt, 0);
 	ft_memdel((void **)&wt);
