@@ -48,6 +48,26 @@ static bool		command_player_is_graphical(t_gfx *gfx)
 	return (true);
 }
 
+static void		command_player_send_welcome(t_server *srv, t_client *clt)
+{
+	t_client	*team;
+	char		*msg;
+	int			nb_clt;
+
+	msg = NULL;
+	team = srv->clt;
+	nb_clt = 0;
+	while (team)
+	{
+		if (team->socket == 0 && (team->team == clt->team || team->team == -1))
+			nb_clt++;
+		team = team->next;
+	}
+	asprintf(&msg, "%i\n%i %i\n", nb_clt, clt->pos.x, clt->pos.y);
+	send(clt->socket, msg, strlen(msg), 0);
+	ft_memdel((void **)&msg);
+}
+
 //	TODO
 //	*	Send to client
 //	*	*	<nb-client>\n
@@ -78,4 +98,5 @@ void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 			ntohs(new->sin.sin_port));
 	fds->max = new->socket > fds->max - 1 ? new->socket + 1 : fds->max;
 	graphe_kill(gfx, fds, true);
+	command_player_send_welcome(srv, new);
 }
