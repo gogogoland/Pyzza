@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/07 22:41:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/20 22:08:33 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	client_init_data(t_client *clt)
 	clt->tolvl = 0;
 	clt->time = 0.0f;
 	clt->health = 0.0f;
+	clt->acolyte = NULL;
+	clt->casting = 0;
 }
 
 t_client	*client_init(t_server *srv)
@@ -70,6 +72,9 @@ void	client_kill(t_client *clt, t_fds *fds)
 	clt->lvl = 0;
 	free(clt);
 	clt = NULL;
+	if (acolyte)
+		free(acolyte);
+	acolyte = NULL;
 }
 
 void	client_zero(t_client *clt, t_fds *fds)
@@ -83,6 +88,9 @@ void	client_zero(t_client *clt, t_fds *fds)
 		FD_CLR(clt->socket, &fds->wr);
 		FD_CLR(clt->socket, &fds->ex);
 	}
+	if (acolyte)
+		free(acolyte);
+	acolyte = NULL;
 	ring_zero(clt->ring);
 	close(clt->socket);
 	clt->socket = 8;

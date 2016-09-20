@@ -6,11 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 15:18:57 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 21:33:49 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/20 21:41:19 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+static const char *g_msg_cmd_ = "ppo #%i\n";
 
 static const char	*g_cmd_pose[] =
 {
@@ -43,7 +45,8 @@ void	command_pose(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		ook = true;
 		srv->map[clt->pos.x][clt->pos.y][rsc] = clt->pos.rsc[rsc];
 		clt->pos.rsc[rsc] = 0;
-		send_graphe_action(srv, clt, 0);
+		send_graphe_action(srv, command_write_msg(clt, 10, 0, NULL), 0, NULL);
+		send_graphe_action(srv, command_write_msg(clt, 8, 0, NULL), 1, clt);
 	}
 	send_client_action(clt, ook);
 	ft_tabdel(tab);

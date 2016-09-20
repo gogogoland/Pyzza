@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/08 20:39:37 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/20 22:05:32 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,6 @@ static const float	g_cmd_time[] =
 };
 
 //	TODO:
-//	*	add correct text
-static const char	*g_action[] =
-{
-};
-
-//	TODO:
 //	*	modify time remain if time server change
 static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 {
@@ -105,8 +99,10 @@ static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 	if (!clt)
 		return (0);
 	action = (clt->time == 0.0f) ? clt->action : 0;
-	if (clt->time == 0.0f)
-		clt->action = n < 12 ? n + 1 : 0;
+	if (clt->time == 0.0f && !clt->socket)
+		send_graphe_action(srv, command_write_msg(clt, 2, 0, NULL), 0, NULL);
+	if (clt->time == 0.0f && (clt->action = n < 12 ? n + 1 : 0) == 11)
+		send_graphe_action(srv, command_write_msg(clt, 1, 0, NULL), 0, NULL);
 	if (clt->time == 0.0f && clt->action == 9)
 		clt->tolvl = clt->lvl + 1;
 	if ((clt->time = (clt->time == 0.0f && n < 12) ?
@@ -154,17 +150,20 @@ void		send_client_action(t_client *clt, bool ok)
 
 //	TODO:
 //	*	add correct action
-void		send_graphe_action(t_server *srv, t_client *clt, int n)
+void		send_graphe_action(t_server *srv, char *msg,
+								int spec, t_client *clt)
 {
 	t_gfx	*gfx;
-	char	*action;
 
-	action = NULL;
 	gfx = srv->gfx;
-	asprintf(&action, "action #%d %d\n", clt->name, n);
 	while (action && gfx)
 	{
 		send(gfx->socket, action, strlen(action), 0);
+		if (spec == 1 && clt)
+		{
+			command_box_content(gfx, clt->pos.x, clt->pos.y,
+								srv->map[clt->pos.x][clt->pos.y]);
+		}
 		gfx = gfx->next;
 	}
 	ft_memdel((void **)&action);

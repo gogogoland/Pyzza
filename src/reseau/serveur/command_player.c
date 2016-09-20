@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/07 22:12:10 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/20 21:51:48 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static t_client	*command_player_get_valide_client(int t, t_server *srv)
 	new = srv->clt;
 	while (new && (new->socket || (new->team >= 0 && new->team != t)))
 		new = new->next;
+	if (new && new->team == t)
+		send_graphe_action(srv, command_write_msg(clt, 0, 0, NULL), 0, NULL);
 	return (new);
 }
 
@@ -65,13 +67,10 @@ static void		command_player_send_welcome(t_server *srv, t_client *clt)
 	}
 	asprintf(&msg, "%i\n%i %i\n", nb_clt, clt->pos.x, clt->pos.y);
 	send(clt->socket, msg, strlen(msg), 0);
+	send_graphe_action(srv, command_write_msg(clt, 7, 0, NULL), 0, NULL);
 	ft_memdel((void **)&msg);
 }
 
-//	TODO
-//	*	Send to client
-//	*	*	<nb-client>\n
-//	*	*	<x> <y>\n
 void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 {
 	int			t;

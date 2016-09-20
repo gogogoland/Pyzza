@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 19:38:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 21:56:23 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/19 16:12:09 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static const char	*g_scr[] =
 		"Error accept %d client\n",
 		"New client from ip %s, port %d.\n",
 		"Client tried to connect, but malloc failed.\n",
-		"Client discnnected , ip %s , port %d.\n"
+		"Client disconnected , ip %s , port %d.\n"
 };
 
 static void client_command(t_fds *fds, t_server *srv, int s)

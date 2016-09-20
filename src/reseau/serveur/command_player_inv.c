@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/07 22:17:37 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/20 18:43:55 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void		command_player_inv(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	}
 	if (!clt)
 		return command_graphical_bad_parameters(fds, srv, gfx, cmd);
-	inv = command_player_inv_get_clt_inv(clt, clt->rsc);
+	inv = command_player_inv_get_clt_inv(clt, clt->pos.rsc);
 	if (inv)
 		send(gfx->socket, inv, strlen(inv), 0);
 	ft_memdel((void **)&inv);

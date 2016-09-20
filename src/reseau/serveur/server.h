@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/07 22:43:25 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/20 21:55:52 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,13 @@ typedef struct			s_client
 	int					team;
 	int					name;
 	bool				fork;
-	int					*rsc;
 	int					lvl;
 	int					tolvl;
 	int					action;
 	float				time;
 	float				health;
+	int					*acolytes
+	bool				casting;
 	struct s_ring		*ring;
 	struct s_client		*next;
 	struct s_client		*prev;
@@ -201,5 +202,8 @@ void	    command_box_content(t_gfx *gfx, int x, int y, int *box);
 void		command_graphical_bad_parameters(t_fds *fds, t_server *srv,
 											t_gfx *gfx, char *cmd);
 //void		command_(t_fds *fds, t_server *srv, t_ *, char *cmd);
+
+char		*command_write_msg(t_client *clt, int action, int n, char *pbc);
+char		*command_write_msg_end_fork(t_client *clt, t_client *frk;
 
 #endif

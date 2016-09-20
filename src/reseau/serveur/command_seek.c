@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/06 21:49:37 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/20 17:38:58 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static char	*command_seek_add(t_server *srv, t_coord pos, int s, char *wt)
 	{
 		if (clt->socket && clt->socket != s
 			&& clt->pos.x == pos.x && clt->pos.y == pos.y)
-			asprintf(&wt, "%s %i %i", clt->name, clt->team);
+			asprintf(&wt, "%i %i", clt->name, clt->team);
 		clt = clt->next;
 	}
 	return (wt);
@@ -92,6 +92,6 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	}
 	asprintf(&wt, "%s\n", wt);
 	send(clt->socket, wt, strlen(wt), 0);
-	send_graphe_action(srv, clt, 0);
+	send_graphe_action(srv, command_write_msg(clt, 00));
 	ft_memdel((void **)&wt);
 }

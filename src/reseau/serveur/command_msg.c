@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:50:09 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 21:37:19 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/20 21:52:31 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,5 @@ void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		cur = cur->next;
 	}
 	send_client_action(clt, true);
-	send_graphe_action(srv, clt, 0);
+	send_graphe_action(srv, command_write_msg(clt, 12, 0, msg), 0, NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:01:54 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/18 18:54:13 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/20 21:54:44 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,17 @@ void			command_eject(t_fds *fds, t_server *srv, t_client *clt, \
 	cp = assign_coord(clt->pos.x + mv.x, clt->pos.y + mv.y);
 	mv.x = (cp.x + mv.x) < 0 ? srv->plateau.x : (cp.x + mv.x) % srv->plateau.x;
 	mv.y = (cp.y + mv.y) < 0 ? srv->plateau.y : (cp.y + mv.y) % srv->plateau.y;
+	send_graphe_action(srv, command_write_msg(clt, 5, 0, NULL), 0, NULL);
 	while (cur)
 	{
 		if (cur && cur->socket && cur->pos.x == cp.x && cur->pos.y == cp.y)
 		{
 			cur->pos = assign_coord(mv.x, mv.y);
 			cur->action = 0;
-			send_graphe_action(srv, cur, 0);
+			send_graphe_action(srv, command_write_msg(clt, 6, 0, NULL), 0, clt);
 			ok = true;
 		}
 		cur = cur->next;
 	}
 	send_client_action(clt, ok);
-	send_graphe_action(srv, clt, 0);
 }
