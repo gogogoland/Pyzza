@@ -6,19 +6,18 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 18:22:09 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/21 20:02:44 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static void	incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 static void	incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 static bool	incant_check_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 static bool	incant_init_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 static void	incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 
-static const char	*g_msg_init_aco = "pie %i %i %i #%i";
+static const char	*g_msg_init_aco = "pic %i %i %i #%i";
 
 static void	incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
@@ -102,7 +101,7 @@ static void	incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	clt->casting = false;
 }
 
-static void	incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
+void	incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
 	t_client	*player;
 
@@ -112,8 +111,14 @@ static void	incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 		player = srv->clt;
 		while (player->name != clt->acolyte[lim_acolyte])
 			player = player->next;
+		send_graphe_action(srv, command_write_msg(player, 11, player->lvl,
+												NULL), 0, NULL);
 		player->lvl = player->lvl + 1 == clt->tolvl ? clt->tolvl : player->lvl;
 	}
+	send_graphe_action(srv, command_write_msg(clt, 11, clt->lvl, NULL), 0,
+						NULL);
+	send_graphe_action(srv, command_write_msg(clt, 8, 0, NULL), 0, NULL);
+	incant_reset_acolyte(srv, clt, lim_acolyte);
 }
 
 bool	incant_help_acolyte(t_server *srv, t_client* clt, int lim_acolyte)

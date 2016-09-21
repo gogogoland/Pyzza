@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 18:05:16 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/21 20:04:07 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,6 @@ static int	command_seek_int(int sens, int pos, t_coord see, int srv)
 	return (r);
 }
 
-//	TODO
-//	*	Check if correct
 void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	t_coord	see;

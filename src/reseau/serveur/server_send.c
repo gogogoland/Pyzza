@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 18:03:11 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/21 20:11:44 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,8 +148,6 @@ void		send_client_action(t_client *clt, bool ok)
 		send(clt->socket, ok ? "ok\n" : "ko\n", 3, 0);
 }
 
-//	TODO:
-//	*	add correct action
 void		send_graphe_action(t_server *srv, char *msg,
 								int spec, t_client *clt)
 {
@@ -166,5 +164,6 @@ void		send_graphe_action(t_server *srv, char *msg,
 		}
 		gfx = gfx->next;
 	}
+		server_log(msg);
 	ft_memdel((void **)&msg);
 }

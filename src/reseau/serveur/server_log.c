@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/16 15:13:07 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/16 15:19:46 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/21 20:12:15 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 //	*	Save log
 void	server_log(const char *msg)
 {
-	write(1, msg, strlen(msg));
-	write(1, "\n", 1);
+	(void)msg;
+//	write(1, msg, strlen(msg));
+//	write(1, "\n", 1);
 }

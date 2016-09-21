@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:40:06 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 18:07:21 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/21 20:03:45 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static const int	g_cmd_incant[7][7] =
 static const char	*g_msg_cmd_incant[] =
 {
 	"elevation en cours niveau actuel : %i\n",
-	"incantation interrompu niveau actuel : %i\n"
+	"incantation interrompu niveau actuel : %i\n",
+	"pie %i %i %s\n"
 };
 
 static bool	incant_interrupt(t_client *clt, t_server *srv)
@@ -49,9 +50,6 @@ static bool	incant_interrupt(t_client *clt, t_server *srv)
 	return (stop ? true : false);
 }
 
-//	TODO:
-//	*	lvlup other player
-//	*	special msg for graphical client
 void		command_incant(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	int			i;
@@ -64,17 +62,19 @@ void		command_incant(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	while (lvlup && ++i < 7)
 		lvlup = (clt->pos.rsc[i - 1] >= g_cmd_incant[clt->lvl - 1][i]) ? 1 : 0;
 	if (!lvlup)
-		return;
+		return ;
 	lvlup = (incant_interrupt(clt, srv)) ? 0 : 1;
 	while (lvlup && ++i < 7)
 		clt->pos.rsc[i - 1] -= g_cmd_incant[clt->lvl - 1][i];
-	clt->lvl = (lvlup) ? clt->tolvl : clt->lvl;
-	clt->lvl = (clt->lvl > 8) ? 8 : clt->lvl;
-	if (asprintf(&msg, g_msg_cmd_incant[lvlup], clt->lvl) > 0)
-	{
-		send(clt->socket, msg, strlen(msg), 0);
-		ft_memdel((void **)&msg);
-	}
+	clt->tolvl = lvlup ? clt->tolvl : clt->lvl;
+	incant_lvlup_acolyte(srv, clt, g_cmd_incant[clt->lvl - 1][0]);
+	asprintf(&msg, g_msg_cmd_incant[lvlup], clt->lvl);
+	send(clt->socket, msg, strlen(msg), 0);
+	ft_memdel((void **)&msg);
+	asprintf(&msg, g_msg_cmd_incant[2], clt->pos.x, clt->pos.y,
+				lvlup ? "ok" : "ko");
+	send(clt->socket, msg, strlen(msg), 0);
+	ft_memdel((void **)&msg);
 }
 
 bool		incant_process(t_client *clt, t_server *srv)
