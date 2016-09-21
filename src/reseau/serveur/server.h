@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/20 21:55:52 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/21 18:01:19 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ typedef struct			s_client
 	int					action;
 	float				time;
 	float				health;
-	int					*acolytes
+	int					*acolyte;
 	bool				casting;
 	struct s_ring		*ring;
 	struct s_client		*next;
@@ -141,8 +141,8 @@ void		server_log(const char *msg);
 bool		recv_client(t_fds *fds, t_server *srv, int ret);
 void		send_client(t_fds *fds, t_server *srv, float tom);
 void		send_client_action(t_client *clt, bool ok);
-void		send_graphe_action(t_server *srv, t_client *clt, int n);
-
+void		send_graphe_action(t_server *srv, char *msg, int spec,
+								t_client *clt);
 
 void		command_forward(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
@@ -169,6 +169,7 @@ void		command_take(t_fds *fds, t_server *srv,
 void		command_incant(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 bool		incant_process(t_client *cllt, t_server *srv);
+bool		incant_help_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 void		command_fork(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 void		command_nbr_co(t_fds *fds, t_server *srv,
@@ -204,6 +205,6 @@ void		command_graphical_bad_parameters(t_fds *fds, t_server *srv,
 //void		command_(t_fds *fds, t_server *srv, t_ *, char *cmd);
 
 char		*command_write_msg(t_client *clt, int action, int n, char *pbc);
-char		*command_write_msg_end_fork(t_client *clt, t_client *frk;
+char		*command_write_msg_end_fork(t_client *clt, t_client *frk);
 
 #endif

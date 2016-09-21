@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/20 22:05:32 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/21 18:03:11 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,9 +156,9 @@ void		send_graphe_action(t_server *srv, char *msg,
 	t_gfx	*gfx;
 
 	gfx = srv->gfx;
-	while (action && gfx)
+	while (msg && gfx)
 	{
-		send(gfx->socket, action, strlen(action), 0);
+		send(gfx->socket, msg, strlen(msg), 0);
 		if (spec == 1 && clt)
 		{
 			command_box_content(gfx, clt->pos.x, clt->pos.y,
@@ -166,5 +166,5 @@ void		send_graphe_action(t_server *srv, char *msg,
 		}
 		gfx = gfx->next;
 	}
-	ft_memdel((void **)&action);
+	ft_memdel((void **)&msg);
 }

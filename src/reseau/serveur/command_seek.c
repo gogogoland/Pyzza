@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/20 17:38:58 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/21 18:05:16 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,5 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	}
 	asprintf(&wt, "%s\n", wt);
 	send(clt->socket, wt, strlen(wt), 0);
-	send_graphe_action(srv, command_write_msg(clt, 00));
 	ft_memdel((void **)&wt);
 }

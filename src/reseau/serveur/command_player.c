@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/20 21:51:48 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/21 18:12:26 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static t_client	*command_player_get_valide_client(int t, t_server *srv)
 	while (new && (new->socket || (new->team >= 0 && new->team != t)))
 		new = new->next;
 	if (new && new->team == t)
-		send_graphe_action(srv, command_write_msg(clt, 0, 0, NULL), 0, NULL);
+		send_graphe_action(srv, command_write_msg(new, 0, 0, NULL), 0, NULL);
 	return (new);
 }
 

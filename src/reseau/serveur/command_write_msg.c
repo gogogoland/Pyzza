@@ -6,13 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/20 17:18:51 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/20 21:34:06 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/21 18:37:58 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const *g_msg_cmd[] =
+static const char *g_msg_cmd[] =
 {
 	"ebo #%i\n",
 	"pfk #%i\n",
@@ -21,7 +21,7 @@ static const *g_msg_cmd[] =
 	"pdi #%i\n",
 	"pex #%i\n",
 	"ppo #%i %i %i %i\n",
-	"pnw #%i %i %i %i %i\n",
+	"pnw #%i %i %i %i %i %i\n",
 	"pin #%i %i %i %i %i %i %i %i %i %i\n",
 	"pgt #%i %i\n",
 	"pdr #%i %i\n",
@@ -45,12 +45,12 @@ char	*command_write_msg(t_client *clt, int action, int n, char *pbc)
 		return (msg);
 	else if (action == 8)
 	{
-		rsc = &clt->pos.rsc;
+		rsc = clt->pos.rsc;
 		if (asprintf(&msg, g_msg_cmd[action], clt->name, clt->pos.x, clt->pos.y,
 				rsc[0], rsc[1], rsc[2], rsc[3], rsc[4], rsc[5], rsc[6]) >= 0)
 			return (msg);
 	}
-	else if (actiom < 12
+	else if (action < 12
 			&& asprintf(&msg, g_msg_cmd[action], clt->name, n) >= 0)
 		return (msg);
 	else if (action == 12

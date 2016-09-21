@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/06/07 22:19:59 by tbalea           ###   ########.fr        #
+#    Updated: 2016/09/21 18:16:00 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,10 +64,12 @@ SRC = ft_atoi.c\
 	  command_take.c\
 	  command_fork.c\
 	  command_incant.c\
+	  incant_help_acolyte.c\
 	  command_nbr_co.c\
 	  command_player.c\
 	  command_graphe.c\
 	  command_size.c\
+	  command_write_msg.c\
 	  command_get_int.c\
 	  command_time_change.c\
 	  command_time_server.c\
