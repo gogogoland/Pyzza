@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 17:56:41 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/22 20:13:36 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	client_init_data(t_client *clt)
 	clt->tolvl = 0;
 	clt->time = 0.0f;
 	clt->health = 0.0f;
+	clt->broadcast = NULL;
 	clt->acolyte = NULL;
 	clt->casting = 0;
 }
@@ -68,13 +69,14 @@ void	client_kill(t_client *clt, t_fds *fds)
 	while (--clt->socket > 0)
 		clt->pos.rsc[clt->socket - 1] = 0;
 	free(clt->pos.rsc);
-	client_init_data(clt);
 	clt->lvl = 0;
-	free(clt);
-	clt = NULL;
+	if (clt->broadcast)
+		free(clt->broadcast);
 	if (clt->acolyte)
 		free(clt->acolyte);
-	clt->acolyte = NULL;
+	client_init_data(clt);
+	free(clt);
+	clt = NULL;
 }
 
 void	client_zero(t_client *clt, t_fds *fds)
@@ -88,9 +90,10 @@ void	client_zero(t_client *clt, t_fds *fds)
 		FD_CLR(clt->socket, &fds->wr);
 		FD_CLR(clt->socket, &fds->ex);
 	}
+	if (clt->broadcast)
+		free(clt->broadcast);
 	if (clt->acolyte)
 		free(clt->acolyte);
-	clt->acolyte = NULL;
 	ring_zero(clt->ring);
 	close(clt->socket);
 	clt->socket = 8;

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/22 14:42:25 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/22 20:42:30 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ typedef struct			s_client
 	int					action;
 	float				time;
 	float				health;
+	char				*msg;
 	int					*acolyte;
 	bool				casting;
 	struct s_ring		*ring;
@@ -158,6 +159,7 @@ void		command_lvlup(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 void		command_msg(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
+bool		msg_save(t_client *clt, char *msg);
 void		command_pose(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 void		command_right(t_fds *fds, t_server *srv,
@@ -205,7 +207,7 @@ int			command_get_int(int i, char *cmd);
 void	    command_box_content(t_gfx *gfx, int x, int y, int *box);
 void		command_graphical_bad_parameters(t_fds *fds, t_server *srv,
 											t_gfx *gfx, char *cmd);
-//void		command_(t_fds *fds, t_server *srv, t_ *, char *cmd);
+void		command_void(t_fds *fds, t_server *srv, t_client *clt, char *cmd);
 
 char		*command_write_msg(t_client *clt, int action, int n, char *pbc);
 char		*command_write_msg_end_fork(t_client *clt, t_client *frk);

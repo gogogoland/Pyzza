@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/22 14:41:29 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/22 20:45:25 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static const char	*g_clt_cmd[] =
 	"prend\n",
 	"pose\n",
 	"expulse\n",
-	"broadcast\n",
+	"broadcast",
 	"incantation\n",
 	"fork\n",
 	"connect_nbr\n"
@@ -136,7 +136,7 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 				g_clt_cmd[n]), strlen(!clt ? g_gfx_cmd[n] : g_clt_cmd[n])) != 0)
 			n++;
 		(!clt && cmd && 0 <= n && n < 9) ? g_tfg[n](fds, srv, gfx, cmd) : NULL;
-		if ((n = time_lapse((cmd ? n : 12), clt, tim, srv)) > 0)
+		if ((n = time_lapse((msg_save(clt, cmd) ? n : 12), clt, tim, srv)))
 			g_tfc[n - 1](fds, srv, clt, cmd);
 		ft_memdel((void **)&cmd);
 	}

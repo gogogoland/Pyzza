@@ -1,22 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server_log.c                                       :+:      :+:    :+:   */
+/*   command_void.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/05/16 15:13:07 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/22 18:37:23 by tbalea           ###   ########.fr       */
+/*   Created: 2016/09/22 19:44:24 by tbalea            #+#    #+#             */
+/*   Updated: 2016/09/22 19:45:38 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-//	TODO
-//	*	Save log
-void	server_log(const char *msg)
+void command_void(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
-	ft_putstr(msg);
-//	write(1, msg, strlen(msg));
-//	write(1, "\n", 1);
+	return ;
 }

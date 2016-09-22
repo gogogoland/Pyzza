@@ -6,11 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:50:09 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/20 21:52:31 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/22 20:47:12 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+static const char	*g_msg_cmd_msg = "pbc %i %s";
 
 static t_coord	command_msg_min(t_server *srv, t_client *clt, t_client *cur)
 {
@@ -36,36 +38,44 @@ static char		*msg_contain(char *cmd)
 	char	*msg;
 	int		i;
 
-	msg = (char *)malloc((strlen(cmd) - 10) * sizeof(char));
-	i = 9;
+	if (!cmd || strlen(cmd) < 10)
+		return (NULL);
+	msg = (char *)malloc((strlen(cmd) - 9) * sizeof(char));
+	i = 8;
 	while (msg && cmd[i++])
-		msg[i - 10] = cmd[i];
+		msg[i - 9] = cmd[i];
 	return (msg);
 }
 
-static char		*msg_from(int org, char *msg)
+static void		msg_send_player(int org, char *msg, int socket)
 {
-	char		*tmp;
 	char		*pos;
 
-	tmp = ft_itoa(org);
-	pos = ft_strjoin(tmp, msg);
-	ft_memdel((void **)&tmp);
-	ft_memdel((void **)&msg);
-	return (pos);
+	if (asprintf(&pos, g_msg_cmd_msg, org, msg))
+	{
+		send(socket, pos, strlen(pos), 0);
+		ft_memdel((void **)&pos);
+	}
+}
+
+bool		msg_save(t_client *clt, char *msg)
+{
+	if (!clt || !msg)
+		return (false);
+	if (clt->msg)
+		ft_memdel((void **)&clt->msg);
+	clt->msg = msg_contain(msg);
+	return (true);
 }
 
 void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	t_coord		p;
 	t_coord		min;
-	char		*pos;
-	char		*msg;
 	t_client	*cur;
 
 	cur = srv->clt;
-	msg = msg_contain(cmd);
-	while (cur)
+	while (clt->msg && cur)
 	{
 		if (cur->socket && cur->socket != clt->socket)
 		{
@@ -74,12 +84,12 @@ void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 			p.y = cur->pos.y - clt->pos.y < 0 ? 0 : 2;
 			p.x = (min.x + (cur->pos.x == clt->pos.x ? 1 : p.x)) % 3;
 			p.y = (min.y + (cur->pos.y == clt->pos.y ? 1 : p.y)) % 3;
-			pos = msg_from(p.y * 3 + p.x, cmd);
-			send(cur->socket, pos, strlen(pos), 0);
-			ft_memdel((void **)&pos);
+			msg_send_player(p.y * 3 + p.x, clt->msg, cur->socket);
 		}
 		cur = cur->next;
 	}
-	send_client_action(clt, true);
-	send_graphe_action(srv, command_write_msg(clt, 12, 0, msg), 0, NULL);
+	send_client_action(clt, !!clt->msg);
+	send_graphe_action(srv, command_write_msg(clt, 12, 0, clt->msg), 0, NULL);
+	if (clt && clt->msg)
+		ft_memdel((void **)&clt->msg);
 }
