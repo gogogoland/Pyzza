@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:40:06 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 20:03:45 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/22 14:40:36 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ static bool	incant_interrupt(t_client *clt, t_server *srv)
 	while (!stop && ++i < 7)
 		stop = clt->pos.rsc[i - 1] >= g_cmd_incant[clt->lvl - 1][i] ? 0 : 1;
 	stop = (clt->tolvl == clt->lvl + 1) ? stop : 1;
-	if (stop)
-		send_graphe_action(srv, command_write_msg(clt, 5, 0, NULL), 0, NULL);
 	return (stop ? true : false);
 }
 
@@ -81,8 +79,10 @@ bool		incant_process(t_client *clt, t_server *srv)
 {
 	if (clt && clt->time == 0.0f)
 		return (false);
-	else if (clt && clt->action == 9 && !incant_interrupt(clt, srv))
+	else if (clt && clt->action == 10 && !incant_interrupt(clt, srv))
 	{
+		incant_msg_acolyte(srv, clt, g_cmd_incant[clt->lvl - 1][0]);
+		incant_reset_acolyte(srv, clt, g_cmd_incant[clt->lvl - 1][0]);
 		clt->action = 0;
 		clt->time = 0.0f;
 		return (false);

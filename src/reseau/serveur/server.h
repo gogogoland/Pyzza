@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 18:57:18 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/22 14:42:25 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,8 +169,10 @@ void		command_take(t_fds *fds, t_server *srv,
 void		command_incant(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 bool		incant_process(t_client *cllt, t_server *srv);
+void		incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 bool		incant_help_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 void		incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
+void		incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 void		command_fork(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 void		command_nbr_co(t_fds *fds, t_server *srv,

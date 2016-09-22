@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 20:11:44 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/22 14:41:29 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 		send_graphe_action(srv, command_write_msg(clt, 2, 0, NULL), 0, NULL);
 	if (clt->time == 0.0f && (clt->action = n < 12 ? n + 1 : 0) == 11)
 		send_graphe_action(srv, command_write_msg(clt, 1, 0, NULL), 0, NULL);
-	if (clt->time == 0.0f && clt->action == 9)
+	if (clt->time == 0.0f && clt->action == 10)
 		clt->tolvl = clt->lvl + 1;
 	if ((clt->time = (clt->time == 0.0f && n < 12) ?
 			g_cmd_time[n] * (1.0f / (float)srv->time) : clt->time - tim) < 0.0f)
@@ -153,17 +153,22 @@ void		send_graphe_action(t_server *srv, char *msg,
 {
 	t_gfx	*gfx;
 
+	if (!msg)
+		return ;
 	gfx = srv->gfx;
 	while (msg && gfx)
 	{
-		send(gfx->socket, msg, strlen(msg), 0);
-		if (spec == 1 && clt)
+		if (gfx->isgfx)
 		{
-			command_box_content(gfx, clt->pos.x, clt->pos.y,
-								srv->map[clt->pos.x][clt->pos.y]);
+			send(gfx->socket, msg, strlen(msg), 0);
+			if (spec == 1 && clt)
+			{
+				command_box_content(gfx, clt->pos.x, clt->pos.y,
+									srv->map[clt->pos.x][clt->pos.y]);
+			}
 		}
 		gfx = gfx->next;
 	}
-		server_log(msg);
+	server_log(msg);
 	ft_memdel((void **)&msg);
 }

@@ -6,29 +6,42 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 20:02:44 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/22 14:45:38 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static void	incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 static bool	incant_check_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 static bool	incant_init_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
-static void	incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 
 static const char	*g_msg_init_aco = "pic %i %i %i #%i";
 
-static void	incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
+void	incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
+	int			error;
 	char		*msg;
+	char		*tmp;
 
-	asprintf(&msg, g_msg_init_aco, clt->pos.x, clt->pos.y, clt->lvl, clt->name);
+	msg = NULL;
+	if (asprintf(&msg, g_msg_init_aco,
+				clt->pos.x, clt->pos.y, clt->lvl, clt->name) < 0)
+		return ;
 	while (lim_acolyte--)
-		asprintf(&msg, " #%i", clt->acolyte[lim_acolyte]);
-	asprintf(&msg, "\n");
-	send_graphe_action(srv, msg, 0, NULL);
+	{
+		error = asprintf(&tmp, "%s #%i", msg, clt->acolyte[lim_acolyte]);
+		ft_memdel((void **)&msg);
+		if (error < 0)
+			return ;
+		error = asprintf(&msg, "%s", tmp);
+		ft_memdel((void **)&tmp);
+		if (error < 0)
+			return ;
+	}
+	error = asprintf(&tmp, "%s\n", msg);
 	ft_memdel((void **)&msg);
+	send_graphe_action(srv, tmp, 0, NULL);
+	send_graphe_action(srv, command_write_msg(clt, 8, 0, NULL), 0, NULL);
 }
 
 static bool	incant_init_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
@@ -79,7 +92,7 @@ static bool	incant_check_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	return (true);
 }
 
-static void	incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
+void	incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
 	t_client	*player;
 	int			i;
