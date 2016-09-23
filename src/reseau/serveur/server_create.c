@@ -89,6 +89,7 @@ static t_server	*check_data(t_server *srv, int isdone)
 {
 	int			e;
 
+	srv->lvl = 1;
 	srv->gfx = NULL;
 	srv->clt = NULL;
 	srv->socket = 0;

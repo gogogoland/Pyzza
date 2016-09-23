@@ -45,8 +45,8 @@ void	command_pose(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		ook = true;
 		srv->map[clt->pos.x][clt->pos.y][rsc] = clt->pos.rsc[rsc];
 		clt->pos.rsc[rsc] = 0;
-		send_graphe_action(srv, command_write_msg(clt, 10, 0, NULL), 0, NULL);
-		send_graphe_action(srv, command_write_msg(clt, 8, 0, NULL), 1, clt);
+		send_graphe_action(srv, command_write_msg(clt, 11, 0, NULL), 0, NULL);
+		send_graphe_action(srv, command_write_msg(clt, 9, 0, NULL), 1, clt);
 	}
 	send_client_action(clt, ook);
 	ft_tabdel(tab);

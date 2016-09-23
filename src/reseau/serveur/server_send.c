@@ -43,6 +43,7 @@ static const t_x_clt g_tfc[] =
 	command_incant,
 	command_fork,
 	command_nbr_co,
+	command_eat,
 	command_death
 };
 
@@ -71,7 +72,8 @@ static const char	*g_clt_cmd[] =
 	"broadcast",
 	"incantation\n",
 	"fork\n",
-	"connect_nbr\n"
+	"connect_nbr\n",
+	"eat\n"
 };
 
 static const float	g_cmd_time[] =
@@ -87,11 +89,10 @@ static const float	g_cmd_time[] =
 	7.0f,
 	300.0f,
 	42.0f,
-	0.0f
+	0.0f,
+	7.0f
 };
 
-//	TODO:
-//	*	modify time remain if time server change
 static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 {
 	int	action;
@@ -105,7 +106,7 @@ static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 		send_graphe_action(srv, command_write_msg(clt, 1, 0, NULL), 0, NULL);
 	if (clt->time == 0.0f && clt->action == 10)
 		clt->tolvl = clt->lvl + 1;
-	if ((clt->time = (clt->time == 0.0f && n < 12) ?
+	if ((clt->time = (clt->time == 0.0f && n < 13) ?
 			g_cmd_time[n] * (1.0f / (float)srv->time) : clt->time - tim) < 0.0f)
 		clt->time = 0.0f;
 	if ((clt->health -= tim) <= 0.0f)
@@ -132,11 +133,11 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 			gfx = gfx->next;
 		if (!incant_process(clt, srv) || (!clt && gfx))
 			cmd = (!clt ? ring_send(gfx->ring) : ring_send(clt->ring));
-		while (cmd && n < (!clt ? 8 : 12) && strncmp(cmd, (!clt ? g_gfx_cmd[n] :
+		while (cmd && n < (!clt ? 8 : 13) && strncmp(cmd, (!clt ? g_gfx_cmd[n] :
 				g_clt_cmd[n]), strlen(!clt ? g_gfx_cmd[n] : g_clt_cmd[n])) != 0)
 			n++;
 		(!clt && cmd && 0 <= n && n < 9) ? g_tfg[n](fds, srv, gfx, cmd) : NULL;
-		if ((n = time_lapse((msg_save(clt, cmd) ? n : 12), clt, tim, srv)))
+		if ((n = time_lapse((msg_save(clt, cmd) ? n : 13), clt, tim, srv)))
 			g_tfc[n - 1](fds, srv, clt, cmd);
 		ft_memdel((void **)&cmd);
 	}

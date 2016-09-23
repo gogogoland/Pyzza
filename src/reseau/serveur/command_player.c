@@ -67,7 +67,7 @@ static void		command_player_send_welcome(t_server *srv, t_client *clt)
 	}
 	asprintf(&msg, "%i\n%i %i\n", nb_clt, clt->pos.x, clt->pos.y);
 	send(clt->socket, msg, strlen(msg), 0);
-	send_graphe_action(srv, command_write_msg(clt, 7, 0, NULL), 0, NULL);
+	send_graphe_action(srv, command_write_msg(clt, 8, 0, NULL), 0, NULL);
 	ft_memdel((void **)&msg);
 }
 

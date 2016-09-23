@@ -33,6 +33,6 @@ void		command_right(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	clt->sens = (clt->sens + 1) % 4;
 	send_client_action(clt, true);
 	msg = write_msg_cmd_right(clt);
-	send_graphe_action(srv, command_write_msg(clt, 6, 0, NULL), 0, NULL);
+	send_graphe_action(srv, command_write_msg(clt, 7, 0, NULL), 0, NULL);
 	ft_memdel((void **)&msg);
 }

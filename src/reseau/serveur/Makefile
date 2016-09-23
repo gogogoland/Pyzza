@@ -54,6 +54,7 @@ SRC = ft_atoi.c\
 	  server_log.c\
 	  command_void.c\
 	  command_death.c\
+	  command_eat.c\
 	  command_eject.c\
 	  command_forward.c\
 	  command_inventory.c\

@@ -43,7 +43,7 @@ void			command_eject(t_fds *fds, t_server *srv, t_client *clt, \
 		{
 			cur->pos = assign_coord(mv.x, mv.y);
 			cur->action = 0;
-			send_graphe_action(srv, command_write_msg(clt, 6, 0, NULL), 0, clt);
+			send_graphe_action(srv, command_write_msg(clt, 7, 0, NULL), 0, clt);
 			ok = true;
 		}
 		cur = cur->next;

@@ -23,5 +23,5 @@ void	command_forward(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	clt->pos.x = (clt->pos.x + mv.x) % srv->plateau.x;
 	clt->pos.y = (clt->pos.y + mv.y) % srv->plateau.y;
 	send_client_action(clt, true);
-	send_graphe_action(srv, command_write_msg(clt, 6, 0, NULL), 0, NULL);
+	send_graphe_action(srv, command_write_msg(clt, 7, 0, NULL), 0, NULL);
 }

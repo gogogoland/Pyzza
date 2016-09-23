@@ -102,6 +102,7 @@ typedef struct			s_server
 	int					socket;
 	int					name;
 	int					time;
+	int					lvl;
 	int					old_player_max;
 	int					player_max;
 	int					***map;
@@ -181,6 +182,8 @@ void		command_nbr_co(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 void		command_death(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
+void		command_eat(t_fds *fds, t_server *srv,
+								t_client *clt, char *cmd);
 
 
 void		command_player(t_fds *fsd, t_server *srv,
@@ -207,6 +210,7 @@ int			command_get_int(int i, char *cmd);
 void	    command_box_content(t_gfx *gfx, int x, int y, int *box);
 void		command_graphical_bad_parameters(t_fds *fds, t_server *srv,
 											t_gfx *gfx, char *cmd);
+
 void		command_void(t_fds *fds, t_server *srv, t_client *clt, char *cmd);
 
 char		*command_write_msg(t_client *clt, int action, int n, char *pbc);

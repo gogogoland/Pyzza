@@ -40,7 +40,7 @@ static void client_command(t_fds *fds, t_server *srv, int s)
 	if (!gfx && !clt)
 		return ;
 	if (rd_len == 0)
-		!clt ? graphe_kill(gfx, fds, false) : client_zero(clt, fds);
+		!clt ? graphe_kill(gfx, fds, false) : command_death(fds, srv, clt, NULL);
 	else
 		ring_recv(buffer, !clt ? gfx->ring : clt->ring);
 }

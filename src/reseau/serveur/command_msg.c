@@ -89,7 +89,7 @@ void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		cur = cur->next;
 	}
 	send_client_action(clt, !!clt->msg);
-	send_graphe_action(srv, command_write_msg(clt, 12, 0, clt->msg), 0, NULL);
+	send_graphe_action(srv, command_write_msg(clt, 14, 0, clt->msg), 0, NULL);
 	if (clt && clt->msg)
 		ft_memdel((void **)&clt->msg);
 }

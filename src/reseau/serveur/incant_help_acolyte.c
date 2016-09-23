@@ -41,7 +41,6 @@ void	incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	error = asprintf(&tmp, "%s\n", msg);
 	ft_memdel((void **)&msg);
 	send_graphe_action(srv, tmp, 0, NULL);
-	send_graphe_action(srv, command_write_msg(clt, 8, 0, NULL), 0, NULL);
 }
 
 static bool	incant_init_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
@@ -116,22 +115,30 @@ void	incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 
 void	incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
+	int			oldlvl;
 	t_client	*player;
 
+	oldlvl = srv->lvl;
 	clt->lvl = (clt->tolvl > 8) ? 8 : clt->tolvl;
+	srv->lvl = clt->lvl > srv->lvl ? clt->lvl : srv->lvl;
 	while (lim_acolyte--)
 	{
 		player = srv->clt;
 		while (player->name != clt->acolyte[lim_acolyte])
 			player = player->next;
-		send_graphe_action(srv, command_write_msg(player, 11, player->lvl,
+		send_graphe_action(srv, command_write_msg(player, 12, player->lvl,
 												NULL), 0, NULL);
 		player->lvl = player->lvl + 1 == clt->tolvl ? clt->tolvl : player->lvl;
 	}
-	send_graphe_action(srv, command_write_msg(clt, 11, clt->lvl, NULL), 0,
+	send_graphe_action(srv, command_write_msg(clt, 12, clt->lvl, NULL), 0,
 						NULL);
-	send_graphe_action(srv, command_write_msg(clt, 8, 0, NULL), 0, NULL);
+	send_graphe_action(srv, command_write_msg(clt, 9, 0, NULL), 0, NULL);
 	incant_reset_acolyte(srv, clt, lim_acolyte);
+	if (srv->lvl == 8 && srv->lvl != oldlvl)
+	{
+		send_graphe_action(srv, command_write_msg(clt, 13, clt->team, NULL),
+							0, NULL);
+	}
 }
 
 bool	incant_help_acolyte(t_server *srv, t_client* clt, int lim_acolyte)
