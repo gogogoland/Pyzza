@@ -87,7 +87,7 @@ void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 		graphe_kill(gfx, fds, false);
 		return ;
 	}
-	client_init_data(new);
+	client_init_data(new, srv);
 	new->socket = gfx->socket;
 	new->sin = gfx->sin;
 	new->len = gfx->len;

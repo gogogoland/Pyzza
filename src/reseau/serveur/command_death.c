@@ -21,5 +21,5 @@ void		command_death(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	}
 	else
 		send_graphe_action(srv, command_write_msg(clt, 3, 0, NULL), 0, NULL);
-	client_zero(clt, fds);
+	client_zero(clt, fds, srv);
 }

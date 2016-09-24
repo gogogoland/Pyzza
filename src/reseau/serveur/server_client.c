@@ -18,11 +18,12 @@ static const char	*g_mcl[] =
 	"Reached client limit's.\n",
 };
 
-void	client_init_data(t_client *clt)
+void	client_init_data(t_client *clt, t_server *srv)
 {
+	srand(time(NULL));
 	clt->action = 0;
-	clt->pos.x = 0;
-	clt->pos.y = 0;
+	clt->pos.x = srv ? rand() % srv->plateau.x : 0;
+	clt->pos.y = srv ? rand() % srv->plateau.y : 0;
 	clt->sens = 0;
 	clt->team = -1;
 	clt->lvl = 1;
@@ -53,7 +54,7 @@ t_client	*client_init(t_server *srv)
 		clt->pos.rsc[clt->socket - 1] = 0;
 	clt->len = sizeof(struct sockaddr_in);
 	clt->next = NULL;
-	client_init_data(clt);
+	client_init_data(clt, srv);
 	clt->name = ++srv->name;
 	return (clt);
 }
@@ -74,12 +75,12 @@ void	client_kill(t_client *clt, t_fds *fds)
 		free(clt->msg);
 	if (clt->acolyte)
 		free(clt->acolyte);
-	client_init_data(clt);
+	client_init_data(clt, NULL);
 	free(clt);
 	clt = NULL;
 }
 
-void	client_zero(t_client *clt, t_fds *fds)
+void	client_zero(t_client *clt, t_fds *fds, t_server *srv)
 {
 	getpeername(clt->socket, (struct sockaddr*)&clt->sin,
 			(socklen_t*)&clt->len);
@@ -99,5 +100,5 @@ void	client_zero(t_client *clt, t_fds *fds)
 	clt->socket = 8;
 	while (--clt->socket > 0)
 		clt->pos.rsc[clt->socket - 1] = 0;
-	client_init_data(clt);
+	client_init_data(clt, srv);
 }

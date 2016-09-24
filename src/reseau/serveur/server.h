@@ -119,8 +119,8 @@ void		ring_kill(t_ring *ring);
 
 
 t_client	*client_init(t_server *srv);
-void	    client_init_data(t_client *clt);
-void		client_zero(t_client *clt, t_fds *fsd);
+void	    client_init_data(t_client *clt, t_server *srv);
+void		client_zero(t_client *clt, t_fds *fsd, t_server *srv);
 void		client_kill(t_client *clt, t_fds *fsd);
 
 
