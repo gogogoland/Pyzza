@@ -120,13 +120,13 @@ void		ring_kill(t_ring *ring);
 
 t_client	*client_init(t_server *srv);
 void	    client_init_data(t_client *clt, t_server *srv);
-void		client_zero(t_client *clt, t_fds *fsd, t_server *srv);
-void		client_kill(t_client *clt, t_fds *fsd);
+void		client_zero(t_client *clt, t_fds *fds, t_server *srv);
+void		client_kill(t_client *clt, t_fds *fds);
 
 
 t_gfx		*graphe_init(void);
 t_gfx		*graphe_news(t_gfx *prev, t_fds *fds, int s);
-void		graphe_kill(t_gfx *gfx, t_fds *fsd, bool gfxtoclt);
+void		graphe_kill(t_gfx *gfx, t_fds *fds, bool gfxtoclt);
 
 
 void	    init_map(t_server *srv);
@@ -186,7 +186,7 @@ void		command_eat(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 
 
-void		command_player(t_fds *fsd, t_server *srv,
+void		command_player(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
 void		command_graphe(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);

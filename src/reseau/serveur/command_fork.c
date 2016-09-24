@@ -22,8 +22,7 @@ void	command_fork(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		new = new->next;
 	if (!(new = client_init(srv)))
 		return (send_client_action(clt, false));
-	srv->player_max = srv->old_player_max + 1;
-	srv->old_player_max = srv->player_max;
+	srv->player_max++;
 	new->pos.x = clt->pos.x;
 	new->pos.y = clt->pos.y;
 	new->health = 1860.0f / (float)srv->time;

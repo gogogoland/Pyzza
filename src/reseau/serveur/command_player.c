@@ -35,7 +35,8 @@ static t_client	*command_player_get_valide_client(int t, t_server *srv)
 	t_client	*new;
 
 	new = srv->clt;
-	while (new && (new->socket || (new->team >= 0 && new->team != t)))
+	while (new && (new->socket || (new->team >= 0 && new->team != t)
+					|| new->time > 0.0f))
 		new = new->next;
 	if (new && new->team == t)
 		send_graphe_action(srv, command_write_msg(new, 0, 0, NULL), 0, NULL);

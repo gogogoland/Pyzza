@@ -93,7 +93,28 @@ static const float	g_cmd_time[] =
 	7.0f
 };
 
-static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
+static char *time_lapse(t_fds *fds, t_server *srv, float tim)
+{
+	t_client	*clt;
+	float		old_time;
+
+	clt = srv->clt;
+	while (clt)
+	{
+		if (clt->time > 0.0f && clt->time <= tim && clt->fork && !clt->socket)
+			send_graphe_action(srv, command_write_msg(clt, 2, 0, 0), 0, 0);
+		if ((clt->time -= tim) < 0.0f)
+			clt->time = 0.0f;
+		if ((clt->health -= tim) < 0.0f)
+			clt->health = 0.0f;
+		if (clt->health <= 0.0f && clt->fork && !clt->socket)
+			g_tfc[12](fds, srv, clt, NULL);
+		clt = clt->next;
+	}
+	return (NULL);
+}
+
+static int	time_action(int n, t_client *clt, t_server *srv)
 {
 	int	action;
 
@@ -106,10 +127,9 @@ static int	time_lapse(int n, t_client *clt, float tim, t_server *srv)
 		send_graphe_action(srv, command_write_msg(clt, 1, 0, NULL), 0, NULL);
 	if (clt->time == 0.0f && clt->action == 10)
 		clt->tolvl = clt->lvl + 1;
-	if ((clt->time = (clt->time == 0.0f && n < 13) ?
-			g_cmd_time[n] * (1.0f / (float)srv->time) : clt->time - tim) < 0.0f)
-		clt->time = 0.0f;
-	if ((clt->health -= tim) <= 0.0f)
+	if (clt->time == 0.0f && n < 13)
+		g_cmd_time[n] * (1.0f / (float)srv->time);
+	if (clt->health <= 0.0f)
 		return (13);
 	return (action);
 }
@@ -121,7 +141,7 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 	t_gfx		*gfx;
 	t_client	*clt;
 
-	cmd = NULL;
+	cmd = time_lapse(fds, srv, tim);
 	while (tim >= 0.0f && --fds->max > 0 && !(n = 0))
 	{
 		if (!(clt = srv->clt) && !FD_ISSET(fds->max, &fds->wr))
@@ -137,7 +157,7 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 				g_clt_cmd[n]), strlen(!clt ? g_gfx_cmd[n] : g_clt_cmd[n])) != 0)
 			n++;
 		(!clt && cmd && 0 <= n && n < 9) ? g_tfg[n](fds, srv, gfx, cmd) : NULL;
-		if ((n = time_lapse((msg_save(clt, cmd) ? n : 13), clt, tim, srv)))
+		if ((n = time_action((msg_save(clt, cmd) ? n : 13), clt, srv)))
 			g_tfc[n - 1](fds, srv, clt, cmd);
 		ft_memdel((void **)&cmd);
 	}
