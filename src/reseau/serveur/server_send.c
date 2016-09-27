@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/22 20:45:25 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/27 20:30:15 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ static char *time_lapse(t_fds *fds, t_server *srv, float tim)
 			clt->time = 0.0f;
 		if ((clt->health -= tim) < 0.0f)
 			clt->health = 0.0f;
-		if (clt->health <= 0.0f && clt->fork && !clt->socket)
-			g_tfc[12](fds, srv, clt, NULL);
+		if (clt->health <= 0.0f && (clt->fork || clt->socket))
+			g_tfc[13](fds, srv, clt, NULL);
 		clt = clt->next;
 	}
 	return (NULL);
@@ -128,9 +128,7 @@ static int	time_action(int n, t_client *clt, t_server *srv)
 	if (clt->time == 0.0f && clt->action == 10)
 		clt->tolvl = clt->lvl + 1;
 	if (clt->time == 0.0f && n < 13)
-		g_cmd_time[n] * (1.0f / (float)srv->time);
-	if (clt->health <= 0.0f)
-		return (13);
+		clt->time = g_cmd_time[n] * (1.0f / (float)srv->time);
 	return (action);
 }
 

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 18:12:26 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/27 21:04:47 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static int		command_player_get_team(t_server *srv, char *cmd)
 	int	t;
 
 	t = 0;
+	if (!cmd)
+		return (-2);
 	while (srv->team[t] && strncmp(srv->team[t], cmd, strlen(cmd) - 1) != 0)
 		t++;
 	return (t);
@@ -35,8 +37,8 @@ static t_client	*command_player_get_valide_client(int t, t_server *srv)
 	t_client	*new;
 
 	new = srv->clt;
-	while (new && (new->socket || (new->team >= 0 && new->team != t)
-					|| new->time > 0.0f))
+	while (new && (new->socket || new->time > 0.0f
+					|| (new->team >= 0 && new->team != t)))
 		new = new->next;
 	if (new && new->team == t)
 		send_graphe_action(srv, command_write_msg(new, 0, 0, NULL), 0, NULL);
@@ -88,12 +90,12 @@ void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 		graphe_kill(gfx, fds, false);
 		return ;
 	}
-	client_init_data(new, srv);
+	new->fork ? NULL : client_init_data(new, srv);
 	new->socket = gfx->socket;
 	new->sin = gfx->sin;
 	new->len = gfx->len;
 	new->team = t;
-	new->health = 1260.0f / (float)srv->time;
+	new->health = new->fork ? new->health : 1260.0f / (float)srv->time;
 	printf(g_cmd_plr[1], new->name, inet_ntoa(new->sin.sin_addr),
 			ntohs(new->sin.sin_port));
 	fds->max = new->socket > fds->max - 1 ? new->socket + 1 : fds->max;

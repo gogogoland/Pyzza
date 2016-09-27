@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 14:06:53 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/22 14:07:34 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/27 19:51:18 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static void	command_death_fork(t_fds *fds, t_server *srv, t_client *clt)
 		clt->next->prev = prev;
 	client_kill(clt, fds);
 	srv->player_max--;
+	srv->old_player_max--;
 }
 
 void		command_death(t_fds *fds, t_server *srv, t_client *clt, char *cmd)

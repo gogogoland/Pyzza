@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/22 20:51:39 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/27 20:34:54 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	client_init_data(t_client *clt, t_server *srv)
 	clt->action = 0;
 	clt->pos.x = srv ? rand() % srv->plateau.x : 0;
 	clt->pos.y = srv ? rand() % srv->plateau.y : 0;
-	clt->sens = 0;
+	clt->sens = rand() % 4;
 	clt->team = -1;
 	clt->lvl = 1;
 	clt->tolvl = 0;
@@ -33,6 +33,7 @@ void	client_init_data(t_client *clt, t_server *srv)
 	clt->msg = NULL;
 	clt->acolyte = NULL;
 	clt->casting = 0;
+	clt->fork = false;
 }
 
 t_client	*client_init(t_server *srv)
