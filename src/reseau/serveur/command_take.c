@@ -6,13 +6,11 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 16:00:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/20 21:42:25 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/27 22:32:28 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
-
-static const char *g_msg_cmd_ = "ppo #%i\n";
 
 static const char	*cmd_pose[] =
 {
