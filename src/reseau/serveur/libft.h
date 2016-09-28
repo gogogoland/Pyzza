@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/15 18:03:32 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/27 14:53:57 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 15:16:07 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void				ft_tabdelelem(char **tab, size_t i);
 void				*ft_memset(void *mem, int c, size_t size);
 size_t				ft_strlen(const char *str);
 char				*ft_strdup(const char *s1);
+char				*ft_strbdup(const char *str, size_t b);
 void				ft_strdelelem(char *str, size_t i);
 char				*ft_strcat(char *s1, const char *s2);
 char				*ft_strncat(char *s1, const char *s2, size_t n);

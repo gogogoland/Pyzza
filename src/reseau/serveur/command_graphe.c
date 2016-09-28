@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:33:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/07 22:07:21 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 19:47:17 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void		command_graphe(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 {
 	t_client	*clt;
 
+	if (gfx->isgfx)
+		return ;
 	gfx->isgfx = true;
 	printf(g_cmd_gfx[0],
 			inet_ntoa(gfx->sin.sin_addr), ntohs(gfx->sin.sin_port));

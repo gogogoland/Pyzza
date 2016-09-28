@@ -6,16 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/03 18:50:24 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 21:35:56 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 19:51:19 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*g_cmd_time_change =
-{
-	"sgt %d\n"
-};
+static const char	*g_cmd_time_change = "sgt %d\n";
 
 static void command_time_change_player(t_server *srv, int new_time)
 {
@@ -40,6 +37,8 @@ void		command_time_change(t_fds *fds,
 	char		*box;
 	int			i;
 
+	if (!gfx->isgfx)
+		return ;
 	i = 0;
 	box = NULL;
 	new_time = 0;

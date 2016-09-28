@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 23:14:27 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 19:46:09 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void		command_map(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	char		*box;
 	t_client	*clt;
 
+	if (!gfx->isgfx)
+		return ;
 /*	if ((child = fork()) < 0)
 		return ;
 	else if (child != 0)

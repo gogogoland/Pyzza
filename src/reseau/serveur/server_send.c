@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/27 20:30:15 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 18:47:56 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,14 @@ static const char	*g_clt_cmd[] =
 	"gauche\n",
 	"voir\n",
 	"inventaire\n",
-	"prend\n",
-	"pose\n",
+	"prend",
+	"pose",
 	"expulse\n",
 	"broadcast",
 	"incantation\n",
 	"fork\n",
 	"connect_nbr\n",
-	"eat\n"
+	"mange"
 };
 
 static const float	g_cmd_time[] =
@@ -123,10 +123,8 @@ static int	time_action(int n, t_client *clt, t_server *srv)
 	action = (clt->time == 0.0f) ? clt->action : 0;
 	if (clt->time == 0.0f && !clt->socket)
 		send_graphe_action(srv, command_write_msg(clt, 2, 0, NULL), 0, NULL);
-	if (clt->time == 0.0f && (clt->action = n < 12 ? n + 1 : 0) == 11)
+	if (clt->time == 0.0f && (clt->action = n < 13 ? n + 1 : 0) == 11)
 		send_graphe_action(srv, command_write_msg(clt, 1, 0, NULL), 0, NULL);
-	if (clt->time == 0.0f && clt->action == 10)
-		clt->tolvl = clt->lvl + 1;
 	if (clt->time == 0.0f && n < 13)
 		clt->time = g_cmd_time[n] * (1.0f / (float)srv->time);
 	return (action);
@@ -155,7 +153,7 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 				g_clt_cmd[n]), strlen(!clt ? g_gfx_cmd[n] : g_clt_cmd[n])) != 0)
 			n++;
 		(!clt && cmd && 0 <= n && n < 9) ? g_tfg[n](fds, srv, gfx, cmd) : NULL;
-		if ((n = time_action((msg_save(clt, cmd) ? n : 13), clt, srv)))
+		if ((n = time_action((save_cur_cmd(clt, cmd, n) ? n : 13), clt, srv)))
 			g_tfc[n - 1](fds, srv, clt, cmd);
 		ft_memdel((void **)&cmd);
 	}

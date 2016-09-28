@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_size.c                                     :+:      :+:    :+:   */
+/*   ft_strbdupt.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/06/02 14:27:13 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 19:50:26 by tbalea           ###   ########.fr       */
+/*   Created: 2014/04/14 18:29:23 by tbalea            #+#    #+#             */
+/*   Updated: 2016/09/28 15:15:18 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "libft.h"
 
-static const char	*g_cmd_size = "msz %i %i\n";
-
-void		command_size(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
+char	*ft_strbdup(const char *str, size_t b)
 {
-	char		*box;
+	char	*ret;
+	size_t	len;
+	size_t	i;
 
-	if (!gfx->isgfx)
-		return ;
-	box = NULL;
-	asprintf(&box, g_cmd_size, srv->plateau.x, srv->plateau.y);
-	send(gfx->socket, box, strlen(box), 0);
-	ft_memdel((void **)&box);
+	ret = NULL;
+	if (!str || (len = ft_strlen(str)) < b)
+		return (ret);
+	ret = ft_strnew(len - b);
+	i = -1;
+	while ((++i + b) < len)
+		ret[i] = str[b + i];
+	ret[i] = '\0';
+	return (ret);
 }

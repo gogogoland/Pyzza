@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/22 20:42:30 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 18:41:12 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ typedef struct			s_client
 	int					action;
 	float				time;
 	float				health;
-	char				*msg;
+	char				*current_cmd;
 	int					*acolyte;
 	bool				casting;
 	struct s_ring		*ring;
@@ -142,6 +142,7 @@ void		server_log(const char *msg);
 
 bool		recv_client(t_fds *fds, t_server *srv, int ret);
 void		send_client(t_fds *fds, t_server *srv, float tom);
+bool		save_cur_cmd(t_client *clt, char *msg, int action);
 void		send_client_action(t_client *clt, bool ok);
 void		send_graphe_action(t_server *srv, char *msg, int spec,
 								t_client *clt);

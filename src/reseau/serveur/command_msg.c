@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:50:09 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/22 20:47:12 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 14:48:25 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ bool		msg_save(t_client *clt, char *msg)
 {
 	if (!clt || !msg)
 		return (false);
-	if (clt->msg)
-		ft_memdel((void **)&clt->msg);
-	clt->msg = msg_contain(msg);
+	if (clt->current_cmd)
+		ft_memdel((void **)&clt->current_cmd);
+	clt->current_cmd = msg_contain(msg);
 	return (true);
 }
 
@@ -75,7 +75,7 @@ void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	t_client	*cur;
 
 	cur = srv->clt;
-	while (clt->msg && cur)
+	while (clt->current_cmd && cur)
 	{
 		if (cur->socket && cur->socket != clt->socket)
 		{
@@ -84,12 +84,13 @@ void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 			p.y = cur->pos.y - clt->pos.y < 0 ? 0 : 2;
 			p.x = (min.x + (cur->pos.x == clt->pos.x ? 1 : p.x)) % 3;
 			p.y = (min.y + (cur->pos.y == clt->pos.y ? 1 : p.y)) % 3;
-			msg_send_player(p.y * 3 + p.x, clt->msg, cur->socket);
+			msg_send_player(p.y * 3 + p.x, clt->current_cmd, cur->socket);
 		}
 		cur = cur->next;
 	}
-	send_client_action(clt, !!clt->msg);
-	send_graphe_action(srv, command_write_msg(clt, 14, 0, clt->msg), 0, NULL);
-	if (clt && clt->msg)
-		ft_memdel((void **)&clt->msg);
+	send_client_action(clt, !!clt->current_cmd);
+	send_graphe_action(srv, command_write_msg(clt, 14, 0, clt->current_cmd),
+						0, NULL);
+	if (clt && clt->current_cmd)
+		ft_memdel((void **)&clt->current_cmd);
 }

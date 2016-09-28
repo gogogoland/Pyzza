@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/09/22 19:45:55 by tbalea           ###   ########.fr        #
+#    Updated: 2016/09/28 18:40:51 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ SRC = ft_atoi.c\
 	  ft_strcat.c\
 	  ft_strncat.c\
 	  ft_strdup.c\
+	  ft_strbdup.c\
 	  server.c\
 	  server_create.c\
 	  server_client.c\
@@ -52,6 +53,7 @@ SRC = ft_atoi.c\
 	  server_ring.c\
 	  server_map.c\
 	  server_log.c\
+	  save_cur_cmd.c\
 	  command_void.c\
 	  command_death.c\
 	  command_eat.c\

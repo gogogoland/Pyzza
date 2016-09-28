@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/27 23:05:56 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 18:37:15 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static char	*command_seek_copy(char *wt, int type)
 		asprintf(&new, "");
 	else if (type == -1 && wt)
 	{
-		asprintf(&new, "%s | ", wt);
+		asprintf(&new, "%s |", wt);
 		ft_memdel((void **)&wt);
 	}
 	else if (type < 8 && type > -1 && wt)

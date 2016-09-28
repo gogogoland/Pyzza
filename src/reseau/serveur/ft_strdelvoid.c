@@ -6,13 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/29 17:19:58 by tbalea            #+#    #+#             */
-/*   Updated: 2016/04/09 15:49:48 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 18:09:39 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	jump_space(const char *str, int j)
+static int	ft_strdelvoid_jump_space(const char *str, int j)
 {
 	int	n;
 
@@ -26,7 +26,7 @@ static int	jump_space(const char *str, int j)
 	return (n);
 }
 
-static int	new_size(const char *str)
+static int	ft_strdelvoid_new_size(const char *str)
 {
 	int	i;
 	int	n;
@@ -65,7 +65,7 @@ char		*ft_strdelvoid(char *str)
 		return (NULL);
 	i = -1;
 	j = 0;
-	t = new_size(str);
+	t = ft_strdelvoid_new_size(str);
 	if ((new = (char *)malloc(t * sizeof(char *))) == NULL)
 		return (NULL);
 	while (str && str[j] != '\0'
@@ -74,7 +74,7 @@ char		*ft_strdelvoid(char *str)
 	while (++i < (t - 1))
 	{
 		new[i] = str[j];
-		j += jump_space(str, j);
+		j += ft_strdelvoid_jump_space(str, j);
 	}
 	new[i] = '\0';
 	ft_bzero(str, ft_strlen(str));

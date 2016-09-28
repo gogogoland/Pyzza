@@ -6,16 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/20 18:43:55 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 19:49:34 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*g_cmd_piv =
-{
-	"pin #%i %i %i %i %i %i %i %i %i %i\n"
-};
+static const char	*g_cmd_piv = "pin #%i %i %i %i %i %i %i %i %i %i\n";
 
 static char	*command_player_inv_get_clt_inv(t_client *clt, int *inv)
 {
@@ -34,6 +31,8 @@ void		command_player_inv(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	int			player;
 	char		*inv;
 
+	if (!gfx->isgfx)
+		return ;
 	i = 0;
 	clt = srv->clt;
 	while (cmd[i] != '\0' && cmd[i] != '#')

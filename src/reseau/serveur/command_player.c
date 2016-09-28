@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/27 21:04:47 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 20:09:17 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ static int		command_player_get_team(t_server *srv, char *cmd)
 	t = 0;
 	if (!cmd)
 		return (-2);
-	while (srv->team[t] && strncmp(srv->team[t], cmd, strlen(cmd) - 1) != 0)
+	while (srv->team[t] && strncmp(srv->team[t], cmd, strlen(srv->team[t]))
+			&& strncmp(srv->team[t], cmd, strlen(srv->team[t])))
 		t++;
 	return (t);
 }
@@ -80,8 +81,8 @@ void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	char		*team;
 	t_client	*new;
 
-	if (!srv->team[(t = command_player_get_team(srv, cmd))]
-			|| command_player_is_graphical(gfx))
+	if (command_player_is_graphical(gfx)
+			|| !srv->team[(t = command_player_get_team(srv, cmd))])
 		return ;
 	if (!(new = command_player_get_valide_client(t, srv)))
 	{

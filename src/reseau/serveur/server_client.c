@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/27 20:34:54 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 20:03:36 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	client_init_data(t_client *clt, t_server *srv)
 	clt->tolvl = 0;
 	clt->time = 0.0f;
 	clt->health = 0.0f;
-	clt->msg = NULL;
+	clt->current_cmd = NULL;
 	clt->acolyte = NULL;
 	clt->casting = 0;
 	clt->fork = false;
@@ -72,8 +72,8 @@ void	client_kill(t_client *clt, t_fds *fds)
 		clt->pos.rsc[clt->socket - 1] = 0;
 	free(clt->pos.rsc);
 	clt->lvl = 0;
-	if (clt->msg)
-		free(clt->msg);
+	if (clt->current_cmd)
+		free(clt->current_cmd);
 	if (clt->acolyte)
 		free(clt->acolyte);
 	client_init_data(clt, NULL);
@@ -83,17 +83,14 @@ void	client_kill(t_client *clt, t_fds *fds)
 
 void	client_zero(t_client *clt, t_fds *fds, t_server *srv)
 {
-	getpeername(clt->socket, (struct sockaddr*)&clt->sin,
-			(socklen_t*)&clt->len);
-	printf(g_mcl[0], inet_ntoa(clt->sin.sin_addr), ntohs(clt->sin.sin_port));
 	if (fds)
 	{
 		FD_CLR(clt->socket, &fds->rd);
 		FD_CLR(clt->socket, &fds->wr);
 		FD_CLR(clt->socket, &fds->ex);
 	}
-	if (clt->msg)
-		free(clt->msg);
+	if (clt->current_cmd)
+		free(clt->current_cmd);
 	if (clt->acolyte)
 		free(clt->acolyte);
 	ring_zero(clt->ring);
