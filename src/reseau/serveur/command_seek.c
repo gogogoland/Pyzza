@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 18:37:15 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/28 20:50:12 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,12 @@ static char	*command_seek_add(t_server *srv, t_coord pos, int s, char *wt)
 	int			n;
 	t_client	*clt;
 
-	i = 0;
+	i = -1;
 	clt = srv->clt;
 	wt = command_seek_copy(wt, -1);
 	while (++i < 7)
 	{
-		n = srv->map[pos.y][pos.x][i];
+		n = srv->map[pos.x][pos.y][i];
 		while (n-- > 0)
 			wt = command_seek_copy(wt, i);
 	}
@@ -156,8 +156,10 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	t_coord	sens;
 	t_coord	pos;
 	char	*wt;
+	char	*tmp;
 
 	wt = NULL;
+	tmp = NULL;
 	see.y = -1;
 	sens.x = (clt->sens + 1) % 4;
 	sens.y = (clt->sens + 2) % 4;
@@ -168,10 +170,11 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		{
 			pos.x = command_seek_int(sens.x, clt->pos.x, see, srv->plateau.x);
 			pos.y = command_seek_int(sens.y, clt->pos.y, see, srv->plateau.y);
-			wt = command_seek_add(srv, pos, clt->socket, wt);
+			tmp = command_seek_add(srv, pos, clt->socket, tmp);
 		}
 	}
-	asprintf(&wt, "%s\n", wt);
+	asprintf(&wt, "%s\n", tmp);
 	send(clt->socket, wt, strlen(wt), 0);
+	ft_memdel((void **)&tmp);
 	ft_memdel((void **)&wt);
 }
