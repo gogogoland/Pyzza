@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/07 22:40:57 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 20:41:22 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,9 @@ int				main(int argc, char **argv)
 	t_fds		*fds;
 	int			ret;
 
-	fds = (t_fds *)malloc(sizeof(t_fds));
 	ret = 0;
-	if (!(srv = server_create(argc, argv)) || srv->socket < 0)
+	if (!(fds = (t_fds *)malloc(sizeof(t_fds)))
+			|| !(srv = server_create(argc, argv)) || srv->socket < 0)
 		return (return_msg(srv ? NULL : g_err_msg[0], srv ? srv->socket : -1));
 	tim = clock();
 	while (ret >= 0)

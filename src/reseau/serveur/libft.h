@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/15 18:03:32 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 15:16:07 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 19:54:30 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ char				*ft_tabjoin(const char **tab, const char *sep);
 int					ft_atoi(const char *str);
 int					ft_isempty(char c);
 int					ft_isdigit(int c);
+int					ft_strisdigit(char const *str);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strcjoin(char const *s1, char const *s2, const char c);
 char				*ft_strtrim(char const *s);

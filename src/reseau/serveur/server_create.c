@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 12:29:29 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 20:41:04 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,95 +56,24 @@ static t_server	*return_msg(const char *msg, int ret, t_server *srv)
 	return (srv);
 }
 
-static int		get_data(t_server *srv, int state, char *arg, int isdone)
-{
-	int	e;
-	int	p;
-
-	p = 1;
-	e = 0;
-	if (state == 0 && (srv->port = ft_atoi(arg)) <= 0)
-		e = 0;
-	else if (state == 1 && (srv->plateau.x = atoi(arg)) <= 0)
-		e = 1;
-	else if (state == 2 && (srv->plateau.y = atoi(arg)) <= 0)
-		e = 2;
-	else if (state == 3 && !(srv->team = ft_txtadd(srv->team, arg)))
-		e = 3;
-	else if (state == 4 && (srv->player_max = atoi(arg)) <= 2)
-		e = 4;
-	else if (state == 5 && (srv->time = atoi(arg)) <= 0)
-		e = 5;
-	while (state-- > 0)
-		p *= 10;
-	if ((isdone / p) % 10 == 1)
-		p = 0;
-	if (e == 0)
-		return (p);
-	server_log(srv, g_error[e]);
-	return (0);
-}
-
-static t_server	*check_data(t_server *srv, int isdone)
-{
-	int			e;
-
-	srv->lvl = 1;
-	srv->egg = 0;
-	srv->gfx = NULL;
-	srv->clt = NULL;
-	srv->socket = 0;
-	srv->old_player_max = 0;
-	if (isdone == 111111)
-	{
-		//TODO Bonus fork
-		srv->bonus_fork = false;
-		return (init_map(srv));
-	}
-	srv->socket = -1;
-	ft_tabdel(srv->team);
-	e = 6;
-	while (isdone > 0)
-	{
-		if (isdone % 10 == 0)
-			server_log(srv, g_error[e]);
-		isdone /= 10;
-		e++;
-	}
-	while (++e < 12)
-		server_log(srv, g_error[e + 11]);
-	return (srv);
-}
-
 //	TODO
 //	*	check if next argument begin with '-' character
 static t_server	*server_init_data(int argc, char **argv)
 {
-	int 		i;
 	int			arg;
-	int			isdone;
-	int			state;
 	t_server	*srv;
 
 	srv = NULL;
-	i = 0;
-	state = -1;
-	isdone = 0;
 	if (argc < 13 || !(srv = (t_server *)malloc(sizeof(t_server))))
 		return (srv);
+	srv->socket = -1;
 	srv->team = NULL;
-	while (++i < argc)
-	{
-		arg = 0;
-		while (arg < 6 && ft_strcmp(g_c_arg[arg], argv[i]) != 0)
-			arg++;
-		if (arg != 6 && (state = arg) == arg)
-			i++;
-		if ((arg == 6 && state != 3)
-				|| !(isdone += get_data(srv, state, argv[i], isdone)))
-			return (check_data(srv, isdone));
-	}
-	return (check_data(srv, isdone));
+	parser(argc, argv, srv);
+	srv->lvl = 1;
+	srv->old_player_max = 0;
+	srv->egg = 0;
+	srv->gfx = NULL;
+	return (srv);
 }
 
 /*static char	*tcp(void)

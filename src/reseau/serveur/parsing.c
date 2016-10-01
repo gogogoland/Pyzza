@@ -6,31 +6,29 @@
 /*   By: croy <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 13:22:08 by croy              #+#    #+#             */
-/*   Updated: 2016/10/01 17:15:17 by croy             ###   ########.fr       */
+/*   Updated: 2016/10/01 20:54:18 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "head.h"
+#include "server.h"
 
 static const char	*g_flag[] = {
-	"-p", "-x", "-y", "-c", "-t", "-b", "-n",
-	"port", "width", "height", "Number of player", "time", "team",
+	"-p",
+	"-x",
+	"-y",
+	"-c",
+	"-t",
+	"-b",
+	"-n",
+	"port",
+	"width",
+	"height",
+	"Number of player",
+	"time",
+	"team"
 };
 
-int			digitcheck(char *str)
-{
-	int		i;
-
-	i = 0;
-	while (str[++i])
-	{
-		if (!isdigit(str[i]))
-			return (0);
-	}
-	return (1);
-}
-
-int			word_after_flag(char **av, int size)
+static int	number_of_team(char **av, int size)
 {
 	int		i;
 	int		count;
@@ -48,24 +46,10 @@ int			word_after_flag(char **av, int size)
 	return (count);
 }
 
-void		checkvalint(t_err val)
-{
-	if ((val.flag_int[0] < P_MIN && val.flag_int[0] > P_MAX) &&\
-		(val.flag_int[1] < X_MIN && val.flag_int[1] > X_MAX) &&\
-		(val.flag_int[2] < Y_MIN && val.flag_int[2] > Y_MAX) &&\
-		(val.flag_int[3] < C_MIN && val.flag_int[3] > C_MAX) &&\
-		(val.flag_int[4] < T_MIN && val.flag_int[4] > T_MAX))
-	{
-		printf("[ERROR] : your value(s) is/are not correct.\n");
-		exit(-1);
-	}
-}
-
-void		integerserror(int check[6])
+static bool	integers_error(int check[6])
 {
 	int		i;
 	int		ex;
-	t_err	value;
 
 	i = -1;
 	ex = 0;
@@ -79,11 +63,10 @@ void		integerserror(int check[6])
 			ex++;
 		}
 	}
-	if (ex > 0)
-		exit(ex);
+	return (ex ? false : true);
 }
 
-void		checkoutsiderflag(char **argv, int ac)
+static bool	check_outsider_flag(char **argv, int ac)
 {
 	int		i;
 	int		j;
@@ -107,86 +90,84 @@ void		checkoutsiderflag(char **argv, int ac)
 			printf("[ERROR] : '%s' is not supported as flag.\n", argv[i]);
 		}
 	}
-	if (err > 0)
-		exit(-1);
+	return (err ? false : true);
 }
 
-void		parsingint(int argc, char **argv, int *check, t_err *val)
+static int	*parsing_int(int argc, char **argv, int *check, int *val)
 {
 	int		j;
 	int		i;
 
 	j = -1;
-	checkoutsiderflag(argv, argc);
+	if (check_outsider_flag(argv, argc) < 0)
+		return (NULL);
 	while (++j < 6)
 	{
 		i = 0;
 		while (++i < (argc))
 		{
-			if (!strcmp(argv[i], g_flag[j]) && i < (argc - 1) &&\
-					digitcheck(argv[i + 1]))
-			{
-				check[j] += 1;
-				if (check[j] == 1)
-					val->flag_int[j] = atoi(argv[i + 1]);
-			}
+			if (!strcmp(argv[i], g_flag[j]) && i < (argc - 1) &&
+					ft_strisdigit(argv[i + 1]))
+				val[j] = (check[j] += 1) == 1 ? atoi(argv[i + 1]) : val[j];
 		}
 	}
-	checkvalint(*val);
+	if (val[0] <= P_MIN || val[0] >= P_MAX || val[1] <= X_MIN || val[1] >= X_MAX
+			|| val[2] <= Y_MIN || val[2] >= Y_MAX || val[3] <= C_MIN
+			|| val[3] >= C_MAX || val[4] <= TIME_MIN || val[4] >= TIME_MAX)
+	{
+		printf("[ERROR] : your value(s) is/are not correct.\n");
+		return (NULL);
+	}
+	return (val);
 }
 
-void		add_team(char **av, int ac, t_err *val)
+static bool	add_teams(char **av, int ac, int *val, t_server *srv)
 {
 	int		i;
+	int		j;
 	int		word;
+	char	**team;
 
 	i = 0;
+	if (!(word = number_of_team(av, ac))
+			|| !(srv->team = (char **)malloc(sizeof(char *) * word)))
+		return (false);
 	word = 0;
-	val->team = malloc(sizeof(char**) * word_after_flag(av, ac));
 	while (++i < ac)
 	{
 		if (!strcmp(av[i], "-n"))
 		{
 			while (++i < ac && av[i][0] != '-')
 			{
-				val->team[word] = strdup(av[i]);
+				srv->team[word] = strdup(av[i]);
 				word++;
 			}
-			val->team[word] = NULL;
+			srv->team[word] = NULL;
 		}
 	}
+	return (true);
 }
 
-t_err		parsingflags(char **argv, int argc)
+void	parser(int argc, char **argv, t_server *srv)
 {
 	int		check[7];
 	int		i;
-	int		j;
-	t_err	value;
+	int		value[7];
 
 	i = -1;
 	while (++i < 7)
 	{
 		check[i] = 0;
-		value.flag_int[i] = 0;
+		value[i] = 0;
 	}
-	parsingint(argc, argv, check, &value);
-	i = -1;
-	while (++i < 6)
-		printf("%d\n", value.flag_int[i]);
-	integerserror(check);
-	add_team(argv, argc, &value);
-	return (value);
-}
-
-int			main(int ac, char **av)
-{
-	printf("%d\n", word_after_flag(av, ac));
-	if (ac < 14)
-	{
-		printf(ERR_ARG);
-		exit(-1);
-	}
-	parsingflags(av, ac);
-	return (0);
+	if (!parsing_int(argc, argv, check, value) || !integers_error(check)
+			|| !add_teams(argv, argc, value, srv))
+		return ;
+	srv->port = value[0];
+	srv->plateau.x = value[1];
+	srv->plateau.y = value[2];
+	srv->player_max = value[3];
+	srv->time = value[4];
+	srv->bonus_fork = value[5] ? true : false;
+	srv->socket = 0;
 }
