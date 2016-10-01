@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 19:38:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/19 16:12:09 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 14:07:16 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,12 @@ static void client_command(t_fds *fds, t_server *srv, int s)
 	if (!gfx && !clt)
 		return ;
 	if (rd_len == 0)
-		!clt ? graphe_kill(gfx, fds, false) : command_death(fds, srv, clt, NULL);
+		!clt ? graphe_kill(srv, gfx, fds, 0) : command_death(fds, srv, clt, 0);
 	else
-		ring_recv(buffer, !clt ? gfx->ring : clt->ring);
+	{
+		ring_recv(srv, buffer, !clt ? gfx->ring : clt->ring,
+					!clt ? gfx->socket : clt->socket);
+	}
 }
 
 static void	client_connect(t_fds *fds, t_server *srv, int s)
@@ -53,7 +56,7 @@ static void	client_connect(t_fds *fds, t_server *srv, int s)
 	cur = srv->gfx;
 	while (cur && cur->next)
 		cur = cur->next;
-	if (!(new = graphe_news(cur, fds, s)))
+	if (!(new = graphe_news(srv, cur, fds, s)))
 		return ;
 	else if (cur)
 		cur->next = new;

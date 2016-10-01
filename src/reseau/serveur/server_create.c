@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/07 22:02:26 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 12:29:29 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static const char			*g_error[] =
 
 static t_server	*return_msg(const char *msg, int ret, t_server *srv)
 {
-	server_log(msg);
+	server_log(srv, msg);
 	srv->socket = ret;
 	return (srv);
 }
@@ -81,7 +81,7 @@ static int		get_data(t_server *srv, int state, char *arg, int isdone)
 		p = 0;
 	if (e == 0)
 		return (p);
-	server_log(g_error[e]);
+	server_log(srv, g_error[e]);
 	return (0);
 }
 
@@ -90,14 +90,16 @@ static t_server	*check_data(t_server *srv, int isdone)
 	int			e;
 
 	srv->lvl = 1;
+	srv->egg = 0;
 	srv->gfx = NULL;
 	srv->clt = NULL;
 	srv->socket = 0;
 	srv->old_player_max = 0;
 	if (isdone == 111111)
 	{
-		init_map(srv);
-		return (srv);
+		//TODO Bonus fork
+		srv->bonus_fork = false;
+		return (init_map(srv));
 	}
 	srv->socket = -1;
 	ft_tabdel(srv->team);
@@ -105,12 +107,12 @@ static t_server	*check_data(t_server *srv, int isdone)
 	while (isdone > 0)
 	{
 		if (isdone % 10 == 0)
-			server_log(g_error[e]);
+			server_log(srv, g_error[e]);
 		isdone /= 10;
 		e++;
 	}
 	while (++e < 12)
-		server_log(g_error[e + 11]);
+		server_log(srv, g_error[e + 11]);
 	return (srv);
 }
 
@@ -159,6 +161,7 @@ static t_server	*server_init_data(int argc, char **argv)
 //	TODO
 //	*	IPv6
 //	*	TCP error
+//	*	open file for log
 t_server	*server_create(int argc, char **argv)
 {
 	int 				sso;
@@ -186,7 +189,7 @@ t_server	*server_create(int argc, char **argv)
 		return (return_msg(g_error[15], -1, srv));
 	else if (listen(srv->socket, srv->player_max) < 0 && (srv->socket = -4) < 0)
 		return (return_msg(g_error[16], -1, srv));
-	srv->gfx = graphe_init();
+	srv->gfx = graphe_init(srv);
 	srv->name = 0;
 	return (srv);
 }

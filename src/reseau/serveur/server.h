@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 18:41:12 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 13:58:48 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ typedef char bool;
 # include <unistd.h>
 
 # define NBR_RESRC_CASE_MAX 7
-# define TIME_MAX 10000
+# define TIME_MAX 100
 
-typedef struct sockaddr_in  t_sokadr_in;
-typedef struct sockaddr     t_sokadr;
-typedef struct in_addr      t_i_adr;
+typedef struct sockaddr_in	t_sokadr_in;
+typedef struct sockaddr		t_sokadr;
+typedef struct in_addr		t_i_adr;
 
 typedef struct			s_ring
 {
@@ -64,8 +64,8 @@ typedef struct			s_fds
 typedef struct			s_gfx
 {
 	int					socket;
-	unsigned int        len;
-	struct sockaddr_in  sin;
+	unsigned int		len;
+	struct sockaddr_in	sin;
 	struct s_ring		*ring;
 	struct s_gfx		*prev;
 	struct s_gfx		*next;
@@ -75,8 +75,8 @@ typedef struct			s_gfx
 typedef struct			s_client
 {
 	int					socket;
-	unsigned int        len;
-	struct sockaddr_in  sin;
+	unsigned int		len;
+	struct sockaddr_in	sin;
 	struct s_coord		pos;
 	int					sens;
 	int					team;
@@ -105,39 +105,41 @@ typedef struct			s_server
 	int					lvl;
 	int					old_player_max;
 	int					player_max;
+	int					egg;
 	int					***map;
 	char				**team;
 	struct s_gfx		*gfx;
 	struct s_client		*clt;
+	bool				bonus_fork;
 }						t_server;
 
-void		ring_recv(char *command, t_ring *ring);
-char		*ring_send(t_ring *ring);
-t_ring		*ring_init(int len);
+void		ring_recv(t_server *srv, char *command, t_ring *ring, int socket);
+char		*ring_send(t_server *srv, t_ring *ring);
+t_ring		*ring_init(t_server *srv, int len);
 void		ring_zero(t_ring *ring);
 void		ring_kill(t_ring *ring);
 
 
 t_client	*client_init(t_server *srv);
-void	    client_init_data(t_client *clt, t_server *srv);
+void		client_init_data(t_client *clt, t_server *srv);
 void		client_zero(t_client *clt, t_fds *fds, t_server *srv);
 void		client_kill(t_client *clt, t_fds *fds);
 
 
-t_gfx		*graphe_init(void);
-t_gfx		*graphe_news(t_gfx *prev, t_fds *fds, int s);
-void		graphe_kill(t_gfx *gfx, t_fds *fds, bool gfxtoclt);
+t_gfx		*graphe_init(t_server *srv);
+t_gfx		*graphe_news(t_server *srv, t_gfx *prev, t_fds *fds, int s);
+void		graphe_kill(t_server *srv, t_gfx *gfx, t_fds *fds, bool gfxtoclt);
 
 
-void	    init_map(t_server *srv);
-void	    kill_map(t_server *srv);
+t_server	*init_map(t_server *srv);
+void		kill_map(t_server *srv);
 
 
 void		generate_map(t_server *srv, int nbr_resrc_case);
 
 
 t_server	*server_create(int argc, char **argv);
-void		server_log(const char *msg);
+void		server_log(t_server *srv, const char *msg);
 
 
 bool		recv_client(t_fds *fds, t_server *srv, int ret);
@@ -191,7 +193,7 @@ void		command_player(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
 void		command_graphe(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void        command_size(t_fds *fds, t_server *srv,
+void		command_size(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
 void		command_time_server(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
@@ -205,10 +207,10 @@ void		command_player_pos(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
 void		command_map(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void        command_box(t_fds *fds, t_server *srv,
+void		command_box(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
 int			command_get_int(int i, char *cmd);
-void	    command_box_content(t_gfx *gfx, int x, int y, int *box);
+void		command_box_content(t_gfx *gfx, int x, int y, int *box);
 void		command_graphical_bad_parameters(t_fds *fds, t_server *srv,
 											t_gfx *gfx, char *cmd);
 

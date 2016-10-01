@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:33:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 19:47:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 16:54:38 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,22 @@
 
 static const char	*g_cmd_gfx[] =
 {
-	"New graphical client from ip %s, port %d.\n",
+	"New graphical client from ip %s, port %d.\nSocket %i is now graphic.\n",
 	"pnw #%d %d %d %d %d %d\n",
 	"enw #%d %d %d %d\n"
 };
+
+static void	command_graphe_log(t_server *srv, t_gfx *gfx, int type)
+{
+	char	*log;
+
+	if ((!type && asprintf(&log, g_cmd_gfx[0], inet_ntoa(gfx->sin.sin_addr),
+					ntohs(gfx->sin.sin_port), gfx->socket)))
+	{
+		server_log(srv, log);
+		ft_memdel((void **)&log);
+	}
+}
 
 static void	command_graphe_client_co(int socket, t_client *clt, int type)
 {
@@ -49,8 +61,7 @@ void		command_graphe(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	if (gfx->isgfx)
 		return ;
 	gfx->isgfx = true;
-	printf(g_cmd_gfx[0],
-			inet_ntoa(gfx->sin.sin_addr), ntohs(gfx->sin.sin_port));
+	command_graphe_log(srv, gfx, 0);
 	clt = srv->clt;
 	command_size(fds, srv, gfx, cmd);
 	//command_team(fds, srv, gfx, cmd);

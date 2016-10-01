@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/02 14:27:13 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 19:50:26 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 01:18:14 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void		command_size(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	char		*box;
 
 	if (!gfx->isgfx)
-		return ;
+		command_player(fds, srv, gfx, cmd);
 	box = NULL;
 	asprintf(&box, g_cmd_size, srv->plateau.x, srv->plateau.y);
 	send(gfx->socket, box, strlen(box), 0);

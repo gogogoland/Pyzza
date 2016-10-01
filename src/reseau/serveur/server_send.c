@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 18:47:56 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 12:58:31 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,10 @@ static char *time_lapse(t_fds *fds, t_server *srv, float tim)
 	while (clt)
 	{
 		if (clt->time > 0.0f && clt->time <= tim && clt->fork && !clt->socket)
+		{
+			srv->egg--;
 			send_graphe_action(srv, command_write_msg(clt, 2, 0, 0), 0, 0);
+		}
 		if ((clt->time -= tim) < 0.0f)
 			clt->time = 0.0f;
 		if ((clt->health -= tim) < 0.0f)
@@ -148,7 +151,7 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 		while (gfx != NULL && gfx->socket != fds->max)
 			gfx = gfx->next;
 		if (!incant_process(clt, srv) || (!clt && gfx))
-			cmd = (!clt ? ring_send(gfx->ring) : ring_send(clt->ring));
+			cmd = !clt ? ring_send(srv, gfx->ring) : ring_send(srv, clt->ring);
 		while (cmd && n < (!clt ? 8 : 13) && strncmp(cmd, (!clt ? g_gfx_cmd[n] :
 				g_clt_cmd[n]), strlen(!clt ? g_gfx_cmd[n] : g_clt_cmd[n])) != 0)
 			n++;
@@ -186,6 +189,6 @@ void		send_graphe_action(t_server *srv, char *msg,
 		}
 		gfx = gfx->next;
 	}
-	server_log(msg);
+	server_log(srv, msg);
 	ft_memdel((void **)&msg);
 }

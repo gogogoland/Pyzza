@@ -6,13 +6,14 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:04:01 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/03 21:50:52 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/30 12:11:37 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-void	init_map(t_server *srv)
+//	TODO put it to return void
+t_server	*init_map(t_server *srv)
 {
 	int		z;
 	int		y;
@@ -38,9 +39,10 @@ void	init_map(t_server *srv)
 		}
 	}
 	!ok ? kill_map(srv) : generate_map(srv, NBR_RESRC_CASE_MAX);
+	return (srv);
 }
 
-void	kill_map(t_server *srv)
+void		kill_map(t_server *srv)
 {
 	int		z;
 	int		y;

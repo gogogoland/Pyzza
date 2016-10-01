@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 20:03:36 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 12:53:47 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_client	*client_init(t_server *srv)
 
 	if (!(clt = (t_client *)malloc(sizeof(t_client)))
 		|| !(clt->pos.rsc = (int *)malloc(8 * sizeof(int)))
-		|| !(clt->ring = ring_init(10)))
+		|| !(clt->ring = ring_init(srv, 10)))
 	{
 		clt != NULL && clt->ring != NULL ? free(clt->ring) : NULL;
 		clt != NULL && clt->pos.rsc != NULL ? free(clt->pos.rsc) : NULL;

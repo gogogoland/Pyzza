@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 19:49:34 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 01:18:32 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void		command_player_inv(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	char		*inv;
 
 	if (!gfx->isgfx)
-		return ;
+		command_player(fds, srv, gfx, cmd);
 	i = 0;
 	clt = srv->clt;
 	while (cmd[i] != '\0' && cmd[i] != '#')

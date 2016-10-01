@@ -6,12 +6,17 @@
 /*   By: nd-heyge <nd-heyge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 17:09:02 by nd-heyge          #+#    #+#             */
-/*   Updated: 2016/05/10 22:20:23 by nd-heyge         ###   ########.fr       */
+/*   Updated: 2016/10/01 13:50:08 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 #include <stdlib.h>
+
+static const char	*g_log_map_data =
+{
+	"x:%i y:%i r0:%i r1:%i r2:%i r3:%i r4:%i r5:%i r6:%i ground:%i\n"
+};
 
 static int		ft_rand_range(int min, int max)
 {
@@ -66,19 +71,25 @@ void			generate_map(t_server *srv, int nbr_resrc_case)
 	int		y;
 	int		r;
 	int		nbr;
+	char	*log;
 
 	y = -1;
 	srand(time(NULL));
-	while (++y < srv->plateau.y)
+	while (++y < srv->plateau.y && (x = -1))
 	{
-		x = -1;
-		while (++x < srv->plateau.x)
+		while (++x < srv->plateau.x && (nbr = -1))
 		{
 			ft_assign_tile(srv, y, x);
-			nbr = -1;
 			r = ft_rand_range(1, nbr_resrc_case);
 			while (++nbr < r)
 				ft_assign_collect(srv, y, x, nbr);
+			if (asprintf(&log, g_log_map_data, y, x, srv->map[y][x][0],
+						srv->map[y][x][1], srv->map[y][x][2], srv->map[y][x][3],
+						srv->map[y][x][4], srv->map[y][x][5], srv->map[y][x][6],
+						srv->map[y][x][7]))
+				server_log(srv, log);
+			if (log)
+				ft_memdel((void **)&log);
 		}
 	}
 }

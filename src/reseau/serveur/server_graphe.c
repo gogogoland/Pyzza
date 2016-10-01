@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 15:04:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/06/06 19:55:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 16:47:18 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,58 +14,83 @@
 
 static const char	*g_sgm[] =
 {
+	"Bienvenue\n",
 	"Malloc failed for new client.\n",
 	"Accept failed new connection.\n",
-	"New undefined client from ip %s , port %d.\n",
-	"Graphical client from ip %s , port %d has disconnected.\n",
-	"Undefined client from ip %s , port %d has disconnected.\n",
-	"Bienvenue\n"
+	"New undefined client from ip %s , port %d.\nSocket %i has opened.\n",
+	"Graphical client from ip %s , port %d has disconnected.\n\
+Socket %i has closed.\n",
+	"Undefined client from ip %s , port %d has disconnected.\n\
+Socket %i has closed.\n",
+	"Close for graphical client from ip %s , port %d failed.\n\
+Socket %i is closed.\n",
+	"Close for undefined client from ip %s , port %d failed.\n\
+Socket %i is closed.\n"
 };
 
-t_gfx	*graphe_news(t_gfx *prev, t_fds *fds, int s)
+static void	graphe_log(t_server *srv, int type, t_gfx *gfx)
+{
+	char	*log;
+
+	if ((type < 3 && asprintf(&log, "%s", g_sgm[type]))
+			|| (type > 2 && asprintf(&log, g_sgm[type],
+										inet_ntoa(gfx->sin.sin_addr),
+										ntohs(gfx->sin.sin_port),
+										gfx->socket)))
+	{
+		server_log(srv, log);
+		ft_memdel((void **)&log);
+	}
+}
+
+t_gfx		*graphe_news(t_server *srv, t_gfx *prev, t_fds *fds, int s)
 {
 	t_gfx	tmp;
 	t_gfx	*gfx;
 
 	tmp.len = sizeof(struct sockaddr_in);
-	if (!(gfx = (t_gfx *)malloc(sizeof(t_gfx))) && printf("%s", g_sgm[0]))
+	if (!(gfx = (t_gfx *)malloc(sizeof(t_gfx))))
 	{
-		if ((s = accept(s, (struct sockaddr *)&tmp.sin, &tmp.len)) >= 0)
+		if ((s = accept(s, (struct sockaddr *)&tmp.sin, &tmp.len)) < 0)
 			close(s);
+		graphe_log(srv, 1, gfx);
 		return (gfx);
 	}
 	gfx->len = sizeof(struct sockaddr_in);
 	if ((gfx->socket = accept(s, (struct sockaddr *)&gfx->sin, &gfx->len)) < 0)
 	{
-		printf("%s", g_sgm[1]);
-		graphe_kill(gfx, fds, false);
+		graphe_log(srv, 2, gfx);
+		graphe_kill(srv, gfx, fds, false);
 		return (NULL);
 	}
-	printf(g_sgm[2], inet_ntoa(gfx->sin.sin_addr), ntohs(gfx->sin.sin_port));
-	gfx->ring = ring_init(1);
+	graphe_log(srv, 3, gfx);
+	gfx->ring = ring_init(srv, 1);
 	gfx->isgfx = false;
 	gfx->prev = prev;
 	gfx->next = NULL;
-	send(gfx->socket, g_sgm[5], strlen(g_sgm[5]), 0);
+	send(gfx->socket, g_sgm[0], strlen(g_sgm[0]), 0);
 	return (gfx);
 }
 
-t_gfx	*graphe_init(void)
+t_gfx		*graphe_init(t_server *srv)
 {
 	t_gfx	*gfx;
 
-	if (!(gfx = (t_gfx *)malloc(sizeof(t_gfx))) && printf("%s", g_sgm[0]))
+	if (!(gfx = (t_gfx *)malloc(sizeof(t_gfx))))
+	{
+		graphe_log(srv, 1, gfx);
 		return (gfx);
+	}
 	gfx->socket = 0;
-	gfx->ring = ring_init(1);
+	gfx->ring = ring_init(srv, 1);
 	gfx->prev = NULL;
 	gfx->next = NULL;
 	return (gfx);
 }
 
 //	TODO
-//	*	set to NULL gfx->sin
-void		graphe_kill(t_gfx *gfx, t_fds *fds, bool gfxtoclt)
+//	*	set to NULL gfx->sin ?
+void		graphe_kill(t_server *srv, t_gfx *gfx, t_fds *fds, bool gfxtoclt)
 {
 	t_gfx	*next;
 
@@ -76,9 +101,8 @@ void		graphe_kill(t_gfx *gfx, t_fds *fds, bool gfxtoclt)
 	ring_kill(gfx->ring);
 	if (!gfxtoclt)
 	{
-		close(gfx->socket);
-		printf(gfx->isgfx ? g_sgm[3] : g_sgm[4], \
-				inet_ntoa(gfx->sin.sin_addr), ntohs(gfx->sin.sin_port));
+		graphe_log(srv, ((gfx->isgfx ? 4 : 5) + (!close(gfx->socket) ? 0 : 2)),
+					gfx);
 	}
 	gfx->isgfx = false;
 	gfx->len = 0;

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 20:09:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 16:34:12 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,29 @@
 
 static const char	*g_cmd_plr[] =
 {
-	"Player from ip %s, port %d tried to connect, but limit of %d client is\
+	"Client from ip %s, port %d tried to connect, but limit of %d player is \
 reached.\n",
-	"New player #%d from ip %s, port %d.\n",
+	"New player #%d from ip %s, port %d.\nSocket %i is now player\n",
 	"suc\n"
 };
+
+static void		command_player_log(t_server *srv, int type, t_client *clt,
+									t_gfx *gfx)
+{
+	char	*log;
+
+	if ((type == 0 && asprintf(&log, g_cmd_plr[type], 
+				inet_ntoa(gfx->sin.sin_addr), ntohs(gfx->sin.sin_port),
+				srv->egg - srv->player_max))
+			|| (type == 1 && asprintf(&log, g_cmd_plr[type], clt->name,
+				inet_ntoa(clt->sin.sin_addr), ntohs(clt->sin.sin_port),
+				clt->socket))
+			|| (type == 2 && asprintf(&log, "%s", g_cmd_plr[type])))
+	{
+		server_log(srv, log);
+		ft_memdel((void **)&log);
+	}
+}
 
 static int		command_player_get_team(t_server *srv, char *cmd)
 {
@@ -44,14 +62,6 @@ static t_client	*command_player_get_valide_client(int t, t_server *srv)
 	if (new && new->team == t)
 		send_graphe_action(srv, command_write_msg(new, 0, 0, NULL), 0, NULL);
 	return (new);
-}
-
-static bool		command_player_is_graphical(t_gfx *gfx)
-{
-	if (!gfx->isgfx)
-		return (false);
-	send(gfx->socket, g_cmd_plr[2], strlen(g_cmd_plr[2]), 0);
-	return (true);
 }
 
 static void		command_player_send_welcome(t_server *srv, t_client *clt)
@@ -81,14 +91,13 @@ void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	char		*team;
 	t_client	*new;
 
-	if (command_player_is_graphical(gfx)
-			|| !srv->team[(t = command_player_get_team(srv, cmd))])
+	gfx->isgfx ? send(gfx->socket, g_cmd_plr[2], strlen(g_cmd_plr[2]), 0) : 0;
+	if (gfx->isgfx	|| !srv->team[(t = command_player_get_team(srv, cmd))])
 		return ;
 	if (!(new = command_player_get_valide_client(t, srv)))
 	{
-		printf(g_cmd_plr[0], inet_ntoa(gfx->sin.sin_addr),
-				ntohs(gfx->sin.sin_port), srv->player_max);
-		graphe_kill(gfx, fds, false);
+		command_player_log(srv, 0, NULL, gfx);
+		graphe_kill(srv, gfx, fds, false);
 		return ;
 	}
 	new->fork ? NULL : client_init_data(new, srv);
@@ -97,9 +106,8 @@ void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	new->len = gfx->len;
 	new->team = t;
 	new->health = new->fork ? new->health : 1260.0f / (float)srv->time;
-	printf(g_cmd_plr[1], new->name, inet_ntoa(new->sin.sin_addr),
-			ntohs(new->sin.sin_port));
+	command_player_log(srv, 1, new, NULL);
 	fds->max = new->socket > fds->max - 1 ? new->socket + 1 : fds->max;
-	graphe_kill(gfx, fds, true);
+	graphe_kill(srv, gfx, fds, true);
 	command_player_send_welcome(srv, new);
 }

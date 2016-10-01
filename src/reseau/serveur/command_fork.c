@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:25:40 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 20:09:26 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/09/30 14:05:57 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	command_fork(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		cur->next = new;
 	else
 		srv->clt = new;
+	srv->egg++;
 	srv->player_max++;
 	srv->old_player_max++;
 	new->pos.x = clt->pos.x;
