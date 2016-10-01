@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 12:58:31 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:43:37 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static const float	g_cmd_time[] =
 	7.0f
 };
 
-static char *time_lapse(t_fds *fds, t_server *srv, float tim)
+static char	*time_lapse(t_fds *fds, t_server *srv, float tim)
 {
 	t_client	*clt;
 	float		old_time;

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 15:45:44 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 14:13:34 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:43:05 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void		ring_kill(t_ring *ring)
 	ring = NULL;
 }
 
-void	ring_zero(t_ring *ring)
+void		ring_zero(t_ring *ring)
 {
 	int	i;
 

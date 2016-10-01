@@ -6,13 +6,14 @@
 /*   By: croy <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 13:22:08 by croy              #+#    #+#             */
-/*   Updated: 2016/10/01 20:54:18 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:47:14 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*g_flag[] = {
+static const char	*g_flag[] =
+{
 	"-p",
 	"-x",
 	"-y",
@@ -148,7 +149,7 @@ static bool	add_teams(char **av, int ac, int *val, t_server *srv)
 	return (true);
 }
 
-void	parser(int argc, char **argv, t_server *srv)
+void		parser(int argc, char **argv, t_server *srv)
 {
 	int		check[7];
 	int		i;

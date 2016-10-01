@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/03 18:50:24 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 01:18:20 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:13:59 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static const char	*g_cmd_time_change = "sgt %d\n";
 
-static void command_time_change_player(t_server *srv, int new_time)
+static void	command_time_change_player(t_server *srv, int new_time)
 {
 	t_client	*player;
 
@@ -22,7 +22,7 @@ static void command_time_change_player(t_server *srv, int new_time)
 	while (player)
 	{
 		player->time = (player->time * srv->time) / new_time;
-		player->health =(player->health * srv->time) / new_time;
+		player->health = (player->health * srv->time) / new_time;
 		player = player->next;
 	}
 	srv->time = new_time;

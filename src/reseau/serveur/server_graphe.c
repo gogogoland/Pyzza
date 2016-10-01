@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 15:04:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 16:47:18 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:41:37 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ static const char	*g_sgm[] =
 	"Accept failed new connection.\n",
 	"New undefined client from ip %s , port %d.\nSocket %i has opened.\n",
 	"Graphical client from ip %s , port %d has disconnected.\n\
-Socket %i has closed.\n",
+		Socket %i has closed.\n",
 	"Undefined client from ip %s , port %d has disconnected.\n\
-Socket %i has closed.\n",
+		Socket %i has closed.\n",
 	"Close for graphical client from ip %s , port %d failed.\n\
-Socket %i is closed.\n",
+		Socket %i is closed.\n",
 	"Close for undefined client from ip %s , port %d failed.\n\
-Socket %i is closed.\n"
+		Socket %i is closed.\n"
 };
 
 static void	graphe_log(t_server *srv, int type, t_gfx *gfx)

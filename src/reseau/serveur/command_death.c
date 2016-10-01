@@ -6,16 +6,16 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 14:06:53 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 15:17:24 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:07:53 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*g_cmd_death[] = 
+static const char	*g_cmd_death[] =
 {
 	"Player client from ip %s, port %d has disconnected.\n",
-	 "Socket %i closed.\n"
+	"Socket %i closed.\n"
 };
 
 static void	command_death_log(t_server *srv, int type, char *ip, int port)
@@ -36,7 +36,7 @@ static void	command_death_fork(t_fds *fds, t_server *srv, t_client *clt)
 
 	prev = srv->clt;
 	while (prev && prev->next != clt)
-			prev = prev->next;
+		prev = prev->next;
 	prev->next = clt->next;
 	if (clt->next)
 		clt->next->prev = prev;

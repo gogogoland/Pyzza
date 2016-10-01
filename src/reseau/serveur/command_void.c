@@ -6,13 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/22 19:44:24 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/22 19:45:38 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:14:27 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-void command_void(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
+void	command_void(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	return ;
 }

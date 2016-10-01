@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 12:53:47 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:38:09 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 static const char	*g_mcl[] =
 {
 	"Player client from ip %s , port %d has disconnected.\n",
-	"Reached client limit's.\n",
+	"Reached client limit's.\n"
 };
 
-void	client_init_data(t_client *clt, t_server *srv)
+void		client_init_data(t_client *clt, t_server *srv)
 {
 	srand(time(NULL));
 	clt->action = 0;
@@ -60,7 +60,7 @@ t_client	*client_init(t_server *srv)
 	return (clt);
 }
 
-void	client_kill(t_client *clt, t_fds *fds)
+void		client_kill(t_client *clt, t_fds *fds)
 {
 	FD_CLR(clt->socket, &fds->rd);
 	FD_CLR(clt->socket, &fds->wr);
@@ -81,7 +81,7 @@ void	client_kill(t_client *clt, t_fds *fds)
 	clt = NULL;
 }
 
-void	client_zero(t_client *clt, t_fds *fds, t_server *srv)
+void		client_zero(t_client *clt, t_fds *fds, t_server *srv)
 {
 	if (fds)
 	{

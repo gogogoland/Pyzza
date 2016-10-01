@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 16:34:12 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:16:04 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static const char	*g_cmd_plr[] =
 {
 	"Client from ip %s, port %d tried to connect, but limit of %d player is \
-reached.\n",
+		reached.\n",
 	"New player #%d from ip %s, port %d.\nSocket %i is now player\n",
 	"suc\n"
 };
@@ -25,7 +25,7 @@ static void		command_player_log(t_server *srv, int type, t_client *clt,
 {
 	char	*log;
 
-	if ((type == 0 && asprintf(&log, g_cmd_plr[type], 
+	if ((type == 0 && asprintf(&log, g_cmd_plr[type],
 				inet_ntoa(gfx->sin.sin_addr), ntohs(gfx->sin.sin_port),
 				srv->egg - srv->player_max))
 			|| (type == 1 && asprintf(&log, g_cmd_plr[type], clt->name,
@@ -92,7 +92,7 @@ void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	t_client	*new;
 
 	gfx->isgfx ? send(gfx->socket, g_cmd_plr[2], strlen(g_cmd_plr[2]), 0) : 0;
-	if (gfx->isgfx	|| !srv->team[(t = command_player_get_team(srv, cmd))])
+	if (gfx->isgfx || !srv->team[(t = command_player_get_team(srv, cmd))])
 		return ;
 	if (!(new = command_player_get_valide_client(t, srv)))
 	{

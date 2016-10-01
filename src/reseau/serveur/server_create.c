@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 20:41:04 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:50:33 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static const char			*g_error[] =
 	"Unchecked height value for the World",
 	"Unchecked team name",
 	"Unchecked number of authorized client",
-	"Unchecked time divisor",
+	"Unchecked time divisor"
 };
 
 static t_server	*return_msg(const char *msg, int ret, t_server *srv)
@@ -91,16 +91,15 @@ static t_server	*server_init_data(int argc, char **argv)
 //	*	IPv6
 //	*	TCP error
 //	*	open file for log
-t_server	*server_create(int argc, char **argv)
+t_server		*server_create(int argc, char **argv)
 {
-	int 				sso;
+	int					sso;
 	t_server			*srv;
 	struct protoent		*proto;
 	struct sockaddr_in	sin;
-
 	//char	*tcp;
-	//tcp = strdup("tcp");
 
+	//tcp = strdup("tcp");
 	sso = 1;
 	if (!(srv = server_init_data(argc, argv)) || srv->socket == -1)
 		return (srv);

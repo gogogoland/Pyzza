@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 16:00:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 18:06:20 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:11:14 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	command_take(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 
 	ook = false;
 	r = 0;
-ft_putendl(clt->current_cmd);
 	while (r < 7 && strncmp(g_cmd_take[r], clt->current_cmd,
 							ft_strlen(g_cmd_take[r])))
 		r++;

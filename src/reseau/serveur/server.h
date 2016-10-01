@@ -6,16 +6,12 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 20:11:14 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:46:39 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef server_H
 # define SERVER_H
-
-typedef char bool;
-# define true 1
-# define false 0
 
 # include "libft.h"
 
@@ -31,7 +27,7 @@ typedef char bool;
 # include <sys/types.h>
 # include <time.h>
 # include <unistd.h>
-# include <string.h>
+# include <stdbool.h>
 
 # define ERR_P "[ERROR] : Port isn't correct.\n"
 # define ERR_W "[ERROR] : Width isn't correct.\n"
@@ -63,85 +59,89 @@ typedef char bool;
 
 /*
 ** [0] : -p, [1] : -x, [2] : -y, [3] : -c, [4] -t [5] -b
-*/ 
-
+*/
+/*
+typedef char	bool;
+# define TRUE 1
+# define FALSE 0
+*/
 typedef struct sockaddr_in	t_sokadr_in;
 typedef struct sockaddr		t_sokadr;
 typedef struct in_addr		t_i_adr;
 
-typedef struct			s_ring
+typedef struct				s_ring
 {
-	char				**command;
-	int					cur;
-	int					len;
-}						t_ring;
+	char					**command;
+	int						cur;
+	int						len;
+}							t_ring;
 
-typedef struct			s_coord
+typedef struct				s_coord
 {
-	int					x;
-	int					y;
-	int					*rsc;
-}						t_coord;
+	int						x;
+	int						y;
+	int						*rsc;
+}							t_coord;
 
-typedef struct			s_fds
+typedef struct				s_fds
 {
-	fd_set				rd;
-	fd_set				wr;
-	fd_set				ex;
-	int					max;
-}						t_fds;
+	fd_set					rd;
+	fd_set					wr;
+	fd_set					ex;
+	int						max;
+}							t_fds;
 
-typedef struct			s_gfx
+typedef struct				s_gfx
 {
-	int					socket;
-	unsigned int		len;
-	struct sockaddr_in	sin;
-	struct s_ring		*ring;
-	struct s_gfx		*prev;
-	struct s_gfx		*next;
-	bool				isgfx;
-}						t_gfx;
+	int						socket;
+	unsigned int			len;
+	struct sockaddr_in		sin;
+	struct s_ring			*ring;
+	struct s_gfx			*prev;
+	struct s_gfx			*next;
+	bool					isgfx;
+}							t_gfx;
 
-typedef struct			s_client
+typedef struct				s_client
 {
-	int					socket;
-	unsigned int		len;
-	struct sockaddr_in	sin;
-	struct s_coord		pos;
-	int					sens;
-	int					team;
-	int					name;
-	bool				fork;
-	int					lvl;
-	int					tolvl;
-	int					action;
-	float				time;
-	float				health;
-	char				*current_cmd;
-	int					*acolyte;
-	bool				casting;
-	struct s_ring		*ring;
-	struct s_client		*next;
-	struct s_client		*prev;
-}						t_client;
+	int						socket;
+	unsigned int			len;
+	struct sockaddr_in		sin;
+	struct s_coord			pos;
+	int						sens;
+	int						team;
+	int						name;
+	bool					fork;
+	int						lvl;
+	int						tolvl;
+	int						action;
+	float					time;
+	float					health;
+	char					*current_cmd;
+	int						*acolyte;
+	bool					casting;
+	struct s_ring			*ring;
+	struct s_client			*next;
+	struct s_client			*prev;
+}							t_client;
 
-typedef struct			s_server
+typedef struct				s_server
 {
-	struct s_coord		plateau;
-	int					port;
-	int					socket;
-	int					name;
-	int					time;
-	int					lvl;
-	int					old_player_max;
-	int					player_max;
-	int					egg;
-	int					***map;
-	char				**team;
-	struct s_gfx		*gfx;
-	struct s_client		*clt;
-	bool				bonus_fork;
-}						t_server;
+	struct s_coord			plateau;
+	int						port;
+	int						socket;
+	int						name;
+	int						time;
+	int						lvl;
+	int						old_player_max;
+	int						player_max;
+	int						egg;
+	int						***map;
+	char					**team;
+	struct s_gfx			*gfx;
+	struct s_client			*clt;
+	bool					bonus_fork;
+}							t_server;
 
 void		ring_recv(t_server *srv, char *command, t_ring *ring, int socket);
 char		*ring_send(t_server *srv, t_ring *ring);
@@ -149,29 +149,23 @@ t_ring		*ring_init(t_server *srv, int len);
 void		ring_zero(t_ring *ring);
 void		ring_kill(t_ring *ring);
 
-
 t_client	*client_init(t_server *srv);
 void		client_init_data(t_client *clt, t_server *srv);
 void		client_zero(t_client *clt, t_fds *fds, t_server *srv);
 void		client_kill(t_client *clt, t_fds *fds);
 
-
 t_gfx		*graphe_init(t_server *srv);
 t_gfx		*graphe_news(t_server *srv, t_gfx *prev, t_fds *fds, int s);
 void		graphe_kill(t_server *srv, t_gfx *gfx, t_fds *fds, bool gfxtoclt);
 
-
 t_server	*init_map(t_server *srv);
 void		kill_map(t_server *srv);
 
-
 void		generate_map(t_server *srv, int nbr_resrc_case);
-
 
 t_server	*server_create(int argc, char **argv);
 void		server_log(t_server *srv, const char *msg);
 void		parser(int argc, char **argv, t_server *srv);
-
 
 bool		recv_client(t_fds *fds, t_server *srv, int ret);
 void		send_client(t_fds *fds, t_server *srv, float tom);
@@ -218,7 +212,6 @@ void		command_death(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 void		command_eat(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-
 
 void		command_player(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);

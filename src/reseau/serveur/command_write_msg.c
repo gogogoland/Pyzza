@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/20 17:18:51 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/21 19:27:55 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:17:46 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static const char *g_msg_cmd[] =
 
 char	*command_write_msg(t_client *clt, int action, int n, char *pbc)
 {
-	char *msg;
-	int	*rsc;
+	char	*msg;
+	int		*rsc;
 
 	if (action < 7 && asprintf(&msg, g_msg_cmd[action], clt->name) >= 0)
 		return (msg);

@@ -6,13 +6,16 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:50:09 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 14:48:25 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:44:20 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*g_msg_cmd_msg = "pbc %i %s";
+static const char	*g_msg_cmd_msg =
+{
+	"pbc %i %s"
+};
 
 static t_coord	command_msg_min(t_server *srv, t_client *clt, t_client *cur)
 {
@@ -58,7 +61,7 @@ static void		msg_send_player(int org, char *msg, int socket)
 	}
 }
 
-bool		msg_save(t_client *clt, char *msg)
+bool			msg_save(t_client *clt, char *msg)
 {
 	if (!clt || !msg)
 		return (false);

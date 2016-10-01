@@ -6,18 +6,15 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/22 14:45:38 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:47:48 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static bool	incant_check_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
-static bool	incant_init_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
-
 static const char	*g_msg_init_aco = "pic %i %i %i #%i";
 
-void	incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
+void		incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
 	int			error;
 	char		*msg;
@@ -56,7 +53,7 @@ static bool	incant_init_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 		while (player && lim_acolyte)
 		{
 			if (player->lvl == clt->lvl && player->pos.y == clt->pos.y
-					&& !player->casting	&& player->pos.x == clt->pos.x
+					&& !player->casting && player->pos.x == clt->pos.x
 					&& player->name > 0 && player->name != clt->name)
 			{
 				player->casting = true;
@@ -91,7 +88,7 @@ static bool	incant_check_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	return (true);
 }
 
-void	incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
+void		incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
 	t_client	*player;
 	int			i;
@@ -113,7 +110,7 @@ void	incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	clt->casting = false;
 }
 
-void	incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
+void		incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
 	int			oldlvl;
 	t_client	*player;
@@ -141,7 +138,7 @@ void	incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	}
 }
 
-bool	incant_help_acolyte(t_server *srv, t_client* clt, int lim_acolyte)
+bool		incant_help_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
 	if (!clt->acolyte && !clt->casting)
 		return (incant_init_acolyte(srv, clt, lim_acolyte));

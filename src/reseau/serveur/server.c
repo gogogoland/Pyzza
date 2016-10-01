@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 20:41:22 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 21:19:06 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static const char	*g_err_msg[] =
 {
 	"Bad argument, usage: ./srv -p <port> -x <width> -y <height> -n <team> \
-... <team> -c <nb> -t <t>",
+		... <team> -c <nb> -t <t>",
 	"Select error",
 	"Malloc error"
 };
@@ -24,7 +24,7 @@ static int		return_msg(const char *msg, int r)
 {
 	if (msg)
 		printf("%s\n", msg);
-	return r;
+	return (r);
 }
 
 static t_client	*set_clients_list(t_server *srv)
