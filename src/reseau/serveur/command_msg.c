@@ -6,16 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:50:09 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 21:44:20 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 23:42:06 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const char	*g_msg_cmd_msg =
-{
-	"pbc %i %s"
-};
+static const char	*g_msg_cmd_msg = "pbc %i %s";
 
 static t_coord	command_msg_min(t_server *srv, t_client *clt, t_client *cur)
 {

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 21:16:04 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 23:46:29 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static const char	*g_cmd_plr[] =
 {
 	"Client from ip %s, port %d tried to connect, but limit of %d player is \
-		reached.\n",
+	reached.\n",
 	"New player #%d from ip %s, port %d.\nSocket %i is now player\n",
 	"suc\n"
 };

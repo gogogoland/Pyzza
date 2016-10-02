@@ -6,21 +6,11 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 21:50:33 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/02 20:04:17 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
-
-static const char			*g_c_arg[] =
-{
-	"-p",
-	"-x",
-	"-y",
-	"-n",
-	"-c",
-	"-t"
-};
 
 static const char			*g_error[] =
 {
@@ -56,24 +46,25 @@ static t_server	*return_msg(const char *msg, int ret, t_server *srv)
 	return (srv);
 }
 
-//	TODO
-//	*	check if next argument begin with '-' character
-static t_server	*server_init_data(int argc, char **argv)
+static t_server	*server_init_data(int ac, char **av)
 {
-	int			arg;
 	t_server	*srv;
 
 	srv = NULL;
-	if (argc < 13 || !(srv = (t_server *)malloc(sizeof(t_server))))
+	if (ac < 13 || !(srv = (t_server *)malloc(sizeof(t_server))))
 		return (srv);
-	srv->socket = -1;
-	srv->team = NULL;
-	parser(argc, argv, srv);
 	srv->lvl = 1;
-	srv->old_player_max = 0;
 	srv->egg = 0;
+	srv->name = 0;
 	srv->gfx = NULL;
-	return (srv);
+	srv->clt = NULL;
+	srv->team = NULL;
+	srv->socket = -1;
+	srv->old_player_max = 0;
+	if (!parser(ac, av, srv))
+		return (srv);
+	srv->socket = 0;
+	return (init_map(srv));
 }
 
 /*static char	*tcp(void)
@@ -93,7 +84,7 @@ static t_server	*server_init_data(int argc, char **argv)
 //	*	open file for log
 t_server		*server_create(int argc, char **argv)
 {
-	int					sso;
+	int 				sso;
 	t_server			*srv;
 	struct protoent		*proto;
 	struct sockaddr_in	sin;
@@ -118,6 +109,5 @@ t_server		*server_create(int argc, char **argv)
 	else if (listen(srv->socket, srv->player_max) < 0 && (srv->socket = -4) < 0)
 		return (return_msg(g_error[16], -1, srv));
 	srv->gfx = graphe_init(srv);
-	srv->name = 0;
 	return (srv);
 }

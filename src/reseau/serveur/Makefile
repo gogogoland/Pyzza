@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/10/01 19:55:00 by tbalea           ###   ########.fr        #
+#    Updated: 2016/10/02 20:12:44 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,8 +46,10 @@ SRC = ft_atoi.c\
 	  ft_strdup.c\
 	  ft_strbdup.c\
 	  server.c\
+	  parser.c\
+	  parser_int.c\
+	  parser_team.c\
 	  server_create.c\
-	  parsing.c\
 	  server_client.c\
 	  server_graphe.c\
 	  server_send.c\
@@ -71,6 +73,7 @@ SRC = ft_atoi.c\
 	  command_fork.c\
 	  command_incant.c\
 	  incant_help_acolyte.c\
+	  incant_help_acolyte2.c\
 	  command_nbr_co.c\
 	  command_player.c\
 	  command_graphe.c\

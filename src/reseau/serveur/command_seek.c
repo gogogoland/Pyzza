@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 20:50:12 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/01 23:27:02 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,20 +94,24 @@ static char	*command_seek_copy(char *wt, int type)
 	char	*new;
 
 	new = NULL;
+ft_putendl("I am the One");
 	if (type == -1 && !wt)
 		asprintf(&new, "");
 	else if (type == -1 && wt)
 	{
+ft_putendl("I am the One");
 		asprintf(&new, "%s |", wt);
 		ft_memdel((void **)&wt);
 	}
 	else if (type < 8 && type > -1 && wt)
 	{
+ft_putendl("I am the One");
 		asprintf(&new, "%s %s", wt, g_cmd_seek[type]);
 		ft_memdel((void **)&wt);
 	}
 	else if (type < 8 && type > -1 && !wt)
 		asprintf(&new, "%s", g_cmd_seek[type]);
+ft_putendl("I feel sun");
 	return (new);
 }
 
@@ -122,17 +126,23 @@ static char	*command_seek_add(t_server *srv, t_coord pos, int s, char *wt)
 	wt = command_seek_copy(wt, -1);
 	while (++i < 7)
 	{
+ft_putendl("I am the One who can recount why we lost");
 		n = srv->map[pos.x][pos.y][i];
+ft_putendl("What's to come is fire of end of the time");
 		while (n-- > 0)
 			wt = command_seek_copy(wt, i);
+ft_putendl("I am the One Who");
 	}
 	while (clt)
 	{
+ft_putendl("I am the One will");
 		if (clt->socket && clt->socket != s
 				&& clt->pos.x == pos.x && clt->pos.y == pos.y)
 			wt = command_seek_copy(wt, 7);
 		clt = clt->next;
+ft_putendl("I am the One revolve");
 	}
+ft_putendl("I am the One");
 	return (wt);
 }
 
@@ -177,4 +187,5 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	send(clt->socket, wt, strlen(wt), 0);
 	ft_memdel((void **)&tmp);
 	ft_memdel((void **)&wt);
+ft_putendl("I am the One");
 }
