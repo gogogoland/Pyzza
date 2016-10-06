@@ -6,7 +6,7 @@
 /*   By: croy <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/02 18:36:02 by croy              #+#    #+#             */
-/*   Updated: 2016/10/02 20:08:14 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/06 17:32:54 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static const char	*g_parser_team_log[] =
 	"[ERROR] : team memory allocation failed.\n"
 };
 
-static bool	parser_team_log(t_server *srv, int type, char *name)
+static bool	parser_team_log(t_server *srv, int type, const char *name)
 {
 	char	*log;
 
@@ -57,7 +57,7 @@ static int	parser_team_n_team(t_server *srv, char **av, int ac)
 		if (strcmp(av[i], g_parser_team_unauthorized_name))
 			n_team++;
 		else if (!no++)
-			(parser_team_log(srv, 0, 0));
+			(parser_team_log(srv, 0, g_parser_team_unauthorized_name));
 	}
 	return (n_team);
 }
@@ -71,11 +71,11 @@ bool		parser_team(int ac, char **av, t_server *srv)
 	n_team = parser_team_n_team(srv, av, ac);
 	if (!n_team)
 		return (parser_team_log(srv, 1, 0));
-	if (!(srv->team = malloc(sizeof(char**) * (n_team + 1))))
+	if (!(srv->team = (char **)malloc(sizeof(char *) * (n_team + 1))))
 		return (parser_team_log(srv, 2, 0));
 	i = 0;
 	srv->team[n_team] = NULL;
-	while (i < ac && !strcmp(av[i], g_parser_team_flag))
+	while (i < ac && strcmp(av[i], g_parser_team_flag))
 		i++;
 	while (++i < ac && av[i][0] != '-')
 	{
