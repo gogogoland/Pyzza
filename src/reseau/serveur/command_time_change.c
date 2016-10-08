@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/03 18:50:24 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 23:43:01 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/08 18:21:16 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,15 @@ void		command_time_change(t_fds *fds,
 	i = 0;
 	box = NULL;
 	new_time = 0;
-	while (cmd[i] > '9' && cmd[i] < '0')
+	while (cmd && (cmd[i] > '9' || cmd[i] < '0'))
 		i++;
 	new_time = command_get_int(i - 1, cmd);
-	if (new_time > 0 && new_time != srv->time && new_time < TIME_MAX)
+	if (new_time <= TIME_MIN)
+		new_time = (TIME_MIN + 1);
+	else if (new_time >= TIME_MAX)
+		new_time = (TIME_MAX - 1);
+	if (new_time > TIME_MIN && new_time != srv->time && new_time < TIME_MAX)
 		command_time_change_player(srv, new_time);
 	asprintf(&box, g_cmd_time_change, srv->time);
-	send(gfx->socket, box, strlen(box), 0);
-	ft_memdel((void **)&box);
+	send_graphe_action(srv, box, 0, NULL);
 }
