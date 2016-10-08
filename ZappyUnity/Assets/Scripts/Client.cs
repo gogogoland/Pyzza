@@ -56,25 +56,31 @@ public class Client : MonoBehaviour {
 		}
 	}
 
-	IEnumerator	CheckData(float time){
-		while (true) {
-			if (_socket.Connected){
-				if (_socket.Poll(10,SelectMode.SelectRead) && _socket.Available == 0)
-					throw new Exception("La connexion au serveur est interrompue.");
-			}
-			if (_socket.Available > 0){
-				string recv;
-				while (_socket.Available > 0){
-					try {
-						recv=Receive();
-						Debug.Log (recv);
-						rtfContent+=recv;
-					}
-					catch(SocketException E) {
-						throw new Exception("CheckData read"+E.Message);
-					}
+	void	CheckData(){
+		if (_socket.Connected){
+			if (_socket.Poll(10,SelectMode.SelectRead) && _socket.Available == 0)
+				throw new Exception("La connexion au serveur est interrompue.");
+		}
+		if (_socket.Available > 0){
+			string recv;
+
+			while (_socket.Available > 0){
+				try {
+					recv=Receive();
+					Debug.Log (recv);
+					rtfContent+=recv;
+					recv = null;
+				}
+				catch(SocketException E) {
+					throw new Exception("CheckData read"+E.Message);
 				}
 			}
+		}
+	}
+
+	IEnumerator	CheckDataCorout(float time) {
+		while (true) {
+			CheckData();
 			yield return new WaitForSeconds(time);
 		}
 	}
@@ -124,15 +130,14 @@ public class Client : MonoBehaviour {
 			_socket.Connect(inputIP, ip);
 
 			WhoIAm();
-			StartCoroutine("CheckData", 0.01f);
+			CheckData();
 			if (rtfContent != null)
 			{
 				DataDistribution();
 				DontDestroyOnLoad(gameObject);
 				Application.LoadLevel("Game");
-				StartCoroutine(DemandInfo());
+				DemandInfo();
 				_in_game = true;
-				rtfContent = null;
 			}
 		}
 		catch (Exception e)
@@ -153,34 +158,44 @@ public class Client : MonoBehaviour {
 		Send (SST + time + "\n");
 	}
 
-	IEnumerator		DemandInfo() {
-		while(true) {
-			try {
-				if (_socket.Connected) {
-					string send;
-					send = MCT;
-					for (int player=0; player < _scriptData.players.Count; player++) {
-						send += PPO + _scriptData.players [player].id + "\n";
-						send += PLV + _scriptData.players [player].id + "\n";
-						send += PIN + _scriptData.players [player].id + "\n";
-					}
-					send += SGT;
-	//				if (_scriptData.unitTime != _scriptUI.value_slider)
-	//					send += SST + _scriptUI.value_slider;
-					Debug.Log(send);
-					Send (send);
+	void		DemandInfo() {
+		try {
+			if (_socket.Connected) {
+//				string send;
+				//send = MCT;
+				Send (MCT);
+				for (int player=0; player < _scriptData.players.Count; player++) {
+					Send (PPO + _scriptData.players [player].id + "\n");
+					Send (PLV + _scriptData.players [player].id + "\n");
+					Send (PIN + _scriptData.players [player].id + "\n");
 				}
-			} catch (Exception e) {
-				Debug.LogError ("Error Demand Info : " + e);
+				Send (SGT);
+//				if (_scriptData.unitTime != _scriptUI.value_slider)
+//					send += SST + _scriptUI.value_slider;
+//				Debug.Log(send);
 			}
-			yield return new WaitForSeconds (0.01f);
+		} catch (Exception e) {
+			Debug.LogError ("Error Demand Info : " + e);
+		}
+	}
+
+	IEnumerator		DemandInfoCourout() {
+		while (true) {
+			DemandInfo ();
+			yield return new WaitForSeconds (1);
 		}
 	}
 
 	// Update is called once per frame
 	void		Update () {
 		if (_in_game) {
-			StartCoroutine("DemandInfo");
+			StartCoroutine(DemandInfoCourout());
+			CheckData();
+			if (rtfContent != null)
+			{
+				DataDistribution();
+			}
 		}
+
 	}
 }

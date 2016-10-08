@@ -19,7 +19,7 @@ public class DataGame : MonoBehaviour {
 		public GameObject					resrc;
 	};
 	public List<c_datamap>					structDataMap;
-	public int								unitTime = 100;
+	public int								unitTime = 0;
 	public List<string>						teamName;
 	public class							c_player {
 		public int							id;
@@ -324,6 +324,6 @@ public class DataGame : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }
