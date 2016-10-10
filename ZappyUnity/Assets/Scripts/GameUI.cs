@@ -1,34 +1,47 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using System;
 using System.Collections;
-using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class GameUI : MonoBehaviour {
 	public GameObject	information_case;
-	public int			value_slider;
+	public int			value_slider = 0;
 
 	private GameObject	_infoTime;
 	private int			_infoUnitTime;
 	private DataGame	_scriptData;
+	private Client		_scriptClient;
 	private Slider		_slider;
 	private Text		_timeUI;
 
 	// Use this for initialization
 	void		Start () {
 		information_case = GameObject.Find ("Information");
-		_scriptData = GameObject.Find ("Client(Clone)").GetComponent<DataGame>();
-		_slider = GameObject.Find ("Time").transform.GetChild (3).GetComponent<Slider> ();
+		GameObject client = GameObject.Find ("Client(Clone)");
+		_scriptData = client.GetComponent<DataGame>();
+		_scriptClient = client.GetComponent<Client> ();
+		_slider = GameObject.Find ("SliderTime").GetComponent<Slider> ();
 		_timeUI = GameObject.Find ("timeCurrent").GetComponent<Text> ();
 		information_case.SetActive (false);
+		value_slider = _scriptData.unitTime;
+		_slider.value = value_slider;
+		_timeUI.text = "" + value_slider;
 	}
 
 	// Update is called once per frame
 	void		Update () {
+
+
 	}
 
-	public void	SliderTime(){
-		_timeUI.text = "" + _scriptData.unitTime;
+	public void	SST(){
 		value_slider = (int)_slider.value;
+		_scriptClient.newTime = true;
+		_timeUI.text = "" + (int)_slider.value;
+		Debug.Log ("The mouse click was released");
 	}
+
+
 }

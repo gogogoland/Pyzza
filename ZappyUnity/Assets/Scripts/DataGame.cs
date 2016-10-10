@@ -96,7 +96,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 7)
 			throw new Exception("Donnees d'un joueur erronees");
 		tmp = new c_player();
-		tmp.id = int.Parse (cmd[1] + 1);
+		tmp.id = int.Parse (cmd [1].Substring (1, cmd [1].Length - 1));
 		tmp.pos_x = int.Parse (cmd[2]);
 		tmp.pos_y = int.Parse (cmd[3]);
 		tmp.orientation = int.Parse (cmd[4]);
@@ -112,7 +112,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 5)
 			throw new Exception("Donnees d'orientions d'un joueur erronees");
 		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd[1] + 1)) {
+			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				player.pos_x = int.Parse (cmd[2]);
 				player.pos_y = int.Parse (cmd[3]);
 				player.orientation = int.Parse (cmd[4]);
@@ -125,7 +125,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 3)
 			throw new Exception("Donnees du level d'un joueur erronees");
 		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd[1] + 1)) {
+			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				player.level = int.Parse (cmd[2]);
 				break ;
 			}
@@ -136,7 +136,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 11)
 			throw new Exception("Donnees du level d'un joueur erronees");
 		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd[1] + 1)) {
+			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				for (int obj=0; obj < player.inventory.Length; obj++) {
 					player.inventory[obj] = int.Parse (cmd[obj + 2]);
 				}
@@ -149,7 +149,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees d'expulsion d'un joueur erronees");
 		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1] + 1)) {
+			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("Expulsion du joueur #" + player.id);
 				break ;
 			}
@@ -160,7 +160,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 3)
 			throw new Exception("Donnees du broadcast d'un joueur erronees");
 		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1] + 1)) {
+			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("Joueur #" + player.id + " dit:" + cmd[2]);
 				break ;
 			}
@@ -177,7 +177,7 @@ public class DataGame : MonoBehaviour {
 		do {
 			restart = false;
 			foreach (c_player player in players) {
-				if (player.id == int.Parse (cmd [5 + i] + 1)) {
+				if (player.id == int.Parse (cmd [5 + i].Substring (1, cmd [5 + i].Length - 1))) {
 					Debug.Log ("Joueur #" + player.id + " incante:" + cmd [2]);
 					restart = true;
 					i++;
@@ -199,10 +199,11 @@ public class DataGame : MonoBehaviour {
 
 	//TODO
 	public void		PlayerForkEgg(string []cmd){
+		Debug.Log ("ici");
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la ponte d'un oeuf erronees");
 		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1] + 1)) {
+			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("Joueur #" + player.id + " pond un oeuf");
 				break ;
 			}
@@ -214,7 +215,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees d'une action sur une ressource erronees");
 		foreach  (c_player player in players) {
-			if (player.id == int.Parse (cmd [1] + 1)) {
+			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				for (int obj = 0;obj < player.inventory.Length;obj++) {
 					if (int.Parse (cmd[2]) == obj) {
 						player.inventory[obj] += getDrop;
@@ -233,7 +234,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la mort d'un joueur erronees");
 		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1] + 1)) {
+			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("Joueur #" + player.id + " meurt");
 				players.Remove(player);
 				break ;
@@ -247,8 +248,8 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 5)
 			throw new Exception("Donnees d'un oeuf erronees");
 		tmp = new c_egg();
-		tmp.id = int.Parse (cmd[1] + 1);
-		tmp.id_player = int.Parse (cmd[2] + 1);
+		tmp.id = int.Parse (cmd [1].Substring (1, cmd [1].Length - 1));
+		tmp.id_player = int.Parse (cmd [2].Substring (1, cmd [2].Length - 1));
 		tmp.pos_x = int.Parse (cmd[3]);
 		tmp.pos_y = int.Parse (cmd[4]);
 
@@ -259,7 +260,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de l'eclosion d'un oeuf erronees");
 		foreach (c_egg egg in eggs) {
-			if (egg.id == int.Parse (cmd [1] + 1)) {
+			if (egg.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("L'oeuf #" + egg.id + " eclos");
 				eggs.Remove(egg);
 				break ;
@@ -271,7 +272,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de connexion d'un joueur sur un oeuf erronees");
 		foreach (c_egg egg in eggs) {
-			if (egg.id == int.Parse (cmd [1] + 1)) {
+			if (egg.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("Un joueur est nee a partir de l'oeuf #" + egg.id);
 				break ;
 			}
@@ -282,7 +283,7 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la mort d'un oeuf erronees");
 		foreach (c_egg egg in eggs) {
-			if (egg.id == int.Parse (cmd [1] + 1)) {
+			if (egg.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("L'oeuf #" + egg.id + " eclos mais pourri");
 				eggs.Remove(egg);
 				break ;

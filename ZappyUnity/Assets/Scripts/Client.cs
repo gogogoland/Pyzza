@@ -11,6 +11,7 @@ public class Client : MonoBehaviour {
 	public string							inputIP;
 	public int								ip;
 	public Text								error;
+	public bool								newTime = false;
 	
 	private const string					GRAPHIC =	"GRAPHIC\n";
 	private const string					MCT =		"mct\n";
@@ -32,7 +33,7 @@ public class Client : MonoBehaviour {
 	string		Receive()
 	{
 		try {
-			byte[] msg = new Byte[_socket.ReceiveBufferSize];
+			byte[] msg = new Byte[_socket.ReceiveBufferSize + 1];
 			_socket.Receive(msg,0,_socket.Available,SocketFlags.None);
 			return (System.Text.Encoding.ASCII.GetString(msg));
 		}
@@ -62,14 +63,12 @@ public class Client : MonoBehaviour {
 				throw new Exception("La connexion au serveur est interrompue.");
 		}
 		if (_socket.Available > 0){
-			string recv;
+			string recv = null;
 
 			while (_socket.Available > 0){
 				try {
 					recv=Receive();
-					Debug.Log (recv);
 					rtfContent+=recv;
-					recv = null;
 				}
 				catch(SocketException E) {
 					throw new Exception("CheckData read"+E.Message);
@@ -78,17 +77,11 @@ public class Client : MonoBehaviour {
 		}
 	}
 
-	IEnumerator	CheckDataCorout(float time) {
-		while (true) {
-			CheckData();
-			yield return new WaitForSeconds(time);
-		}
-	}
-
 	void		DataDistribution(){
 		string	[]cutBlockData = rtfContent.Split ('\n');
 
 		for (int line = 0; line < cutBlockData.Length; line++) {
+			Debug.Log (cutBlockData[line]);
 			string []cutCmd = cutBlockData[line].Split(' ');
 			switch (cutCmd[0]) {
 			case "Bienvenue" : _scriptData.Init();break;
@@ -119,12 +112,14 @@ public class Client : MonoBehaviour {
 			default : break;
 			}
 		}
+		if (Input.GetKey(KeyCode.L))
+			Debug.Log (rtfContent);
+		rtfContent = null;
 	}
 
 	void		Start () {
 		error = GameObject.Find("Error").GetComponent<Text>();
 		_scriptData = GetComponent<DataGame> ();
-		_scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI> ();
 		_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		try {
 			_socket.Connect(inputIP, ip);
@@ -136,6 +131,7 @@ public class Client : MonoBehaviour {
 				DataDistribution();
 				DontDestroyOnLoad(gameObject);
 				Application.LoadLevel("Game");
+				_scriptUI = GameObject.Find("Canvas").GetComponent<GameUI> ();
 				DemandInfo();
 				_in_game = true;
 			}
@@ -154,25 +150,21 @@ public class Client : MonoBehaviour {
 		}
 	}
 
-	public void	UpdateUnitTime(int time) {
-		Send (SST + time + "\n");
-	}
-
 	void		DemandInfo() {
 		try {
 			if (_socket.Connected) {
-//				string send;
-				//send = MCT;
 				Send (MCT);
+				Debug.Log (_scriptData.players.Count);
 				for (int player=0; player < _scriptData.players.Count; player++) {
 					Send (PPO + _scriptData.players [player].id + "\n");
 					Send (PLV + _scriptData.players [player].id + "\n");
 					Send (PIN + _scriptData.players [player].id + "\n");
 				}
 				Send (SGT);
-//				if (_scriptData.unitTime != _scriptUI.value_slider)
-//					send += SST + _scriptUI.value_slider;
-//				Debug.Log(send);
+				if (newTime) {
+					Send (SST + GameObject.Find("Canvas").GetComponent<GameUI> ().value_slider + "\n");
+					newTime = false;
+				}
 			}
 		} catch (Exception e) {
 			Debug.LogError ("Error Demand Info : " + e);
@@ -192,9 +184,7 @@ public class Client : MonoBehaviour {
 			StartCoroutine(DemandInfoCourout());
 			CheckData();
 			if (rtfContent != null)
-			{
 				DataDistribution();
-			}
 		}
 
 	}
