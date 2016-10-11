@@ -21,17 +21,7 @@ public class DataGame : MonoBehaviour {
 	public List<c_datamap>					structDataMap;
 	public int								unitTime = 0;
 	public List<string>						teamName;
-	public class							c_player {
-		public int							id;
-		public int							pos_x;
-		public int							pos_y;
-		public int							orientation;
-		public int							level;
-		public string						teamName;
-		public int							[]inventory;
-		public GameObject					stock_player;
-	};
-	public List<c_player>					players;
+	public List<GameObject>					players;
 	public class							c_egg{
 		public int							id;
 		public int							id_player;
@@ -46,7 +36,7 @@ public class DataGame : MonoBehaviour {
 	public void		Init(){
 		structDataMap = new List<c_datamap> ();
 		teamName = new List<string> ();
-		players = new List<c_player> ();
+		players = new List<GameObject> ();
 		eggs = new List<c_egg> ();
 	}
 
@@ -61,7 +51,7 @@ public class DataGame : MonoBehaviour {
 		Vector3 coord = Vector3.zero;
 		coord.x = x * 10;
 		coord.z = -y * 10;
-		coord.y = player_obj.transform.localScale.y / 2;
+		coord.y = 1.5f;
 
 		return coord;
 	}
@@ -91,31 +81,28 @@ public class DataGame : MonoBehaviour {
 	}
 
 	public void		PlayerNew(string []cmd) {
-		c_player tmp;
-
 		if (cmd.Length != 7)
 			throw new Exception("Donnees d'un joueur erronees");
-		tmp = new c_player();
-		tmp.id = int.Parse (cmd [1].Substring (1, cmd [1].Length - 1));
-		tmp.pos_x = int.Parse (cmd[2]);
-		tmp.pos_y = int.Parse (cmd[3]);
-		tmp.orientation = int.Parse (cmd[4]);
-		tmp.level = int.Parse (cmd[5]);
-		tmp.teamName = cmd[6];
-		tmp.inventory = new int[7];
-		clone_player = GameObject.Instantiate(player_obj, CoordCase(tmp.pos_x, tmp.pos_y), Quaternion.identity) as GameObject;
-		tmp.stock_player = clone_player;
-		players.Add(tmp);
+		clone_player = GameObject.Instantiate(player_obj, CoordCase(int.Parse (cmd[2]), int.Parse (cmd[3])), Quaternion.identity) as GameObject;
+		Player script = clone_player.GetComponent<Player> ();
+		script.id = int.Parse (cmd [1].Substring (1, cmd [1].Length - 1));
+		script.pos_x = int.Parse (cmd[2]);
+		script.pos_y = int.Parse (cmd[3]);
+		script.orientation = int.Parse (cmd[4]);
+		script.level = int.Parse (cmd[5]);
+		script.teamName = cmd[6];
+		players.Add(clone_player);
 	}
 
 	public void		PlayerPositionOrientation(string []cmd){
 		if (cmd.Length != 5)
 			throw new Exception("Donnees d'orientions d'un joueur erronees");
-		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				player.pos_x = int.Parse (cmd[2]);
-				player.pos_y = int.Parse (cmd[3]);
-				player.orientation = int.Parse (cmd[4]);
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.pos_x = int.Parse (cmd[2]);
+				script.pos_y = int.Parse (cmd[3]);
+				script.orientation = int.Parse (cmd[4]);
 				break ;
 			}
 		}
@@ -124,9 +111,10 @@ public class DataGame : MonoBehaviour {
 	public void		PlayerLevel(string []cmd){
 		if (cmd.Length != 3)
 			throw new Exception("Donnees du level d'un joueur erronees");
-		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				player.level = int.Parse (cmd[2]);
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.level = int.Parse (cmd[2]);
 				break ;
 			}
 		}
@@ -135,10 +123,11 @@ public class DataGame : MonoBehaviour {
 	public void		PlayerInventory(string []cmd){
 		if (cmd.Length != 11)
 			throw new Exception("Donnees du level d'un joueur erronees");
-		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				for (int obj=0; obj < player.inventory.Length; obj++) {
-					player.inventory[obj] = int.Parse (cmd[obj + 2]);
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				for (int obj=0; obj < script.inventory.Length; obj++) {
+					script.inventory[obj] = int.Parse (cmd[obj + 2]);
 				}
 				break ;
 			}
@@ -148,9 +137,10 @@ public class DataGame : MonoBehaviour {
 	public void		PlayerExpulse(string []cmd){
 		if (cmd.Length != 2)
 			throw new Exception("Donnees d'expulsion d'un joueur erronees");
-		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Expulsion du joueur #" + player.id);
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				Debug.Log ("Expulsion du joueur #" + script.id);
 				break ;
 			}
 		}
@@ -159,9 +149,10 @@ public class DataGame : MonoBehaviour {
 	public void		PlayerBroadCast(string []cmd){
 		if (cmd.Length != 3)
 			throw new Exception("Donnees du broadcast d'un joueur erronees");
-		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Joueur #" + player.id + " dit:" + cmd[2]);
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				Debug.Log ("Joueur #" + script.id + " dit:" + cmd[2]);
 				break ;
 			}
 		}
@@ -176,9 +167,10 @@ public class DataGame : MonoBehaviour {
 
 		do {
 			restart = false;
-			foreach (c_player player in players) {
-				if (player.id == int.Parse (cmd [5 + i].Substring (1, cmd [5 + i].Length - 1))) {
-					Debug.Log ("Joueur #" + player.id + " incante:" + cmd [2]);
+			foreach (GameObject player in players) {
+				Player script = player.GetComponent<Player>();
+				if (script.id == int.Parse (cmd [5 + i].Substring (1, cmd [5 + i].Length - 1))) {
+					Debug.Log ("Joueur #" + script.id + " incante:" + cmd [2]);
 					restart = true;
 					i++;
 					break;
@@ -202,9 +194,10 @@ public class DataGame : MonoBehaviour {
 		Debug.Log ("ici");
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la ponte d'un oeuf erronees");
-		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Joueur #" + player.id + " pond un oeuf");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				Debug.Log ("Joueur #" + script.id + " pond un oeuf");
 				break ;
 			}
 		}
@@ -214,13 +207,14 @@ public class DataGame : MonoBehaviour {
 	public void		PlayerGetDrop(string []cmd, int getDrop){
 		if (cmd.Length != 2)
 			throw new Exception("Donnees d'une action sur une ressource erronees");
-		foreach  (c_player player in players) {
-			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				for (int obj = 0;obj < player.inventory.Length;obj++) {
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				for (int obj = 0;obj < script.inventory.Length;obj++) {
 					if (int.Parse (cmd[2]) == obj) {
-						player.inventory[obj] += getDrop;
-						if (player.inventory[obj] < 0)
-							player.inventory[obj] = 0;
+						script.inventory[obj] += getDrop;
+						if (script.inventory[obj] < 0)
+							script.inventory[obj] = 0;
 						break ;
 					}
 				}
@@ -233,10 +227,12 @@ public class DataGame : MonoBehaviour {
 	public void		PlayerDie(string []cmd) {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la mort d'un joueur erronees");
-		foreach (c_player player in players) {
-			if (player.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Joueur #" + player.id + " meurt");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				Debug.Log ("Joueur #" + script.id + " meurt");
 				players.Remove(player);
+				Destroy(player);
 				break ;
 			}
 		}

@@ -32,15 +32,13 @@ public class GameUI : MonoBehaviour {
 
 	// Update is called once per frame
 	void		Update () {
-
-
+		_timeUI.text = "" + (int)_slider.value;
 	}
 
 	public void	SST(){
 		value_slider = (int)_slider.value;
 		_scriptClient.newTime = true;
-		_timeUI.text = "" + (int)_slider.value;
-		Debug.Log ("The mouse click was released");
+		_scriptClient.newTimeValue = (int)_slider.value;
 	}
 
 

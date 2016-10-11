@@ -12,6 +12,8 @@ public class Client : MonoBehaviour {
 	public int								ip;
 	public Text								error;
 	public bool								newTime = false;
+	public int								newTimeValue = 0;
+	public float							sendRate = 1.0f;
 	
 	private const string					GRAPHIC =	"GRAPHIC\n";
 	private const string					MCT =		"mct\n";
@@ -22,18 +24,18 @@ public class Client : MonoBehaviour {
 	private const string					SST =		"sst ";
 	private string							rtfContent = null;
 	private DataGame						_scriptData;
-	private GameUI							_scriptUI;
 
 	private Socket							_socket;
 	private bool							_in_game = false;
 	private GameObject						_loading_panel;
-
+	private float							nextSend = 0.0f;
+	
 	// Use this for initialization
 
 	string		Receive()
 	{
 		try {
-			byte[] msg = new Byte[_socket.ReceiveBufferSize + 1];
+			byte[] msg = new Byte[_socket.ReceiveBufferSize];
 			_socket.Receive(msg,0,_socket.Available,SocketFlags.None);
 			return (System.Text.Encoding.ASCII.GetString(msg));
 		}
@@ -81,7 +83,6 @@ public class Client : MonoBehaviour {
 		string	[]cutBlockData = rtfContent.Split ('\n');
 
 		for (int line = 0; line < cutBlockData.Length; line++) {
-			Debug.Log (cutBlockData[line]);
 			string []cutCmd = cutBlockData[line].Split(' ');
 			switch (cutCmd[0]) {
 			case "Bienvenue" : _scriptData.Init();break;
@@ -131,7 +132,6 @@ public class Client : MonoBehaviour {
 				DataDistribution();
 				DontDestroyOnLoad(gameObject);
 				Application.LoadLevel("Game");
-				_scriptUI = GameObject.Find("Canvas").GetComponent<GameUI> ();
 				DemandInfo();
 				_in_game = true;
 			}
@@ -156,13 +156,14 @@ public class Client : MonoBehaviour {
 				Send (MCT);
 				Debug.Log (_scriptData.players.Count);
 				for (int player=0; player < _scriptData.players.Count; player++) {
-					Send (PPO + _scriptData.players [player].id + "\n");
-					Send (PLV + _scriptData.players [player].id + "\n");
-					Send (PIN + _scriptData.players [player].id + "\n");
+					Player script = _scriptData.players [player].GetComponent<Player>();
+					Send (PPO + script.id + "\n");
+					Send (PLV + script.id + "\n");
+					Send (PIN + script.id + "\n");
 				}
 				Send (SGT);
 				if (newTime) {
-					Send (SST + GameObject.Find("Canvas").GetComponent<GameUI> ().value_slider + "\n");
+					Send (SST + newTimeValue + "\n");
 					newTime = false;
 				}
 			}
@@ -171,21 +172,22 @@ public class Client : MonoBehaviour {
 		}
 	}
 
-	IEnumerator		DemandInfoCourout() {
-		while (true) {
-			DemandInfo ();
-			yield return new WaitForSeconds (1);
-		}
-	}
-
 	// Update is called once per frame
 	void		Update () {
+
 		if (_in_game) {
-			StartCoroutine(DemandInfoCourout());
 			CheckData();
 			if (rtfContent != null)
 				DataDistribution();
+			if (Time.time > nextSend) {
+				nextSend = Time.time + sendRate;
+				DemandInfo();
+			}
 		}
+
+	}
+
+	void		LastUpdate(){
 
 	}
 }

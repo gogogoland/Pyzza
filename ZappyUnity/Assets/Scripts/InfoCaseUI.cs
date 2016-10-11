@@ -13,6 +13,7 @@ public class InfoCaseUI : MonoBehaviour {
 	private GameObject		_contentInfo;
 	private GenerateMap		_scriptMap;
 	private GameUI			_scriptUI;
+	private Text			_coordCase;
 	private class			c_info
 	{
 		public int			[]nbr;
@@ -25,8 +26,10 @@ public class InfoCaseUI : MonoBehaviour {
 	void	Start () {
 		_scriptMap = GameObject.Find ("GenerateMap").GetComponent<GenerateMap> ();
 		_scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI> ();
+
 		_informationCase = _scriptUI.information_case;
 		_contentInfo = _informationCase.transform.GetChild (1).transform.GetChild (0).transform.GetChild (0).gameObject;
+		_coordCase = _informationCase.transform.GetChild (0).transform.GetChild (1).GetComponent<Text> ();
 		_informationCase.SetActive(true);
 		InitStructInfo ();
 		ClearInfoCase ();
@@ -56,6 +59,10 @@ public class InfoCaseUI : MonoBehaviour {
 		Array.Copy(_scriptMap.ressources_sprite, _info.sprite, _scriptMap.ressources_sprite.Length);
 	}
 
+	void	CoordCase(){
+		_coordCase.text = "x " + (int)(tile.transform.position.x / 10) + " y " + (int)(-tile.transform.position.z / 10);
+	}
+
 	void	StockAllNameResrc() {
 		if (tile.transform.childCount > 0) {
 			for (int resrcInTile = 0; resrcInTile < tile.transform.childCount; resrcInTile++) {
@@ -68,8 +75,8 @@ public class InfoCaseUI : MonoBehaviour {
 	}
 
 	void	GetInfoCase() {
+		CoordCase ();
 		StockAllNameResrc ();
-
 		for (int resrc = 0; resrc < _info.ressources.Length; resrc++) {
 			if (_info.nbr[resrc] > 0)
 			{
