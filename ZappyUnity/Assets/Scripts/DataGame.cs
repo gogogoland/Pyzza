@@ -22,14 +22,7 @@ public class DataGame : MonoBehaviour {
 	public int								unitTime = 0;
 	public List<string>						teamName;
 	public List<GameObject>					players;
-	public class							c_egg{
-		public int							id;
-		public int							id_player;
-		public int							pos_x;
-		public int							pos_y;
-		public GameObject					stock_eggs;
-	};
-	public List<c_egg>						eggs;
+	public List<GameObject>					eggs;
 	private GameObject						clone_player;
 	private GameObject						clone_egg;
 
@@ -37,7 +30,7 @@ public class DataGame : MonoBehaviour {
 		structDataMap = new List<c_datamap> ();
 		teamName = new List<string> ();
 		players = new List<GameObject> ();
-		eggs = new List<c_egg> ();
+		eggs = new List<GameObject> ();
 	}
 
 	public void		MapSize(string []cmd) {
@@ -85,12 +78,13 @@ public class DataGame : MonoBehaviour {
 			throw new Exception("Donnees d'un joueur erronees");
 		clone_player = GameObject.Instantiate(player_obj, CoordCase(int.Parse (cmd[2]), int.Parse (cmd[3])), Quaternion.identity) as GameObject;
 		Player script = clone_player.GetComponent<Player> ();
-		script.id = int.Parse (cmd [1].Substring (1, cmd [1].Length - 1));
-		script.pos_x = int.Parse (cmd[2]);
-		script.pos_y = int.Parse (cmd[3]);
-		script.orientation = int.Parse (cmd[4]);
-		script.level = int.Parse (cmd[5]);
-		script.teamName = cmd[6];
+		script.PlayerNew(int.Parse (cmd [1].Substring (1, cmd [1].Length - 1)),
+		                 int.Parse (cmd[2]),
+		                 int.Parse (cmd[3]),
+		                 int.Parse (cmd[4]),
+		                 int.Parse (cmd[5]),
+		                 cmd[6]);
+		script.SetMoveSpeed (unitTime);
 		players.Add(clone_player);
 	}
 
@@ -99,10 +93,10 @@ public class DataGame : MonoBehaviour {
 			throw new Exception("Donnees d'orientions d'un joueur erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
-			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				script.pos_x = int.Parse (cmd[2]);
-				script.pos_y = int.Parse (cmd[3]);
-				script.orientation = int.Parse (cmd[4]);
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.SetPosOrient(int.Parse (cmd[2]),
+									int.Parse (cmd[3]),
+									int.Parse (cmd[4]));
 				break ;
 			}
 		}
@@ -113,8 +107,8 @@ public class DataGame : MonoBehaviour {
 			throw new Exception("Donnees du level d'un joueur erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
-			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				script.level = int.Parse (cmd[2]);
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.SetLevel(int.Parse (cmd[2]));
 				break ;
 			}
 		}
@@ -122,12 +116,12 @@ public class DataGame : MonoBehaviour {
 
 	public void		PlayerInventory(string []cmd){
 		if (cmd.Length != 11)
-			throw new Exception("Donnees du level d'un joueur erronees");
+			throw new Exception("Donnees de l'inventaire d'un joueur erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
-			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				for (int obj=0; obj < script.inventory.Length; obj++) {
-					script.inventory[obj] = int.Parse (cmd[obj + 2]);
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				for (int obj=0; obj < script.GetInventory().Length; obj++) {
+					script.SetResource(obj, int.Parse (cmd[obj + 2]));
 				}
 				break ;
 			}
@@ -139,20 +133,31 @@ public class DataGame : MonoBehaviour {
 			throw new Exception("Donnees d'expulsion d'un joueur erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
-			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Expulsion du joueur #" + script.id);
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				Debug.Log ("Expulsion du joueur #" + script.GetID());
 				break ;
 			}
 		}
 	}
 	//TODO
 	public void		PlayerBroadCast(string []cmd){
-		if (cmd.Length != 3)
+		if (cmd.Length <= 1)
 			throw new Exception("Donnees du broadcast d'un joueur erronees");
+		string talk = "...";
+
+		if (cmd.Length != 2) {
+			int 	word;
+			talk = "";
+			for (word = 2; word < cmd.Length - 1; word++)
+				talk += cmd[word] + " ";
+			talk += cmd[word];
+		}
+
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
-			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Joueur #" + script.id + " dit:" + cmd[2]);
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				if (cmd.Length >= 3) 
+					Debug.Log ("Joueur #" + script.GetID() + " dit : " + talk);
 				break ;
 			}
 		}
@@ -169,8 +174,8 @@ public class DataGame : MonoBehaviour {
 			restart = false;
 			foreach (GameObject player in players) {
 				Player script = player.GetComponent<Player>();
-				if (script.id == int.Parse (cmd [5 + i].Substring (1, cmd [5 + i].Length - 1))) {
-					Debug.Log ("Joueur #" + script.id + " incante:" + cmd [2]);
+				if (script.GetID() == int.Parse (cmd [5 + i].Substring (1, cmd [5 + i].Length - 1))) {
+					Debug.Log ("Joueur #" + script.GetID() + " incante:" + cmd [2]);
 					restart = true;
 					i++;
 					break;
@@ -191,33 +196,25 @@ public class DataGame : MonoBehaviour {
 
 	//TODO
 	public void		PlayerForkEgg(string []cmd){
-		Debug.Log ("ici");
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la ponte d'un oeuf erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
-			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Joueur #" + script.id + " pond un oeuf");
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				Debug.Log ("Joueur #" + script.GetID() + " pond un oeuf");
 				break ;
 			}
 		}
 	}
 
 	//TODO
-	public void		PlayerGetDrop(string []cmd, int getDrop){
+	public void		PlayerGetDrop(string []cmd, bool drop){
 		if (cmd.Length != 2)
 			throw new Exception("Donnees d'une action sur une ressource erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
-			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				for (int obj = 0;obj < script.inventory.Length;obj++) {
-					if (int.Parse (cmd[2]) == obj) {
-						script.inventory[obj] += getDrop;
-						if (script.inventory[obj] < 0)
-							script.inventory[obj] = 0;
-						break ;
-					}
-				}
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.GetOrDrop(int.Parse (cmd[2]), drop);
 				break ;
 			}
 		}
@@ -229,8 +226,8 @@ public class DataGame : MonoBehaviour {
 			throw new Exception("Donnees de la mort d'un joueur erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
-			if (script.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Joueur #" + script.id + " meurt");
+			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				Debug.Log ("Joueur #" + script.GetID () + " meurt");
 				players.Remove(player);
 				Destroy(player);
 				break ;
@@ -239,25 +236,24 @@ public class DataGame : MonoBehaviour {
 	}
 
 	public void		EggNew(string []cmd){
-		c_egg	tmp;
-
 		if (cmd.Length != 5)
 			throw new Exception("Donnees d'un oeuf erronees");
-		tmp = new c_egg();
-		tmp.id = int.Parse (cmd [1].Substring (1, cmd [1].Length - 1));
-		tmp.id_player = int.Parse (cmd [2].Substring (1, cmd [2].Length - 1));
-		tmp.pos_x = int.Parse (cmd[3]);
-		tmp.pos_y = int.Parse (cmd[4]);
-
-		eggs.Add(tmp);
+		clone_egg = GameObject.Instantiate(egg_obj, CoordCase(int.Parse (cmd[3]), int.Parse (cmd[4])), Quaternion.identity) as GameObject;
+		Egg script = clone_egg.GetComponent<Egg> ();
+		script.EggNew(int.Parse (cmd [1].Substring (1, cmd [1].Length - 1)),
+			           int.Parse (cmd [2].Substring (1, cmd [2].Length - 1)),
+			           int.Parse (cmd [3]),
+		    	       int.Parse (cmd [4]));
+		eggs.Add(clone_egg);
 	}
 
 	public void		EggHatch(string []cmd){
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de l'eclosion d'un oeuf erronees");
-		foreach (c_egg egg in eggs) {
-			if (egg.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("L'oeuf #" + egg.id + " eclos");
+		foreach (GameObject egg in eggs) {
+			Egg script = egg.GetComponent<Egg> ();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				Debug.Log ("L'oeuf #" + script.GetID() + " eclos");
 				eggs.Remove(egg);
 				break ;
 			}
@@ -267,9 +263,10 @@ public class DataGame : MonoBehaviour {
 	public void		EggBorn(string []cmd){
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de connexion d'un joueur sur un oeuf erronees");
-		foreach (c_egg egg in eggs) {
-			if (egg.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Un joueur est nee a partir de l'oeuf #" + egg.id);
+		foreach (GameObject egg in eggs) {
+			Egg script = egg.GetComponent<Egg> ();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				Debug.Log ("Un joueur est nee a partir de l'oeuf #" + script.GetID());
 				break ;
 			}
 		}
@@ -278,9 +275,10 @@ public class DataGame : MonoBehaviour {
 	public void		EggDie(string []cmd){
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la mort d'un oeuf erronees");
-		foreach (c_egg egg in eggs) {
-			if (egg.id == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("L'oeuf #" + egg.id + " eclos mais pourri");
+		foreach (GameObject egg in eggs) {
+			Egg script = egg.GetComponent<Egg> ();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				Debug.Log ("L'oeuf #" + script.GetID() + " eclos mais pourri");
 				eggs.Remove(egg);
 				break ;
 			}
@@ -300,9 +298,16 @@ public class DataGame : MonoBehaviour {
 	}
 
 	public void		ServerMessage(string []cmd) {
-		if (cmd.Length != 2)
-			throw new Exception("Donnees de message du server erronees");
-		Debug.Log ("Pizza le Hutt parle : " + cmd[1]);
+		string talk = "...";
+
+		if (cmd.Length != 1) {
+			int 	word;
+			talk = "";
+			for (word = 1; word < cmd.Length - 1; word++)
+				talk += cmd[word] + " ";
+			talk += cmd[word];
+		}
+		Debug.Log ("Pizza le Hutt parle : " + talk);
 	}
 
 	public void		ServerUnknownCommand() {

@@ -26,7 +26,6 @@ public class Client : MonoBehaviour {
 	private DataGame						_scriptData;
 
 	private Socket							_socket;
-	private bool							_in_game = false;
 	private GameObject						_loading_panel;
 	private float							nextSend = 0.0f;
 	
@@ -61,8 +60,10 @@ public class Client : MonoBehaviour {
 
 	void	CheckData(){
 		if (_socket.Connected){
-			if (_socket.Poll(10,SelectMode.SelectRead) && _socket.Available == 0)
+			if (_socket.Poll(10,SelectMode.SelectRead) && _socket.Available == 0) {
+				Application.LoadLevel("Menu");
 				throw new Exception("La connexion au serveur est interrompue.");
+			}
 		}
 		if (_socket.Available > 0){
 			string recv = null;
@@ -98,8 +99,8 @@ public class Client : MonoBehaviour {
 			case "pic" : _scriptData.PlayerIncantBegin(cutCmd);break;
 			case "pie" : _scriptData.PlayerIncantEnd(cutCmd);break;
 			case "pfk" : _scriptData.PlayerForkEgg(cutCmd);break;
-			case "pdr" : _scriptData.PlayerGetDrop(cutCmd, -1);break;
-			case "pgt" : _scriptData.PlayerGetDrop(cutCmd, 1);break;
+			case "pdr" : _scriptData.PlayerGetDrop(cutCmd, true);break;
+			case "pgt" : _scriptData.PlayerGetDrop(cutCmd, false);break;
 			case "pdi" : _scriptData.PlayerDie(cutCmd);break;
 			case "enw" : _scriptData.EggNew(cutCmd);break;
 			case "eht" : _scriptData.EggHatch(cutCmd);break;
@@ -131,15 +132,16 @@ public class Client : MonoBehaviour {
 			{
 				DataDistribution();
 				DontDestroyOnLoad(gameObject);
+				for (int player=0; player < _scriptData.players.Count; player++)
+					DontDestroyOnLoad(_scriptData.players [player]);
 				Application.LoadLevel("Game");
 				DemandInfo();
-				_in_game = true;
 			}
 		}
 		catch (Exception e)
 		{
 			_socket.Disconnect(true);
-			if (!_in_game) {
+			if (Application.loadedLevelName != "Game") {
 				error.text = "Error : " + e;
 				error.color = Color.red;
 			}
@@ -157,9 +159,9 @@ public class Client : MonoBehaviour {
 				Debug.Log (_scriptData.players.Count);
 				for (int player=0; player < _scriptData.players.Count; player++) {
 					Player script = _scriptData.players [player].GetComponent<Player>();
-					Send (PPO + script.id + "\n");
-					Send (PLV + script.id + "\n");
-					Send (PIN + script.id + "\n");
+					Send (PPO + script.GetID() + "\n");
+					Send (PLV + script.GetID() + "\n");
+					Send (PIN + script.GetID() + "\n");
 				}
 				Send (SGT);
 				if (newTime) {
@@ -175,7 +177,7 @@ public class Client : MonoBehaviour {
 	// Update is called once per frame
 	void		Update () {
 
-		if (_in_game) {
+		if (Application.loadedLevelName == "Game") {
 			CheckData();
 			if (rtfContent != null)
 				DataDistribution();
