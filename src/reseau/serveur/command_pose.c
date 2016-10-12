@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 15:18:57 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 18:05:54 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/12 17:17:10 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,6 @@ void	command_pose(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		return ;
 	clt->pos.rsc[r]--;
 	srv->map[clt->pos.x][clt->pos.y][r]++;
-	send_graphe_action(srv, command_write_msg(clt, 11, 0, NULL), 0, NULL);
+	send_graphe_action(srv, command_write_msg(clt, 11, r, NULL), 0, NULL);
 	send_graphe_action(srv, command_write_msg(clt, 9, 0, NULL), 1, clt);
 }
