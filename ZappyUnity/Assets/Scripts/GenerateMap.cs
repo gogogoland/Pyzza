@@ -13,7 +13,7 @@ public class GenerateMap : MonoBehaviour {
 	public Sprite					[]ressources_sprite;
 	public Material					[]materials;
 
-	private List<GameObject>		resrcs;
+	public List<GameObject>			resrcs;
 	private GameObject				[,]tiles;
 	private Material				[,]variant_materials;
 	private GameObject				map;
@@ -68,7 +68,7 @@ public class GenerateMap : MonoBehaviour {
 		}
 	}
 
-	void	RepositioningResrc(GameObject resrc, int id) {
+	public void	RepositioningResrc(GameObject resrc, int id) {
 		Vector3		vec = Vector3.zero;
 		switch (id)
 		{

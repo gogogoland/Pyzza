@@ -99,8 +99,8 @@ public class Client : MonoBehaviour {
 			case "pic" : _scriptData.PlayerIncantBegin(cutCmd);break;
 			case "pie" : _scriptData.PlayerIncantEnd(cutCmd);break;
 			case "pfk" : _scriptData.PlayerForkEgg(cutCmd);break;
-			case "pdr" : _scriptData.PlayerGetDrop(cutCmd, true);break;
-			case "pgt" : _scriptData.PlayerGetDrop(cutCmd, false);break;
+			case "pdr" : _scriptData.PlayerDrop(cutCmd);break;
+			case "pgt" : _scriptData.PlayerGet(cutCmd);break;
 			case "pdi" : _scriptData.PlayerDie(cutCmd);break;
 			case "enw" : _scriptData.EggNew(cutCmd);break;
 			case "eht" : _scriptData.EggHatch(cutCmd);break;

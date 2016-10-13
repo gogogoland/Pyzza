@@ -223,41 +223,66 @@ public class DataGame : MonoBehaviour {
 			}
 		}
 	}
-
-	//TODO
-	public void		PlayerGetDrop(string []cmd, bool drop){
+	
+	public void		PlayerGet(string []cmd){
 		if (cmd.Length != 3)
 			throw new Exception("Donnees d'une action sur une ressource erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				script.GetOrDrop(int.Parse (cmd[2]), drop);
+				script.GetOrDrop(int.Parse (cmd[2]), false);
 				float x = player.transform.position.x / 10;
 				float z = -player.transform.position.z / 10;
 				Transform tile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform;
-				Debug.Log("position : " + x + " " + z);
-				if (!drop) {
-					for(int r = 0; r < typeResrc.Length;r++) {
-						if (r == int.Parse (cmd[2])) {
-							GameObject resrc = tile.FindChild(typeResrc[r]).gameObject;
-							Debug.LogWarning(resrc.name);
-							Destroy(resrc);
-							break ;
-						}
+				for(int r = 0; r < typeResrc.Length;r++) {
+					if (r == int.Parse (cmd[2])) {
+						GameObject resrc = tile.FindChild(typeResrc[r]).gameObject;
+						Debug.Log ("Joueur #" + script.GetID() + " prend " + resrc.name + " aux coordonnees (" + x + ", " + z + ")");
+						Destroy(resrc);
+						break ;
 					}
-				}
-				else {
-					if (int.Parse (cmd[2]) == 0) {}
-			//			GameObject resrc = GameObject.Instantiate(GameObject.Find ("Canvas").GetComponent<GenerateMap>().food_obj, )
-			/*		for(int r = 0; r < typeResrc.Length;r++) {
-						if (r == int.Parse (cmd[2])) {
-							GameObject 
-						}
-					}*/
 				}
 				break ;
 			}
 		}
+	}
+
+	public void		PlayerDrop(string []cmd) {
+		if (cmd.Length != 3)
+			throw new Exception("Donnees d'un drop d'une ressource erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.GetOrDrop(int.Parse (cmd[2]), true);
+				float x = player.transform.position.x / 10;
+				float z = -player.transform.position.z / 10;
+				Transform tile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform;
+				Debug.Log("position : " + x + " " + z);
+				GenerateMap scriptGM = GameObject.Find ("GenerateMap").GetComponent<GenerateMap>();
+				if (int.Parse (cmd[2]) == 0) {
+					DropResrc(scriptGM.food_obj, 0, 20, tile, scriptGM);
+				}
+				else if (int.Parse (cmd[2]) >= 1) {
+					DropResrc(scriptGM.ressources_obj, int.Parse (cmd[2]), 5, tile, scriptGM);
+				}
+				Debug.Log ("Joueur #" + script.GetID() + " pose " + typeResrc[int.Parse (cmd[2])] + " aux coordonnees (" + x + ", " + z + ")");
+				break ;
+			}
+		}
+	}
+
+	private void	DropResrc(GameObject modelToClone, int idResrc, int resize, Transform tile, GenerateMap scriptGM)
+	{
+		Vector3		vec = Vector3.zero;
+		
+		GameObject	resrc;
+		vec = new Vector3(0, modelToClone.transform.position.y, 0);
+		resrc = GameObject.Instantiate(modelToClone, vec, Quaternion.identity) as GameObject;
+		resrc.transform.localScale *= resize;
+		resrc.transform.SetParent(tile);
+		resrc.GetComponent<SpriteRenderer>().sprite = scriptGM.ressources_sprite[idResrc];
+		scriptGM.RepositioningResrc(resrc, idResrc);
+		scriptGM.resrcs.Add(resrc);
 	}
 
 	//TODO
@@ -363,9 +388,8 @@ public class DataGame : MonoBehaviour {
 	void Start () {
 
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-
 	}
 }
