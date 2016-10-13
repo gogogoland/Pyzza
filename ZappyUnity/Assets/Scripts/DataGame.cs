@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ public class DataGame : MonoBehaviour {
 	public Animator							anim;
 	public GameObject						egg_obj;
 	public GameObject						player_obj;
+	public GameObject						bubble_obj;
 	public int								height;
 	public int								width;
 	public class							c_datamap {
@@ -26,11 +28,21 @@ public class DataGame : MonoBehaviour {
 	private GameObject						clone_player;
 	private GameObject						clone_egg;
 
+	private string							[]typeResrc;
+
 	public void		Init(){
 		structDataMap = new List<c_datamap> ();
 		teamName = new List<string> ();
 		players = new List<GameObject> ();
 		eggs = new List<GameObject> ();
+		typeResrc = new string[7];
+		typeResrc[0] = "Food";
+		typeResrc[1] = "Linemate";
+		typeResrc[2] = "Deraumere";
+		typeResrc[3] = "Sibur";
+		typeResrc[4] = "Mendiane";
+		typeResrc[5] = "Phiras";
+		typeResrc[6] = "Thystame";
 	}
 
 	public void		MapSize(string []cmd) {
@@ -139,7 +151,7 @@ public class DataGame : MonoBehaviour {
 			}
 		}
 	}
-	//TODO
+
 	public void		PlayerBroadCast(string []cmd){
 		if (cmd.Length <= 1)
 			throw new Exception("Donnees du broadcast d'un joueur erronees");
@@ -156,8 +168,13 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				if (cmd.Length >= 3) 
+				if (cmd.Length >= 3) {
+					GameObject cloneBubble = GameObject.Instantiate(bubble_obj, Vector3.zero, Quaternion.identity) as GameObject;
+					cloneBubble.transform.SetParent (GameObject.Find ("CanvasTalk").transform);
+					cloneBubble.transform.GetChild(0).GetComponent<Text>().text = talk;
+					cloneBubble.GetComponent<BubbleTalk>().posPlayer = player.transform;
 					Debug.Log ("Joueur #" + script.GetID() + " dit : " + talk);
+				}
 				break ;
 			}
 		}
@@ -209,12 +226,35 @@ public class DataGame : MonoBehaviour {
 
 	//TODO
 	public void		PlayerGetDrop(string []cmd, bool drop){
-		if (cmd.Length != 2)
+		if (cmd.Length != 3)
 			throw new Exception("Donnees d'une action sur une ressource erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.GetOrDrop(int.Parse (cmd[2]), drop);
+				float x = player.transform.position.x / 10;
+				float z = -player.transform.position.z / 10;
+				Transform tile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform;
+				Debug.Log("position : " + x + " " + z);
+				if (!drop) {
+					for(int r = 0; r < typeResrc.Length;r++) {
+						if (r == int.Parse (cmd[2])) {
+							GameObject resrc = tile.FindChild(typeResrc[r]).gameObject;
+							Debug.LogWarning(resrc.name);
+							Destroy(resrc);
+							break ;
+						}
+					}
+				}
+				else {
+					if (int.Parse (cmd[2]) == 0) {}
+			//			GameObject resrc = GameObject.Instantiate(GameObject.Find ("Canvas").GetComponent<GenerateMap>().food_obj, )
+			/*		for(int r = 0; r < typeResrc.Length;r++) {
+						if (r == int.Parse (cmd[2])) {
+							GameObject 
+						}
+					}*/
+				}
 				break ;
 			}
 		}

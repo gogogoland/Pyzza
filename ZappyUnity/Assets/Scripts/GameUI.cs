@@ -34,6 +34,13 @@ public class GameUI : MonoBehaviour {
 	void		Update () {
 		_timeUI.text = "" + (int)_slider.value;
 	}
+	/*
+	void		LateUpdate() {
+		GameObject []bubbles = GameObject.FindGameObjectsWithTag ("Talk");
+		foreach (GameObject bubble in bubbles) {
+
+		}
+	}*/
 
 	public void	SST(){
 		value_slider = (int)_slider.value;

@@ -61,7 +61,7 @@ public class Client : MonoBehaviour {
 	void	CheckData(){
 		if (_socket.Connected){
 			if (_socket.Poll(10,SelectMode.SelectRead) && _socket.Available == 0) {
-				Application.LoadLevel("Menu");
+				Application.Quit ();
 				throw new Exception("La connexion au serveur est interrompue.");
 			}
 		}
@@ -156,7 +156,6 @@ public class Client : MonoBehaviour {
 		try {
 			if (_socket.Connected) {
 				Send (MCT);
-				Debug.Log (_scriptData.players.Count);
 				for (int player=0; player < _scriptData.players.Count; player++) {
 					Player script = _scriptData.players [player].GetComponent<Player>();
 					Send (PPO + script.GetID() + "\n");
