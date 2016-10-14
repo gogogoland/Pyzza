@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 23:41:18 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/14 18:26:05 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,15 @@ void		command_player_inv(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	if (!gfx->isgfx)
 		command_player(fds, srv, gfx, cmd);
 	i = 0;
+	inv = NULL;
 	clt = srv->clt;
 	while (cmd[i] != '\0' && cmd[i] != '#')
 		i++;
 	if ((player = command_get_int(i, cmd)) < 1)
 		return ;
-	while (clt)
-	{
-		if (clt->name == player)
-			break ;
+	while (clt && clt->name != player)
 		clt = clt->next;
-	}
-	if (!clt)
+	if (!clt || clt->socket <= 0)
 		return (command_graphical_bad_parameters(fds, srv, gfx, cmd));
 	inv = command_player_inv_get_clt_inv(clt, clt->pos.rsc);
 	if (inv)

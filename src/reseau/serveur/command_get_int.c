@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/30 20:55:25 by tbalea            #+#    #+#             */
-/*   Updated: 2016/05/30 20:59:46 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/14 17:46:23 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	command_get_int(int i, char *cmd)
 	int	ret;
 
 	ret = -1;
-	while (cmd[++i] >= '0' && cmd[i] <= '9')
+	while (cmd && cmd[++i] != '\0' && cmd[i] >= '0' && cmd[i] <= '9')
 	{
 		if (ret == -1)
 			ret = 0;
