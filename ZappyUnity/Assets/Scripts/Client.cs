@@ -13,10 +13,11 @@ public class Client : MonoBehaviour {
 	public Text								error;
 	public bool								newTime = false;
 	public int								newTimeValue = 0;
-	public float							sendRate = 1.0f;
+	public float							sendRate = 10.0f;
 	
 	private const string					GRAPHIC =	"GRAPHIC\n";
 	private const string					MCT =		"mct\n";
+	private const string					BCT = 		"bct ";
 	private const string					PPO =		"ppo #";
 	private const string					PLV =		"plv #";
 	private const string					PIN =		"pin #";
@@ -34,6 +35,7 @@ public class Client : MonoBehaviour {
 	string		Receive()
 	{
 		try {
+			Debug.Log (_socket.ReceiveBufferSize);
 			byte[] msg = new Byte[_socket.ReceiveBufferSize];
 			_socket.Receive(msg,0,_socket.Available,SocketFlags.None);
 			return (System.Text.Encoding.ASCII.GetString(msg));
@@ -59,8 +61,8 @@ public class Client : MonoBehaviour {
 	}
 
 	void	CheckData(){
-		if (_socket.Connected){
-			if (_socket.Poll(10,SelectMode.SelectRead) && _socket.Available == 0) {
+		if (_socket.Connected) {
+			if (_socket.Poll(100,SelectMode.SelectRead) && _socket.Available == 0) {
 				Application.Quit ();
 				throw new Exception("La connexion au serveur est interrompue.");
 			}
@@ -128,15 +130,17 @@ public class Client : MonoBehaviour {
 
 			WhoIAm();
 			CheckData();
-			if (rtfContent != null)
-			{
-				DataDistribution();
-				DontDestroyOnLoad(gameObject);
-				for (int player=0; player < _scriptData.players.Count; player++)
-					DontDestroyOnLoad(_scriptData.players [player]);
-				Application.LoadLevel("Game");
-				DemandInfo();
-			}
+//			if (rtfContent != null)
+//			{
+//				Debug.Log(rtfContent);
+			DataDistribution();
+			DontDestroyOnLoad(gameObject);
+			for (int player=0; player < _scriptData.players.Count; player++)
+				DontDestroyOnLoad(_scriptData.players [player]);
+			Application.LoadLevel("Game");
+
+//				DemandInfo();
+//			}
 		}
 		catch (Exception e)
 		{
@@ -150,6 +154,12 @@ public class Client : MonoBehaviour {
 			Debug.LogError(e);
 			Destroy(gameObject);
 		}
+	}
+
+	public void SendBCT(string bct, int x, int y)
+	{
+		//Send (BCT + x + " " + y + "\n");
+		Debug.Log (rtfContent);
 	}
 
 	void		DemandInfo() {
@@ -175,17 +185,15 @@ public class Client : MonoBehaviour {
 
 	// Update is called once per frame
 	void		Update () {
-
 		if (Application.loadedLevelName == "Game") {
 			CheckData();
 			if (rtfContent != null)
 				DataDistribution();
 			if (Time.time > nextSend) {
 				nextSend = Time.time + sendRate;
-				DemandInfo();
+//				DemandInfo();
 			}
 		}
-
 	}
 
 	void		LastUpdate(){

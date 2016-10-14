@@ -62,6 +62,7 @@ public class DataGame : MonoBehaviour {
 	}
 
 	public void		TileContent(string []cmd) {
+		Debug.Log (cmd[1] + " " + cmd[2]);
 		if (cmd.Length < 10 && cmd.Length > 11)
 			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
 		for (int data = 0; data < 7; data++) {
@@ -132,6 +133,7 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+//				script.UpdateInventory();
 				for (int obj=0; obj < script.GetInventory().Length; obj++) {
 					script.SetResource(obj, int.Parse (cmd[obj + 2]));
 				}
@@ -229,8 +231,10 @@ public class DataGame : MonoBehaviour {
 			throw new Exception("Donnees d'une action sur une ressource erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
+
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				script.GetOrDrop(int.Parse (cmd[2]), false);
+				script.SetObjConcern(int.Parse (cmd[2]));
+/*				script.GetOrDrop(int.Parse (cmd[2]), false);
 				float x = player.transform.position.x / 10;
 				float z = -player.transform.position.z / 10;
 				Transform tile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform;
@@ -242,6 +246,7 @@ public class DataGame : MonoBehaviour {
 						break ;
 					}
 				}
+*/
 				break ;
 			}
 		}

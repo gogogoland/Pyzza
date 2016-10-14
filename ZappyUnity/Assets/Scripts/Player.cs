@@ -3,13 +3,15 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-	private int							_id;
-	private int							_posX;
-	private int							_posY;
-	private int							_orientation;
-	private int							_level;
-	private string						_teamName;
-	private int							[]_inventory;
+	private	int							_idObjTmp = -1;
+
+	[SerializeField]private int			_id;
+	[SerializeField]private int			_posX;
+	[SerializeField]private int			_posY;
+	[SerializeField]private int			_orientation;
+	[SerializeField]private int			_level;
+	[SerializeField]private string		_teamName;
+	[SerializeField]private int			[]_inventory;
 
 	private float						_moveSpeed;
 	private int							_maxMapX;
@@ -76,6 +78,18 @@ public class Player : MonoBehaviour {
 			}
 		}
 	}
+
+	public void		SetObjConcern(int id){
+		id = _idObjTmp;
+	}
+	/*
+	public void		UpdateInventory(){
+		if (_idObjTmp == -1)
+			return ;
+		for (int obj = 0; obj < _inventory.Length; obj++) {
+			if (_idObjTmp == obj)
+		}
+	}*/
 
 	public void		SetPosOrient(int posX, int posY, int orientation){
 		if (_posX != posX) {

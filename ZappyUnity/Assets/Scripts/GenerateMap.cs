@@ -24,7 +24,7 @@ public class GenerateMap : MonoBehaviour {
 	private int						FOOD = 0;
 	private int						RESRC = 1;
 
-	void		AssignTileColor() {
+	void		AssignTilesColor() {
 		int data = 0;
 
 		variant_materials = new Material[height, width];
@@ -45,13 +45,13 @@ public class GenerateMap : MonoBehaviour {
 		_scriptData = GameObject.Find ("Client(Clone)").GetComponent<DataGame>();
 		height = _scriptData.height;
 		width = _scriptData.width;
-		AssignTileColor();
 	}
 	
 	void Start ()
 	{
+		AssignTilesColor();
 		InitMap();
-		GenerateTile();
+		GenerateTiles();
 		GenerateResrc();
 		Destroy(lineTmp);
 	}
@@ -104,7 +104,7 @@ public class GenerateMap : MonoBehaviour {
 		resrc.transform.localPosition = vec;
 	}
 
-	void	GenerateTile() {
+	void	GenerateTiles() {
 		Vector3		vec = Vector3.zero;
 		tiles = new GameObject[height, width];
 		
@@ -145,6 +145,10 @@ public class GenerateMap : MonoBehaviour {
 			else if (_scriptData.structDataMap[data].type >= RESRC)
 				NbrResrcPerTile(ressources_obj, data, 5);
 		}
+	}
+
+	public void CheckAllTiles() {
+
 	}
 
 	// Update is called once per frame
