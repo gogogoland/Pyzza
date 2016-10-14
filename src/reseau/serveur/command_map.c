@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 01:16:55 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/14 17:06:08 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void		command_map(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	{
 		y = -1;
 		while (++y < srv->plateau.y)
-			command_box_content(gfx, x, y, srv->map[x][y]);
+			command_box_content(gfx, x, y, srv->map[y][x]);
 	}
 	if (srv->bonus_fork)
 		exit(0);

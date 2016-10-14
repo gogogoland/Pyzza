@@ -6,7 +6,7 @@
 /*   By: nd-heyge <nd-heyge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 17:09:02 by nd-heyge          #+#    #+#             */
-/*   Updated: 2016/10/01 13:50:08 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/14 17:16:01 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 static const char	*g_log_map_data =
 {
-	"x:%i y:%i r0:%i r1:%i r2:%i r3:%i r4:%i r5:%i r6:%i ground:%i\n"
+	"y:%i x:%i r0:%i r1:%i r2:%i r3:%i r4:%i r5:%i r6:%i ground:%i\n"
 };
 
 static int		ft_rand_range(int min, int max)

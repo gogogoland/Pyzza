@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:04:01 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/30 12:11:37 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/14 17:14:29 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void		kill_map(t_server *srv)
 			z = -1;
 			while (srv->map && srv->map[y] && srv->map[y][x] && ++z < 8)
 				srv->map[y][x][z] = 0;
-			free(srv->map[x][y]);
+			free(srv->map[y][x]);
 		}
 		free(srv->map[x]);
 	}
