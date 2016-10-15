@@ -93,10 +93,11 @@ public class Player : MonoBehaviour {
 
 	public void		SetPosOrient(int posX, int posY, int orientation){
 		if (_posX != posX) {
+			_posX = posX;
 			StartCoroutine("_MoveLeftRight", posX);
-
 		}
 		if (_posY != posY) {
+			_posY = posY;
 			StartCoroutine("_MoveUpDown", posY);
 		}
 		if (_orientation != orientation)
@@ -107,7 +108,7 @@ public class Player : MonoBehaviour {
 		Vector3 target = new Vector3 (posX * 10, transform.position.y, transform.position.z);
 		float t = 0.0f;
 		while (t < 1) {
-			t += Time.deltaTime / _moveSpeed;
+			t += Time.deltaTime;
 			transform.position = Vector3.Lerp (transform.position, target, t);
 			_posX = posX;
 			yield return null;
@@ -115,10 +116,11 @@ public class Player : MonoBehaviour {
 	}
 
 	private IEnumerator	_MoveUpDown(int posY){
-		Vector3 target = new Vector3 (transform.position.y, posY * 10, transform.position.z);
+		int newWorldPosZ = posY * -10;
+		Vector3 target = new Vector3 (transform.position.x, transform.position.y, posY * -10);
 		float t = 0.0f;
 		while (t < 1) {
-			t += Time.deltaTime / _moveSpeed;
+			t += Time.deltaTime;
 			transform.position = Vector3.Lerp (transform.position, target, t);
 			_posY = posY;
 			yield return null;

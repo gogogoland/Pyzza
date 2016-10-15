@@ -55,7 +55,7 @@ public class DataGame : MonoBehaviour {
 		height = int.Parse (cmd [2]);
 	}
 
-	public Vector3	CoordCase(int x, int y){
+	Vector3			CoordCase(int x, int y){
 		Vector3 coord = Vector3.zero;
 		coord.x = x * 10;
 		coord.z = -y * 10;
@@ -287,7 +287,7 @@ public class DataGame : MonoBehaviour {
 		}
 	}
 
-	private void	DropResrc(GameObject modelToClone, int idResrc, int resize, Transform tile, GenerateMap scriptGM)
+	void			DropResrc(GameObject modelToClone, int idResrc, int resize, Transform tile, GenerateMap scriptGM)
 	{
 		Vector3		vec = Vector3.zero;
 		
