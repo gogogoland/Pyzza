@@ -137,6 +137,21 @@ public class GenerateMap : MonoBehaviour {
 		}
 	}
 
+	void	NbrResrcPerTile(GameObject modelToClone, DataGame.c_datamap upTile, int resize){
+		Vector3		vec = Vector3.zero;
+		
+		for (int nbr = 0; nbr < upTile.nbr; nbr++) {
+			GameObject	tmp;
+			vec = new Vector3(0, modelToClone.transform.position.y, 0);
+			tmp = GameObject.Instantiate(modelToClone, vec, Quaternion.identity) as GameObject;
+			tmp.transform.localScale *= resize;
+			tmp.transform.SetParent(tiles[upTile.z, upTile.x].transform);
+			tmp.GetComponent<SpriteRenderer>().sprite = ressources_sprite[upTile.type];
+			RepositioningResrc(tmp, upTile.type);
+			resrcs.Add(tmp);
+		}
+	}
+
 	void	GenerateResrc(){
 		resrcs = new List<GameObject> ();
 		for (int data = 0; data < _scriptData.structDataMap.Count; data++) {
@@ -147,10 +162,33 @@ public class GenerateMap : MonoBehaviour {
 		}
 	}
 
-	public void CheckAllTiles() {
-
+	void	GenerateResrc(DataGame.c_datamap upTile) {
+		if (upTile.type == FOOD)
+			NbrResrcPerTile(food_obj, upTile, 20);
+		else if (upTile.type >= RESRC)
+			NbrResrcPerTile(ressources_obj, upTile, 5);
 	}
 
+	public Vector2 CheckAllTiles() {
+		Vector2 ret = new Vector2 (-1.0f, -1.0f);
+		for (int z = 0; z < height; z++) {
+			for (int x = 0; x < width; x++) {
+				if (tiles[z, x].GetComponent<Renderer>().material.mainTexture == null) {
+					ret.x = x;
+					ret.y = z;
+					break ;
+				}
+			}
+		}
+		return (ret);
+	}
+
+	public void	UpdateTile(DataGame.c_datamap upTile) {
+		variant_materials[upTile.z, upTile.x] = materials[upTile.tileColor];
+		tiles [upTile.z, upTile.x].GetComponent<Renderer> ().material = variant_materials [upTile.z, upTile.x];
+		GenerateResrc (upTile);
+	}
+	
 	// Update is called once per frame
 	void	Update ()
 	{

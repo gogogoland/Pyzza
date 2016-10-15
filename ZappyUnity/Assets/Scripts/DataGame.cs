@@ -30,6 +30,9 @@ public class DataGame : MonoBehaviour {
 
 	private string							[]typeResrc;
 
+	private bool							update = false;
+	private Vector2							vectupdate = new Vector2(-1, -1);
+
 	public void		Init(){
 		structDataMap = new List<c_datamap> ();
 		teamName = new List<string> ();
@@ -61,8 +64,13 @@ public class DataGame : MonoBehaviour {
 		return coord;
 	}
 
+	public void		UpdateTile(int x, int y) {
+		update = true;
+		vectupdate.x = x;
+		vectupdate.y = y;
+	}
+
 	public void		TileContent(string []cmd) {
-		Debug.Log (cmd[1] + " " + cmd[2]);
 		if (cmd.Length < 10 && cmd.Length > 11)
 			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
 		for (int data = 0; data < 7; data++) {
@@ -76,6 +84,9 @@ public class DataGame : MonoBehaviour {
 				tmp.tileColor = 0;
 			else
 				tmp.tileColor = int.Parse(cmd[10]);
+			if (update == true && vectupdate.x != -1 && vectupdate.y != -1) {
+				GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().UpdateTile(tmp);
+			}
 			structDataMap.Add(tmp);
 		}
 	}

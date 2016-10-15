@@ -29,13 +29,13 @@ public class Client : MonoBehaviour {
 	private Socket							_socket;
 	private GameObject						_loading_panel;
 	private float							nextSend = 0.0f;
+	private bool							checktile = true;
 	
 	// Use this for initialization
 
 	string		Receive()
 	{
 		try {
-			Debug.Log (_socket.ReceiveBufferSize);
 			byte[] msg = new Byte[_socket.ReceiveBufferSize];
 			_socket.Receive(msg,0,_socket.Available,SocketFlags.None);
 			return (System.Text.Encoding.ASCII.GetString(msg));
@@ -116,8 +116,6 @@ public class Client : MonoBehaviour {
 			default : break;
 			}
 		}
-		if (Input.GetKey(KeyCode.L))
-			Debug.Log (rtfContent);
 		rtfContent = null;
 	}
 
@@ -156,16 +154,24 @@ public class Client : MonoBehaviour {
 		}
 	}
 
-	public void SendBCT(string bct, int x, int y)
+	public void SendBCT()
 	{
-		//Send (BCT + x + " " + y + "\n");
-		Debug.Log (rtfContent);
+		Vector2 ret = GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().CheckAllTiles();
+		if (ret.x != -1) {
+			Send (BCT + ret.x + " " + ret.y + "\n");
+			_scriptData.UpdateTile((int)ret.x, (int)ret.y);
+		}
+		else
+			checktile = false;
 	}
 
 	void		DemandInfo() {
 		try {
 			if (_socket.Connected) {
-				Send (MCT);
+				if (checktile)
+					SendBCT();
+				
+				/*Send (MCT);
 				for (int player=0; player < _scriptData.players.Count; player++) {
 					Player script = _scriptData.players [player].GetComponent<Player>();
 					Send (PPO + script.GetID() + "\n");
@@ -176,7 +182,7 @@ public class Client : MonoBehaviour {
 				if (newTime) {
 					Send (SST + newTimeValue + "\n");
 					newTime = false;
-				}
+				}*/
 			}
 		} catch (Exception e) {
 			Debug.LogError ("Error Demand Info : " + e);
@@ -191,7 +197,7 @@ public class Client : MonoBehaviour {
 				DataDistribution();
 			if (Time.time > nextSend) {
 				nextSend = Time.time + sendRate;
-//				DemandInfo();
+				DemandInfo();
 			}
 		}
 	}
