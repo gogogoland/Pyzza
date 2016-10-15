@@ -56,6 +56,10 @@ public class MoveCamera : MonoBehaviour {
 				cloneBorderCamera[cam].transform.Rotate(Vector3.up * Time.deltaTime * -speedRot, Space.World);
 			orientationCam.transform.Rotate(Vector3.up * Time.deltaTime * -speedRot, Space.World);
 		}
+		if (Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift))
+			speed = 100;
+		else
+			speed = 50;
 		if (transform.position.x < -tile_x)
 			transform.position = new Vector3(width * 10 - tile_x, transform.position.y, transform.position.z);
 		if (width * 10 - tile_x < transform.position.x)
