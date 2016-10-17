@@ -14,11 +14,12 @@ public class Player : MonoBehaviour {
 	[SerializeField]private int			[]_inventory;
 
 	private float						_moveSpeed;
-	private int							_maxMapX;
-	private int							_maxMapY;
+
+	private Animator					anim;
 	
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		anim = GetComponent<Animator> ();
 	}
 
 	public void		PlayerNew(int id, int posX, int posY, int orientation, int level, string teamName) {
@@ -81,6 +82,8 @@ public class Player : MonoBehaviour {
 
 	public void		SetObjConcern(int id){
 		id = _idObjTmp;
+		anim.SetInteger ("Wait", -1);
+		anim.SetInteger ("Attack", _orientation);
 	}
 	/*
 	public void		UpdateInventory(){
@@ -102,6 +105,8 @@ public class Player : MonoBehaviour {
 		}
 		if (_orientation != orientation)
 			_orientation = orientation;
+		anim.SetInteger ("Wait", -1);
+		anim.SetInteger ("Move", _orientation);
 	}
 	
 	private IEnumerator	_MoveLeftRight(int posX){
@@ -136,4 +141,9 @@ public class Player : MonoBehaviour {
 		_moveSpeed = unitTime * 7.0f;
 	}
 
+	public void		Idle(){
+		anim.SetInteger ("Move", -1);
+		anim.SetInteger ("Attack", -1);
+		anim.SetInteger ("Wait", _orientation);
+	}
 }

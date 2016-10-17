@@ -33,6 +33,8 @@ public class DataGame : MonoBehaviour {
 	private bool							update = false;
 	private Vector2							vectupdate = new Vector2(-1, -1);
 
+	private GameObject						victory;
+
 	public void		Init(){
 		structDataMap = new List<c_datamap> ();
 		teamName = new List<string> ();
@@ -62,6 +64,14 @@ public class DataGame : MonoBehaviour {
 		coord.y = 1.5f;
 
 		return coord;
+	}
+
+	void			InvockBubbleTalk(Transform player, string talk){
+		GameObject cloneBubble = GameObject.Instantiate(bubble_obj, Vector3.zero, Quaternion.identity) as GameObject;
+
+		cloneBubble.transform.SetParent (GameObject.Find ("CanvasTalk").transform);
+		cloneBubble.transform.GetChild(0).GetComponent<Text>().text = talk;
+		cloneBubble.GetComponent<BubbleTalk>().posPlayer = player;
 	}
 
 	public void		UpdateTile(int x, int y) {
@@ -182,10 +192,7 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				if (cmd.Length >= 3) {
-					GameObject cloneBubble = GameObject.Instantiate(bubble_obj, Vector3.zero, Quaternion.identity) as GameObject;
-					cloneBubble.transform.SetParent (GameObject.Find ("CanvasTalk").transform);
-					cloneBubble.transform.GetChild(0).GetComponent<Text>().text = talk;
-					cloneBubble.GetComponent<BubbleTalk>().posPlayer = player.transform;
+					InvockBubbleTalk(player.transform, talk);
 					Debug.Log ("Joueur #" + script.GetID() + " dit : " + talk);
 				}
 				break ;
@@ -245,6 +252,7 @@ public class DataGame : MonoBehaviour {
 
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.SetObjConcern(int.Parse (cmd[2]));
+				Debug.Log ("Joueur #" + script.GetID() + " prend " + int.Parse (cmd[2]));
 /*				script.GetOrDrop(int.Parse (cmd[2]), false);
 				float x = player.transform.position.x / 10;
 				float z = -player.transform.position.z / 10;
@@ -252,7 +260,6 @@ public class DataGame : MonoBehaviour {
 				for(int r = 0; r < typeResrc.Length;r++) {
 					if (r == int.Parse (cmd[2])) {
 						GameObject resrc = tile.FindChild(typeResrc[r]).gameObject;
-						Debug.Log ("Joueur #" + script.GetID() + " prend " + resrc.name + " aux coordonnees (" + x + ", " + z + ")");
 						Destroy(resrc);
 						break ;
 					}
@@ -335,6 +342,7 @@ public class DataGame : MonoBehaviour {
 			Egg script = egg.GetComponent<Egg> ();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("L'oeuf #" + script.GetID() + " eclos");
+				script.Hatch();
 				eggs.Remove(egg);
 				break ;
 			}
@@ -360,6 +368,7 @@ public class DataGame : MonoBehaviour {
 			Egg script = egg.GetComponent<Egg> ();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("L'oeuf #" + script.GetID() + " eclos mais pourri");
+				script.Die();
 				eggs.Remove(egg);
 				break ;
 			}
@@ -375,6 +384,8 @@ public class DataGame : MonoBehaviour {
 	public void		ServerEndGame(string []cmd) {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la fin de partie erronees");
+		victory.SetActive (true);
+		victory.transform.GetChild (1).GetComponent<Text> ().text = cmd [1];
 		Debug.Log ("Victoire de l'equipe : " + cmd[1]);
 	}
 
@@ -402,7 +413,8 @@ public class DataGame : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		victory = GameObject.Find ("Victoy");
+		victory.SetActive (false);
 	}
 
 	// Update is called once per frame
