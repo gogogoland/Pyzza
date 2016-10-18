@@ -128,8 +128,8 @@ public class Client : MonoBehaviour {
 
 			WhoIAm();
 			CheckData();
-//			if (rtfContent != null)
-//			{
+			if (rtfContent != null)
+			{
 //				Debug.Log(rtfContent);
 			DataDistribution();
 			DontDestroyOnLoad(gameObject);
@@ -138,7 +138,7 @@ public class Client : MonoBehaviour {
 			Application.LoadLevel("Game");
 
 //				DemandInfo();
-//			}
+			}
 		}
 		catch (Exception e)
 		{

@@ -82,7 +82,7 @@ public class Player : MonoBehaviour {
 
 	public void		SetObjConcern(int id){
 		id = _idObjTmp;
-		anim.SetInteger ("Wait", -1);
+//		anim.SetInteger ("Wait", 0);
 		anim.SetInteger ("Attack", _orientation);
 	}
 	/*
@@ -95,18 +95,22 @@ public class Player : MonoBehaviour {
 	}*/
 
 	public void		SetPosOrient(int posX, int posY, int orientation){
+		if (_orientation != orientation)
+			_orientation = orientation;
+		if (_posX == posX && _posY == posY) {
+			anim.SetInteger ("Wait", _orientation);
+		}
 		if (_posX != posX) {
 			_posX = posX;
 			StartCoroutine("_MoveLeftRight", posX);
+			anim.SetInteger ("Move", _orientation);
 		}
 		if (_posY != posY) {
 			_posY = posY;
 			StartCoroutine("_MoveUpDown", posY);
+			anim.SetInteger ("Move", _orientation);
 		}
-		if (_orientation != orientation)
-			_orientation = orientation;
-		anim.SetInteger ("Wait", -1);
-		anim.SetInteger ("Move", _orientation);
+		Debug.Log (_orientation);
 	}
 	
 	private IEnumerator	_MoveLeftRight(int posX){
@@ -142,8 +146,12 @@ public class Player : MonoBehaviour {
 	}
 
 	public void		Idle(){
-		anim.SetInteger ("Move", -1);
-		anim.SetInteger ("Attack", -1);
+//		anim.SetInteger ("Move", 0);
+//		anim.SetInteger ("Attack", 0);
+		anim.SetInteger ("Wait", _orientation);
+	}
+
+	void			Start(){
 		anim.SetInteger ("Wait", _orientation);
 	}
 }

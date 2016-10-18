@@ -34,6 +34,7 @@ public class DataGame : MonoBehaviour {
 	private Vector2							vectupdate = new Vector2(-1, -1);
 
 	private GameObject						victory;
+	private bool							startSceneGame = true;
 
 	public void		Init(){
 		structDataMap = new List<c_datamap> ();
@@ -412,12 +413,16 @@ public class DataGame : MonoBehaviour {
 	
 
 	// Use this for initialization
-	void Start () {
-		victory = GameObject.Find ("Victoy");
-		victory.SetActive (false);
+	void StartSceneGame () {
+		if (Application.loadedLevelName == "Game" && startSceneGame == true) {
+			victory = GameObject.Find ("Canvas/Victory");
+			victory.SetActive (false);
+			startSceneGame = false;
+		}
 	}
 
 	// Update is called once per frame
 	void Update () {
+		StartSceneGame ();
 	}
 }
