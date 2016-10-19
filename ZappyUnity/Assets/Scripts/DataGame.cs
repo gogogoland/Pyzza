@@ -58,12 +58,14 @@ public class DataGame : MonoBehaviour {
 		height = int.Parse (cmd [2]);
 	}
 
-	Vector3			CoordCase(int x, int y){
+	Vector3			CoordCase(int x, int y, bool egg){
 		Vector3 coord = Vector3.zero;
 		coord.x = x * 10;
 		coord.z = -y * 10;
-		coord.y = 1.5f;
-
+		if (egg)
+			coord.y = 1.5f;
+		else
+			coord.y = 2.5f;
 		return coord;
 	}
 
@@ -111,7 +113,7 @@ public class DataGame : MonoBehaviour {
 	public void		PlayerNew(string []cmd) {
 		if (cmd.Length != 7)
 			throw new Exception("Donnees d'un joueur erronees");
-		clone_player = GameObject.Instantiate(player_obj, CoordCase(int.Parse (cmd[2]), int.Parse (cmd[3])), Quaternion.identity) as GameObject;
+		clone_player = GameObject.Instantiate(player_obj, CoordCase(int.Parse (cmd[2]), int.Parse (cmd[3]), false), Quaternion.identity) as GameObject;
 		Player script = clone_player.GetComponent<Player> ();
 		script.PlayerNew(int.Parse (cmd [1].Substring (1, cmd [1].Length - 1)),
 		                 int.Parse (cmd[2]),
@@ -327,7 +329,7 @@ public class DataGame : MonoBehaviour {
 	public void		EggNew(string []cmd){
 		if (cmd.Length != 5)
 			throw new Exception("Donnees d'un oeuf erronees");
-		clone_egg = GameObject.Instantiate(egg_obj, CoordCase(int.Parse (cmd[3]), int.Parse (cmd[4])), Quaternion.identity) as GameObject;
+		clone_egg = GameObject.Instantiate(egg_obj, CoordCase(int.Parse (cmd[3]), int.Parse (cmd[4]), true), Quaternion.identity) as GameObject;
 		Egg script = clone_egg.GetComponent<Egg> ();
 		script.EggNew(int.Parse (cmd [1].Substring (1, cmd [1].Length - 1)),
 			           int.Parse (cmd [2].Substring (1, cmd [2].Length - 1)),
