@@ -128,7 +128,8 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-
+	void	AnimateStop(string action){
+	}
 
 	void	AnimatePlay(string action){
 		anim.SetInteger (action, CardinalDirection());
