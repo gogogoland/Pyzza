@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/02 20:04:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/20 12:21:04 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static t_server	*server_init_data(int ac, char **av)
 //	*	open file for log
 t_server		*server_create(int argc, char **argv)
 {
-	int 				sso;
+	int					sso;
 	t_server			*srv;
 	struct protoent		*proto;
 	struct sockaddr_in	sin;

@@ -6,7 +6,7 @@
 /*   By: croy <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/01 13:22:08 by croy              #+#    #+#             */
-/*   Updated: 2016/10/02 20:06:16 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/20 12:16:20 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static bool	parser_check_flags_unknow(int ac, char **av, t_server *srv)
 	return (err > 0 ? false : true);
 }
 
-bool	parser(int ac, char **av, t_server *srv)
+bool		parser(int ac, char **av, t_server *srv)
 {
 	int	bonus;
 
