@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:32:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 18:36:20 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/20 17:43:37 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static const char	*g_cmd_inv_rsc[] =
 	"deraumere",
 	"sibur",
 	"mendiane",
-	"phirase",
+	"phiras",
 	"thystame"
 };
 

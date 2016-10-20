@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/12 17:01:19 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/20 17:45:07 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ static char	*command_seek_add(t_server *srv, t_coord pos, int s, char *wt)
 	wt = command_seek_copy(wt, -1);
 	while (++i < 7)
 	{
-		n = srv->map[pos.x][pos.y][i];
+		n = srv->map[pos.y][pos.x][i];
 		while (n-- > 0)
 			wt = command_seek_copy(wt, i);
 	}
@@ -165,8 +165,8 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	sens.y = (clt->sens + 2) % 4;
 	while (++see.y <= clt->lvl)
 	{
-		see.x = -1;
-		while (++see.x < (see.y * 2 + 1))
+		see.x = (see.y * 2 + 1);
+		while (--see.x >=  0)
 		{
 			pos.x = command_seek_int(sens.x, clt->pos.x, see, srv->plateau.x);
 			pos.y = command_seek_int(sens.y, clt->pos.y, see, srv->plateau.y);
