@@ -19,10 +19,10 @@ public class Player : MonoBehaviour {
 
 	//TODO if server change
 	private int							DEFAULT = 4;//= 0;
-	private int							NORTH = 0;//= 1;
-	private int							WEST = 1;//= 4;
-	private int							SOUTH = 2;//= 3;
-	private int							EST = 3;//= 2;
+	private int							NORTH = 1;
+	private int							WEST = 0;//= 4;
+	private int							SOUTH = 3;
+	private int							EST = 2;
 
 	private int							AnimSW = 0;
 	private int							AnimNW = 1;
@@ -44,6 +44,8 @@ public class Player : MonoBehaviour {
 		_orientation[1] = DEFAULT;
 		_level = level;
 		_teamName = teamName;
+		transform.localScale = new Vector3((float)_level, (float)_level, (float)_level);
+		transform.position = new Vector3 (transform.position.x, (9 + _level) * transform.position.y / 10, transform.position.z);
 	}
 	
 	public int		GetID(){
@@ -78,7 +80,7 @@ public class Player : MonoBehaviour {
 		if (_inventory[positionInv] != value)
 			_inventory [positionInv] = value;
 	}
-
+	/*
 	public void		GetOrDrop(int idInv, bool drop) {
 		for (int obj = 0; obj < _inventory.Length; obj++) {
 			if (idInv == obj){
@@ -93,7 +95,7 @@ public class Player : MonoBehaviour {
 			}
 		}
 	}
-
+	*/
 	public void		SetObjConcern(int id){
 		id = _idObjTmp;
 //		anim.SetInteger ("Wait", 0);
@@ -186,8 +188,11 @@ public class Player : MonoBehaviour {
 	}
 	
 	public void		SetLevel(int level) {
-		if (_level != level)
+		if (_level != level) {
 			_level = level;
+			transform.localScale += Vector3.one;
+			transform.position = new Vector3(transform.position.x, transform.position.y + 0.275f, transform.position.z);
+		}
 	}
 	
 	public void		SetMoveSpeed(int unitTime) {

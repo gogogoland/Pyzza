@@ -10,6 +10,7 @@ public class DataGame : MonoBehaviour {
 	public GameObject						egg_obj;
 	public GameObject						player_obj;
 	public GameObject						bubble_obj;
+	public GameObject						invok_obj;
 	public int								height;
 	public int								width;
 	public class							c_datamap {
@@ -75,6 +76,17 @@ public class DataGame : MonoBehaviour {
 		cloneBubble.transform.SetParent (GameObject.Find ("CanvasTalk").transform);
 		cloneBubble.transform.GetChild(0).GetComponent<Text>().text = talk;
 		cloneBubble.GetComponent<BubbleTalk>().posPlayer = player;
+	}
+
+	void			InvockPentacle(int x, int z) {
+		Transform parentTile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform;
+
+		GameObject clonePentacle = GameObject.Instantiate(invok_obj, parentTile.position, Quaternion.identity) as GameObject;
+		clonePentacle.transform.SetParent (parentTile);
+	}
+
+	void			DestroyPentacle(int x, int z){
+		Destroy (GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)"));
 	}
 
 	public void		UpdateTile(int x, int y) {
@@ -159,7 +171,7 @@ public class DataGame : MonoBehaviour {
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 //				script.UpdateInventory();
 				for (int obj=0; obj < script.GetInventory().Length; obj++) {
-					script.SetResource(obj, int.Parse (cmd[obj + 2]));
+					script.SetResource(obj, int.Parse (cmd[obj + 4]));
 				}
 				break ;
 			}
@@ -205,29 +217,28 @@ public class DataGame : MonoBehaviour {
 
 	//TODO
 	public void		PlayerIncantBegin(string []cmd){
-		if (cmd.Length >= 5)
+		if (cmd.Length < 5)
 			throw new Exception("Donnees du debut de l'incantation erronees");
-		bool restart;
-		int i = 0;
+		InvockPentacle (int.Parse (cmd [1]), int.Parse (cmd [2]));
 
-		do {
-			restart = false;
+		for (int id = 4; id < cmd.Length; id++) {
 			foreach (GameObject player in players) {
 				Player script = player.GetComponent<Player>();
-				if (script.GetID() == int.Parse (cmd [5 + i].Substring (1, cmd [5 + i].Length - 1))) {
-					Debug.Log ("Joueur #" + script.GetID() + " incante:" + cmd [2]);
-					restart = true;
-					i++;
-					break;
+
+				if (script.GetPosX() == int.Parse (cmd[1])
+				    && script.GetPosY() == int.Parse (cmd[2])
+				    && script.GetID() == int.Parse (cmd [id].Substring (1, cmd [id].Length - 1))){
+					Debug.Log ("Joueur #" + script.GetID() + " incante au level: " + cmd [3]);
 				}
 			}
-		} while (restart);
+		}
 	}
 
 	//TODO
 	public void		PlayerIncantEnd(string []cmd){
 		if (cmd.Length != 4)
 			throw new Exception("Donnees de la fin de l'incantation erronees");
+		DestroyPentacle(int.Parse (cmd [1]), int.Parse (cmd [2]));
 		if (int.Parse (cmd[3]) == 0)
 			Debug.Log ("L'incantation [" + cmd[1] + ", " + cmd[2] + "] est un echec");
 		else
@@ -279,6 +290,9 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.SetObjConcern(int.Parse (cmd[2]));
+				Debug.Log ("Joueur #" + script.GetID() + " pose " + int.Parse (cmd[2]));
+				/*
 				script.GetOrDrop(int.Parse (cmd[2]), true);
 				float x = player.transform.position.x / 10;
 				float z = -player.transform.position.z / 10;
@@ -293,6 +307,7 @@ public class DataGame : MonoBehaviour {
 				}
 				Debug.Log ("Joueur #" + script.GetID() + " pose " + typeResrc[int.Parse (cmd[2])] + " aux coordonnees (" + x + ", " + z + ")");
 				break ;
+				*/
 			}
 		}
 	}
