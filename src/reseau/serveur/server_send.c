@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/14 17:48:50 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/21 21:17:39 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ void		send_graphe_action(t_server *srv, char *msg,
 			if (spec == 1 && clt)
 			{
 				command_box_content(gfx, clt->pos.x, clt->pos.y,
-									srv->map[clt->pos.x][clt->pos.y]);
+									srv->map[clt->pos.y][clt->pos.x]);
 			}
 		}
 		gfx = gfx->next;

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/20 17:18:51 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 23:47:03 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/21 22:09:37 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static const char *g_msg_cmd[] =
 	"plv #%i %i\n",
 	"seg #%i %i\n",
 	"pbc #%i %s\n",
+	"pie #%i %i %i\n",
 	"enw #%i #%i %i %i\n",
 };
 
@@ -61,10 +62,18 @@ char	*command_write_msg(t_client *clt, int action, int n, char *pbc)
 	return (NULL);
 }
 
+char	*command_write_msg_incant_end(t_client *clt)
+{
+	char *msg;
+
+	asprintf(&msg, g_msg_cmd[15], clt->pos.x, clt->pos.y, clt->lvl);
+	return (msg);
+}
+
 char	*command_write_msg_end_fork(t_client *clt, t_client *frk)
 {
 	char *msg;
 
-	asprintf(&msg, g_msg_cmd[15], clt->name, frk->name, clt->pos.x, clt->pos.y);
+	asprintf(&msg, g_msg_cmd[16], clt->name, frk->name, clt->pos.x, clt->pos.y);
 	return (msg);
 }

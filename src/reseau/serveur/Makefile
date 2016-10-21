@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/10/02 20:12:44 by tbalea           ###   ########.fr        #
+#    Updated: 2016/10/21 20:57:08 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,7 +73,7 @@ SRC = ft_atoi.c\
 	  command_fork.c\
 	  command_incant.c\
 	  incant_help_acolyte.c\
-	  incant_help_acolyte2.c\
+	  incant_help_acolyte_msg.c\
 	  command_nbr_co.c\
 	  command_player.c\
 	  command_graphe.c\

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/02 19:24:58 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/21 21:06:32 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,8 @@ void		command_take(t_fds *fds, t_server *srv,
 void		command_incant(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 bool		incant_process(t_client *cllt, t_server *srv);
-void		incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
+void		incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte,
+								int state);
 bool		incant_help_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 void		incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
 void		incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
@@ -240,6 +241,7 @@ void		command_graphical_bad_parameters(t_fds *fds, t_server *srv,
 void		command_void(t_fds *fds, t_server *srv, t_client *clt, char *cmd);
 
 char		*command_write_msg(t_client *clt, int action, int n, char *pbc);
+char		*command_write_msg_incant_end(t_client *clt);
 char		*command_write_msg_end_fork(t_client *clt, t_client *frk);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/20 17:45:07 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/21 23:11:08 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	while (++see.y <= clt->lvl)
 	{
 		see.x = (see.y * 2 + 1);
-		while (--see.x >=  0)
+		while (--see.x >= 0)
 		{
 			pos.x = command_seek_int(sens.x, clt->pos.x, see, srv->plateau.x);
 			pos.y = command_seek_int(sens.y, clt->pos.y, see, srv->plateau.y);
