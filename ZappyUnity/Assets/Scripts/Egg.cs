@@ -49,9 +49,12 @@ public class Egg : MonoBehaviour {
 		anim.SetInteger ("Etat", 1);
 	}
 
-	public void		Die()
+	public void		Die(bool playerAlive)
 	{
-		anim.SetInteger("Etat", 2);
+		if (playerAlive)
+			anim.SetInteger("Etat", 3);
+		else
+			anim.SetInteger("Etat", 2);
 		StartCoroutine("DieTime", 5.0f);
 	}
 	

@@ -23,6 +23,7 @@ public class GenerateMap : MonoBehaviour {
 
 	private int						FOOD = 0;
 	private int						RESRC = 1;
+	private string					[]resrcName;
 
 	void		AssignTilesColor() {
 		int data = 0;
@@ -45,6 +46,14 @@ public class GenerateMap : MonoBehaviour {
 		_scriptData = GameObject.Find ("Client(Clone)").GetComponent<DataGame>();
 		height = _scriptData.height;
 		width = _scriptData.width;
+		resrcName = new string[7];
+		resrcName[0] = "Food";
+		resrcName[1] = "Linemate";
+		resrcName[2] = "Deraumere";
+		resrcName[3] = "Sibur";
+		resrcName[4] = "Mendiane";
+		resrcName[5] = "Phiras";
+		resrcName[6] = "Thystame";
 	}
 	
 	void Start ()
@@ -73,34 +82,28 @@ public class GenerateMap : MonoBehaviour {
 		switch (id)
 		{
 		case 0 :
-			resrc.name = "Food";
 			vec = new Vector3(0.0f, resrc.transform.localPosition.y, 0.0f);
 			;break;
 		case 1 :
-			resrc.name = "Linemate";
 			vec = new Vector3(3.0f, resrc.transform.localPosition.y, 0.0f);
 			;break;
 		case 2 :
-			resrc.name = "Deraumere";
 			vec = new Vector3(3.0f, resrc.transform.localPosition.y, -3.0f);
 			;break;
 		case 3 :
-			resrc.name = "Sibur";
 			vec = new Vector3(3.0f, resrc.transform.localPosition.y, 3.0f);
 			;break;
 		case 4 :
-			resrc.name = "Mendiane";
 			vec = new Vector3(-3.0f, resrc.transform.localPosition.y, 3.0f);
 			;break;
 		case 5 :
-			resrc.name = "Phiras";
 			vec = new Vector3(-3.0f, resrc.transform.localPosition.y, 0.0f);
 			;break;
 		case 6 :
-			resrc.name = "Thystame";
 			vec = new Vector3(-3.0f, resrc.transform.localPosition.y, -3.0f);
 			;break;
 		}
+		resrc.name = resrcName [id];
 		resrc.transform.localPosition = vec;
 	}
 
@@ -188,7 +191,25 @@ public class GenerateMap : MonoBehaviour {
 		tiles [upTile.z, upTile.x].GetComponent<Renderer> ().material = variant_materials [upTile.z, upTile.x];
 		GenerateResrc (upTile);
 	}
+
+	public void	UpdateResrc(DataGame.c_datamap newTile, int newNbr) {
+		GameObject tile = GameObject.Find ("Tile(" + newTile.z + ", " + newTile.x + ")");
 	
+		if (newNbr > newTile.nbr)
+			Debug.Log ("CreateResrc");
+		else if (newNbr < newTile.nbr)
+			Debug.Log ("SupprResrc");
+
+		foreach (Transform child in tile.GetComponentsInChildren<Transform>()) {
+			if (child.name == resrcName[newTile.type]) {
+
+			}
+		}
+		Debug.Log (newNbr);
+		Debug.Log (newTile.nbr);
+
+	}
+
 	// Update is called once per frame
 	void	Update ()
 	{

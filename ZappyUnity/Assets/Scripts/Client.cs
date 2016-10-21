@@ -86,11 +86,12 @@ public class Client : MonoBehaviour {
 		string	[]cutBlockData = rtfContent.Split ('\n');
 
 		for (int line = 0; line < cutBlockData.Length; line++) {
+			Debug.Log (cutBlockData[line]);
 			string []cutCmd = cutBlockData[line].Split(' ');
 			switch (cutCmd[0]) {
 			case "Bienvenue" : _scriptData.Init();break;
 			case "msz" : _scriptData.MapSize(cutCmd);break;
-			case "bct" : _scriptData.TileContent(cutCmd);break;
+			case "bct" : _scriptData.TileContent(cutCmd);/*Debug.Log (cutBlockData[line]);*/break;
 			case "tna" : _scriptData.TeamName(cutCmd);break;
 			case "pnw" : _scriptData.PlayerNew(cutCmd);break;
 			case "ppo" : _scriptData.PlayerPositionOrientation(cutCmd);break;
@@ -179,10 +180,11 @@ public class Client : MonoBehaviour {
 					Send (PIN + script.GetID() + "\n");
 				}
 				Send (SGT);
+				*/
 				if (newTime) {
 					Send (SST + newTimeValue + "\n");
 					newTime = false;
-				}*/
+				}
 			}
 		} catch (Exception e) {
 			Debug.LogError ("Error Demand Info : " + e);

@@ -19,10 +19,10 @@ public class Player : MonoBehaviour {
 
 	//TODO if server change
 	private int							DEFAULT = 4;//= 0;
-	private int							NORTH = 1;
-	private int							WEST = 0;//= 4;
-	private int							SOUTH = 3;
-	private int							EST = 2;
+	private int							NORTH = 0;//= 1;
+	private int							WEST = 1;//= 2;
+	private int							SOUTH = 2;//= 3;
+	private int							EST = 3;//= 4;
 
 	private int							AnimSW = 0;
 	private int							AnimNW = 1;

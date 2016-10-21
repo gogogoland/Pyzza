@@ -11,6 +11,8 @@ public class DataGame : MonoBehaviour {
 	public GameObject						player_obj;
 	public GameObject						bubble_obj;
 	public GameObject						invok_obj;
+	public Sprite							expulse_tex;
+	public Sprite							pensee_tex;
 	public int								height;
 	public int								width;
 	public class							c_datamap {
@@ -70,25 +72,29 @@ public class DataGame : MonoBehaviour {
 		return coord;
 	}
 
-	void			InvockBubbleTalk(Transform player, string talk){
-		GameObject cloneBubble = GameObject.Instantiate(bubble_obj, Vector3.zero, Quaternion.identity) as GameObject;
+	void			InvockBubbleTalk(Transform player, string talk, int typeBubble){
+		GameObject cloneBubble = GameObject.Instantiate(bubble_obj, player.transform.position, Quaternion.identity) as GameObject;
 
 		cloneBubble.transform.SetParent (GameObject.Find ("CanvasTalk").transform);
 		cloneBubble.transform.GetChild(0).GetComponent<Text>().text = talk;
 		cloneBubble.GetComponent<BubbleTalk>().posPlayer = player;
+		if (typeBubble == 1)
+			cloneBubble.GetComponent<Image> ().sprite = expulse_tex;
+		else if (typeBubble == 2)
+			cloneBubble.GetComponent<Image> ().sprite = pensee_tex;
 	}
 
 	void			InvockPentacle(int x, int z) {
 		Transform parentTile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform;
 
-		GameObject clonePentacle = GameObject.Instantiate(invok_obj, parentTile.position, Quaternion.identity) as GameObject;
-		clonePentacle.transform.SetParent (parentTile);
+		GameObject.Instantiate(invok_obj, parentTile.position, Quaternion.identity);
 	}
 
-	void			DestroyPentacle(int x, int z){
+/*	void			DestroyPentacle(int x, int z){
+		if (GameObject.Find ("Tile(" + z + ", " + x + ")"))
 		Destroy (GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)"));
 	}
-
+*/
 	public void		UpdateTile(int x, int y) {
 		update = true;
 		vectupdate.x = x;
@@ -98,6 +104,19 @@ public class DataGame : MonoBehaviour {
 	public void		TileContent(string []cmd) {
 		if (cmd.Length < 10 && cmd.Length > 11)
 			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
+
+		foreach (c_datamap tile in structDataMap) {
+			if (tile.x == int.Parse (cmd[1]) && tile.z == int.Parse (cmd[2])) {
+				for (int data = 0; data < 7; data++) {
+					Debug.Log ("BCT: " + int.Parse (cmd[3+data]) + "; tile.nbr: " + tile.nbr );
+					if (tile.type == data && tile.nbr != int.Parse (cmd[3+data])) {
+						GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().UpdateResrc(tile, int.Parse (cmd[3+data]));
+						return ;
+					}
+				}
+			}
+		}
+
 		for (int data = 0; data < 7; data++) {
 			c_datamap	tmp = new c_datamap();
 
@@ -109,7 +128,8 @@ public class DataGame : MonoBehaviour {
 				tmp.tileColor = 0;
 			else
 				tmp.tileColor = int.Parse(cmd[10]);
-			if (update == true && vectupdate.x != -1 && vectupdate.y != -1) {
+			if (tmp.nbr > 0 && update == true && vectupdate.x != -1 && vectupdate.y != -1) {
+				Debug.Log ("case Rose");
 				GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().UpdateTile(tmp);
 			}
 			structDataMap.Add(tmp);
@@ -184,6 +204,7 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				InvockBubbleTalk(player.transform, "FUS ROH DA !", 1);
 				Debug.Log ("Expulsion du joueur #" + script.GetID());
 				break ;
 			}
@@ -207,7 +228,7 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				if (cmd.Length >= 3) {
-					InvockBubbleTalk(player.transform, talk);
+					InvockBubbleTalk(player.transform, talk, 0);
 					Debug.Log ("Joueur #" + script.GetID() + " dit : " + talk);
 				}
 				break ;
@@ -238,20 +259,20 @@ public class DataGame : MonoBehaviour {
 	public void		PlayerIncantEnd(string []cmd){
 		if (cmd.Length != 4)
 			throw new Exception("Donnees de la fin de l'incantation erronees");
-		DestroyPentacle(int.Parse (cmd [1]), int.Parse (cmd [2]));
+//		DestroyPentacle(int.Parse (cmd [1]), int.Parse (cmd [2]));
 		if (int.Parse (cmd[3]) == 0)
 			Debug.Log ("L'incantation [" + cmd[1] + ", " + cmd[2] + "] est un echec");
 		else
 			Debug.Log ("L'incantation [" + cmd[1] + ", " + cmd[2] + "] est une reussite");
 	}
-
-	//TODO
+	
 	public void		PlayerForkEgg(string []cmd){
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la ponte d'un oeuf erronees");
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				InvockBubbleTalk(player.transform, "Je pond un oeuf", 2);
 				Debug.Log ("Joueur #" + script.GetID() + " pond un oeuf");
 				break ;
 			}
@@ -374,6 +395,7 @@ public class DataGame : MonoBehaviour {
 			Egg script = egg.GetComponent<Egg> ();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("Un joueur est nee a partir de l'oeuf #" + script.GetID());
+				script.Die(true);
 				break ;
 			}
 		}
@@ -386,7 +408,7 @@ public class DataGame : MonoBehaviour {
 			Egg script = egg.GetComponent<Egg> ();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("L'oeuf #" + script.GetID() + " eclos mais pourri");
-				script.Die();
+				script.Die(false);
 				eggs.Remove(egg);
 				break ;
 			}
