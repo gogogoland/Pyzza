@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/21 21:17:39 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/22 15:19:27 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,9 +125,12 @@ static int	time_action(int n, t_client *clt, t_server *srv)
 
 	if (!clt)
 		return (0);
-	action = (clt->time == 0.0f) ? clt->action : 0;
+	action = (clt->time == 0.0f && clt->action > 0) ? clt->action : 0;
 	if (clt->time == 0.0f && !clt->socket)
+	{
+		srv->egg--;
 		send_graphe_action(srv, command_write_msg(clt, 2, 0, NULL), 0, NULL);
+	}
 	if (clt->time == 0.0f && (clt->action = n < 13 ? n + 1 : 0) == 11)
 		send_graphe_action(srv, command_write_msg(clt, 1, 0, NULL), 0, NULL);
 	if (clt->time == 0.0f && n < 13)

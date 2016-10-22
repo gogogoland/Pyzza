@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 23:46:29 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/22 14:40:30 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void		command_player_log(t_server *srv, int type, t_client *clt,
 
 	if ((type == 0 && asprintf(&log, g_cmd_plr[type],
 				inet_ntoa(gfx->sin.sin_addr), ntohs(gfx->sin.sin_port),
-				srv->egg - srv->player_max))
+				srv->player_max - srv->egg))
 			|| (type == 1 && asprintf(&log, g_cmd_plr[type], clt->name,
 				inet_ntoa(clt->sin.sin_addr), ntohs(clt->sin.sin_port),
 				clt->socket))
