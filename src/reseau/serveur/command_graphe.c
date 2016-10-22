@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:33:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/21 22:31:56 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/22 16:14:21 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ static const char	*g_cmd_gfx[] =
 {
 	"New graphical client from ip %s, port %d.\nSocket %i is now graphic.\n",
 	"pnw #%d %d %d %d %d %d\n",
-	"enw #%d #%d %d %d\n",
-	"tna %s\n"
+	"enw #%d #%d %d %d\n"
 };
 
 static void	command_graphe_log(t_server *srv, t_gfx *gfx, int type)
@@ -55,23 +54,6 @@ static void	command_graphe_client_co(int socket, t_client *clt, int type)
 	}
 }
 
-static void	command_graphe_send_team(t_server *srv, t_gfx *gfx)
-{
-	char		*team;
-	int			i;
-
-	i = -1;
-	team = NULL;
-	while (srv && srv->team && srv->team[++i])
-	{
-		if (asprintf(&team, g_cmd_gfx[3], srv->team[i]))
-		{
-			send(gfx->socket, team, ft_strlen(team), 0);
-			ft_memdel((void **)&team);
-		}
-	}
-}
-
 void		command_graphe(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 {
 	t_client	*clt;
@@ -91,5 +73,5 @@ void		command_graphe(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	}
 	command_map(fds, srv, gfx, cmd);
 	command_time_server(fds, srv, gfx, cmd);
-	command_graphe_send_team(srv, gfx);
+	command_team_name(fds, srv, gfx, cmd);
 }

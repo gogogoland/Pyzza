@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/21 21:06:32 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/22 16:12:46 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,8 @@ void		command_player_pos(t_fds *fds, t_server *srv,
 void		command_map(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
 void		command_box(t_fds *fds, t_server *srv,
+								t_gfx *gfx, char *cmd);
+void		command_team_name(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
 int			command_get_int(int i, char *cmd);
 void		command_box_content(t_gfx *gfx, int x, int y, int *box);

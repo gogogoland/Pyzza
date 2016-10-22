@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/20 17:18:51 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/21 22:09:37 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/22 16:16:00 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ static const char *g_msg_cmd[] =
 	"pex #%i\n",
 	"pet #%i\n",
 	"ppo #%i %i %i %i\n",
-	"pnw #%i %i %i %i %i %i\n",
+	"pnw #%i %i %i %i %i %s\n",
 	"pin #%i %i %i %i %i %i %i %i %i %i\n",
 	"pgt #%i %i\n",
 	"pdr #%i %i\n",
 	"plv #%i %i\n",
-	"seg #%i %i\n",
+	"seg #%i %s\n",
 	"pbc #%i %s\n",
 	"pie #%i %i %i\n",
 	"enw #%i #%i %i %i\n",
@@ -44,7 +44,7 @@ char	*command_write_msg(t_client *clt, int action, int n, char *pbc)
 				clt->pos.x, clt->pos.y, clt->sens) >= 0)
 		return (msg);
 	else if (action == 8 && asprintf(&msg, g_msg_cmd[action], clt->name,
-				clt->pos.x, clt->pos.y, clt->sens, clt->lvl, clt->team) >= 0)
+				clt->pos.x, clt->pos.y, clt->sens, clt->lvl, pbc) >= 0)
 		return (msg);
 	else if (action == 9)
 	{
@@ -53,10 +53,10 @@ char	*command_write_msg(t_client *clt, int action, int n, char *pbc)
 				rsc[0], rsc[1], rsc[2], rsc[3], rsc[4], rsc[5], rsc[6]) >= 0)
 			return (msg);
 	}
-	else if (action < 14
+	else if (action < 13
 			&& asprintf(&msg, g_msg_cmd[action], clt->name, n) >= 0)
 		return (msg);
-	else if (action == 14
+	else if (action < 15
 			&& asprintf(&msg, g_msg_cmd[action], clt->name, pbc) >= 0)
 		return (msg);
 	return (NULL);

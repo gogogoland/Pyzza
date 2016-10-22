@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/22 14:40:30 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/22 16:17:46 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ static void		command_player_send_welcome(t_server *srv, t_client *clt)
 	}
 	asprintf(&msg, "%i\n%i %i\n", nb_clt, clt->pos.x, clt->pos.y);
 	send(clt->socket, msg, strlen(msg), 0);
-	send_graphe_action(srv, command_write_msg(clt, 8, 0, NULL), 0, NULL);
+	send_graphe_action(srv, command_write_msg(clt, 8, 0, srv->team[clt->team]),
+						0, NULL);
 	ft_memdel((void **)&msg);
 }
 

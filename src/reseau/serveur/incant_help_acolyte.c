@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/21 23:07:07 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/22 16:05:03 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	incant_reset_acolyte(srv, clt, lim_acolyte);
 	if (srv->lvl == 8 && srv->lvl != oldlvl)
 	{
-		send_graphe_action(srv, command_write_msg(clt, 13, clt->team, NULL),
-							0, NULL);
+		send_graphe_action(srv, command_write_msg(clt, 13, 0,
+					srv->team[clt->team]),0 , NULL);
 	}
 }

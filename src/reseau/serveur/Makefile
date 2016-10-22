@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/10/21 20:57:08 by tbalea           ###   ########.fr        #
+#    Updated: 2016/10/22 16:12:03 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -88,6 +88,7 @@ SRC = ft_atoi.c\
 	  command_player_inv.c\
 	  command_player_lvl.c\
 	  command_player_pos.c\
+	  command_team_name.c\
 	  command_graphical_bad_parameters.c\
 	  generate_map.c
 
