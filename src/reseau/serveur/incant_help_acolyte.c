@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/22 16:05:03 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/22 17:19:20 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ bool		incant_help_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	return (true);
 }
 
-void	incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
+void		incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
 	t_client	*player;
 	int			i;
@@ -99,7 +99,7 @@ void	incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	clt->casting = false;
 }
 
-void	incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
+void		incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
 	int			oldlvl;
 	int			lim_save;
@@ -122,6 +122,6 @@ void	incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	if (srv->lvl == 8 && srv->lvl != oldlvl)
 	{
 		send_graphe_action(srv, command_write_msg(clt, 13, 0,
-					srv->team[clt->team]),0 , NULL);
+					srv->team[clt->team]), 0, NULL);
 	}
 }
