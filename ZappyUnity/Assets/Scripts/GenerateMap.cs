@@ -194,10 +194,12 @@ public class GenerateMap : MonoBehaviour {
 
 	public void	UpdateResrc(DataGame.c_datamap newTile, int newNbr) {
 		GameObject tile = GameObject.Find ("Tile(" + newTile.z + ", " + newTile.x + ")");
-	
-		if (newNbr > newTile.nbr)
+
+		if (newNbr > newTile.nbr) {
+
+		}
 			Debug.Log ("CreateResrc");
-		else if (newNbr < newTile.nbr)
+//		else if (newNbr < newTile.nbr)
 			Debug.Log ("SupprResrc");
 
 		foreach (Transform child in tile.GetComponentsInChildren<Transform>()) {

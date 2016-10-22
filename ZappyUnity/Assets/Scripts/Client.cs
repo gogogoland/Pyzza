@@ -126,17 +126,18 @@ public class Client : MonoBehaviour {
 		_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		try {
 			_socket.Connect(inputIP, ip);
-
-			WhoIAm();
-			CheckData();
+			while (rtfContent == null) {
+				WhoIAm();
+				CheckData();
+			}
 			if (rtfContent != null)
 			{
 //				Debug.Log(rtfContent);
-			DataDistribution();
-			DontDestroyOnLoad(gameObject);
-			for (int player=0; player < _scriptData.players.Count; player++)
-				DontDestroyOnLoad(_scriptData.players [player]);
-			Application.LoadLevel("Game");
+				DataDistribution();
+				DontDestroyOnLoad(gameObject);
+				for (int player=0; player < _scriptData.players.Count; player++)
+					DontDestroyOnLoad(_scriptData.players [player]);
+				Application.LoadLevel("Game");
 
 //				DemandInfo();
 			}
