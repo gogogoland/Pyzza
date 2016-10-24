@@ -111,9 +111,9 @@ public class Client : MonoBehaviour {
 			case "edi" : _scriptData.EggDie(cutCmd);break;
 			case "sgt" : _scriptData.ServerGetTime(cutCmd);break;
 			case "seg" : _scriptData.ServerEndGame(cutCmd);break;
-			case "smg" : _scriptData.ServerMessage(cutCmd);break;
-			case "suc" : _scriptData.ServerUnknownCommand();break;
-			case "sbp" : _scriptData.ServerBadParameter();break;
+			case "smg" : _scriptData.ServerMessage(cutCmd, false);break;
+			case "suc" : _scriptData.ServerMessage(cutCmd, true);break;
+			case "sbp" : _scriptData.ServerMessage(cutCmd, true);break;
 			default : break;
 			}
 		}

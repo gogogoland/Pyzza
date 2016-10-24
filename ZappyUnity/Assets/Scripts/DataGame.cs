@@ -25,7 +25,7 @@ public class DataGame : MonoBehaviour {
 	};
 	public List<c_datamap>					structDataMap;
 	public int								unitTime = 0;
-	public List<string>						teamName;
+	public Dictionary<string, Color>		teamName;
 	public List<GameObject>					players;
 	public List<GameObject>					eggs;
 	private GameObject						clone_player;
@@ -41,7 +41,7 @@ public class DataGame : MonoBehaviour {
 
 	public void		Init(){
 		structDataMap = new List<c_datamap> ();
-		teamName = new List<string> ();
+		teamName = new Dictionary<string, Color> ();
 		players = new List<GameObject> ();
 		eggs = new List<GameObject> ();
 		typeResrc = new string[7];
@@ -85,16 +85,15 @@ public class DataGame : MonoBehaviour {
 	}
 
 	void			InvockPentacle(int x, int z) {
-		Transform parentTile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform;
-
-		GameObject.Instantiate(invok_obj, parentTile.position, Quaternion.identity);
+		GameObject.Instantiate(invok_obj, GameObject.Find ("Tile(" + z + ", " + x + ")").transform.position, Quaternion.identity);
 	}
 
-/*	void			DestroyPentacle(int x, int z){
-		if (GameObject.Find ("Tile(" + z + ", " + x + ")"))
-		Destroy (GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)"));
+	void			DestroyPentacle(int x, int z){
+		GameObject pentacle = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)").gameObject;
+		if (pentacle != null)
+			Destroy (pentacle);
 	}
-*/
+
 	public void		UpdateTile(int x, int y) {
 		update = true;
 		vectupdate.x = x;
@@ -108,7 +107,6 @@ public class DataGame : MonoBehaviour {
 		foreach (c_datamap tile in structDataMap) {
 			if (tile.x == int.Parse (cmd[1]) && tile.z == int.Parse (cmd[2])) {
 				for (int data = 0; data < 7; data++) {
-					Debug.Log ("BCT: " + int.Parse (cmd[3+data]) + "; tile.nbr: " + tile.nbr );
 					if (tile.type == data && tile.nbr != int.Parse (cmd[3+data])) {
 						GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().UpdateResrc(tile, int.Parse (cmd[3+data]));
 						return ;
@@ -129,7 +127,6 @@ public class DataGame : MonoBehaviour {
 			else
 				tmp.tileColor = int.Parse(cmd[10]);
 			if (tmp.nbr > 0 && update == true && vectupdate.x != -1 && vectupdate.y != -1) {
-				Debug.Log ("case Rose");
 				GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().UpdateTile(tmp);
 			}
 			structDataMap.Add(tmp);
@@ -139,7 +136,10 @@ public class DataGame : MonoBehaviour {
 	public void		TeamName(string []cmd) {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees du nom d'equipe erronees");
-		teamName.Add (cmd [1]);
+		Color color = new Color( UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0.78f );
+		if (teamName.ContainsValue (color))
+			TeamName (cmd);
+		teamName.Add (cmd [1], color);
 	}
 
 	public void		PlayerNew(string []cmd) {
@@ -153,7 +153,6 @@ public class DataGame : MonoBehaviour {
 		                 int.Parse (cmd[4]),
 		                 int.Parse (cmd[5]),
 		                 cmd[6]);
-		script.SetMoveSpeed (unitTime);
 		players.Add(clone_player);
 	}
 
@@ -189,7 +188,6 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-//				script.UpdateInventory();
 				for (int obj=0; obj < script.GetInventory().Length; obj++) {
 					script.SetResource(obj, int.Parse (cmd[obj + 4]));
 				}
@@ -197,7 +195,7 @@ public class DataGame : MonoBehaviour {
 			}
 		}
 	}
-	//TODO
+
 	public void		PlayerExpulse(string []cmd){
 		if (cmd.Length != 2)
 			throw new Exception("Donnees d'expulsion d'un joueur erronees");
@@ -259,7 +257,7 @@ public class DataGame : MonoBehaviour {
 	public void		PlayerIncantEnd(string []cmd){
 		if (cmd.Length != 4)
 			throw new Exception("Donnees de la fin de l'incantation erronees");
-//		DestroyPentacle(int.Parse (cmd [1]), int.Parse (cmd [2]));
+		DestroyPentacle(int.Parse (cmd [1]), int.Parse (cmd [2]));
 		if (int.Parse (cmd[3]) == 0)
 			Debug.Log ("L'incantation [" + cmd[1] + ", " + cmd[2] + "] est un echec");
 		else
@@ -288,18 +286,6 @@ public class DataGame : MonoBehaviour {
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.SetObjConcern(int.Parse (cmd[2]));
 				Debug.Log ("Joueur #" + script.GetID() + " prend " + int.Parse (cmd[2]));
-/*				script.GetOrDrop(int.Parse (cmd[2]), false);
-				float x = player.transform.position.x / 10;
-				float z = -player.transform.position.z / 10;
-				Transform tile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform;
-				for(int r = 0; r < typeResrc.Length;r++) {
-					if (r == int.Parse (cmd[2])) {
-						GameObject resrc = tile.FindChild(typeResrc[r]).gameObject;
-						Destroy(resrc);
-						break ;
-					}
-				}
-*/
 				break ;
 			}
 		}
@@ -313,22 +299,6 @@ public class DataGame : MonoBehaviour {
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.SetObjConcern(int.Parse (cmd[2]));
 				Debug.Log ("Joueur #" + script.GetID() + " pose " + int.Parse (cmd[2]));
-				/*
-				script.GetOrDrop(int.Parse (cmd[2]), true);
-				float x = player.transform.position.x / 10;
-				float z = -player.transform.position.z / 10;
-				Transform tile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform;
-				Debug.Log("position : " + x + " " + z);
-				GenerateMap scriptGM = GameObject.Find ("GenerateMap").GetComponent<GenerateMap>();
-				if (int.Parse (cmd[2]) == 0) {
-					DropResrc(scriptGM.food_obj, 0, 20, tile, scriptGM);
-				}
-				else if (int.Parse (cmd[2]) >= 1) {
-					DropResrc(scriptGM.ressources_obj, int.Parse (cmd[2]), 5, tile, scriptGM);
-				}
-				Debug.Log ("Joueur #" + script.GetID() + " pose " + typeResrc[int.Parse (cmd[2])] + " aux coordonnees (" + x + ", " + z + ")");
-				break ;
-				*/
 			}
 		}
 	}
@@ -425,11 +395,18 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la fin de partie erronees");
 		victory.SetActive (true);
-		victory.transform.GetChild (1).GetComponent<Text> ().text = cmd [1];
+		victory.GetComponent<Image> ().color = new Color (1.0f - teamName [cmd [1]].r, 1.0f - teamName [cmd [1]].g, 1.0f - teamName [cmd [1]].b);
+		Text text = victory.transform.GetChild (1).GetComponent<Text> ();
+		text.text = cmd [1];
+		text.color = teamName [cmd [1]];
 		Debug.Log ("Victoire de l'equipe : " + cmd[1]);
 	}
 
-	public void		ServerMessage(string []cmd) {
+	public void		ServerMessage(string []cmd, bool error) {
+		if (error) {
+			Debug.Log ("Pizza le Hutt s'enerve : Je ne comprends pas ton langage !");
+			return ;
+		}
 		string talk = "...";
 
 		if (cmd.Length != 1) {
@@ -439,17 +416,8 @@ public class DataGame : MonoBehaviour {
 				talk += cmd[word] + " ";
 			talk += cmd[word];
 		}
-		Debug.Log ("Pizza le Hutt parle : " + talk);
+		Debug.Log ("Pizza le Hutt dit : " + talk);
 	}
-
-	public void		ServerUnknownCommand() {
-		throw new Exception ("Commande inconnue");
-	}
-
-	public void		ServerBadParameter() {
-		throw new Exception ("Mauvais parametres pour la commande");
-	}
-	
 
 	// Use this for initialization
 	void StartSceneGame () {

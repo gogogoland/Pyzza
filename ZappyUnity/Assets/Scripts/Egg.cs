@@ -3,10 +3,10 @@ using System.Collections;
 
 public class Egg : MonoBehaviour {
 
-	private int							_id;
-	private int							_idPlayer;
-	private int							_posX;
-	private int							_posY;
+	[SerializeField]private int							_id;
+	[SerializeField]private int							_idPlayer;
+	[SerializeField]private int							_posX;
+	[SerializeField]private int							_posY;
 
 	private Animator					anim;
 
@@ -38,24 +38,22 @@ public class Egg : MonoBehaviour {
 		_posY = posY;
 	}
 
-	IEnumerator		DieTime(float time)
+	public void	DestroyMe()
 	{
-		yield return new WaitForSeconds (time);
 		Destroy(gameObject);
 	}
 
-	public void		Hatch()
+	public void	Hatch()
 	{
 		anim.SetInteger ("Etat", 1);
 	}
 
-	public void		Die(bool playerAlive)
+	public void	Die(bool playerAlive)
 	{
 		if (playerAlive)
 			anim.SetInteger("Etat", 3);
 		else
 			anim.SetInteger("Etat", 2);
-		StartCoroutine("DieTime", 5.0f);
 	}
 	
 	void Update(){

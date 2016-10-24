@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
-	private	int							_idObjTmp = -1;
+	public GameObject					lvlUp_obj;
+	public GameObject					drop_obj;
 
+	private Dictionary<int, Color>		colorParticleDrop;
+
+	private	int							_idObjTmp = -1;
 	[SerializeField]private int			_id;
 	[SerializeField]private int			_posX;
 	[SerializeField]private int			_posY;
@@ -13,27 +18,26 @@ public class Player : MonoBehaviour {
 	[SerializeField]private string		_teamName;
 	[SerializeField]private int			[]_inventory;
 
-	private float						_moveSpeed;
-
 	private Animator					anim;
-
-	//TODO if server change
 	private int							DEFAULT = 4;//= 0;
 	private int							NORTH = 0;//= 1;
 	private int							WEST = 1;//= 2;
 	private int							SOUTH = 2;//= 3;
 	private int							EST = 3;//= 4;
 
-	private int							AnimSW = 0;
-	private int							AnimNW = 1;
-	private int							AnimNE = 2;
-	private int							AnimSE = 3;
-	
 	// Use this for initialization
 	void Awake () {
 		anim = GetComponent<Animator> ();
 		_orientation = new int[2];
 		_inventory = new int[7];
+		colorParticleDrop = new Dictionary<int, Color> ();
+		colorParticleDrop.Add (0, new Color (0.93f, 0.87f, 0.84f));
+		colorParticleDrop.Add (1, new Color (1.0f, 1.0f, 0.52f));
+		colorParticleDrop.Add (2, new Color (0.83f, 0.88f, 0.76f));
+		colorParticleDrop.Add (3, new Color (0.43f, 0.73f, 1.0f));
+		colorParticleDrop.Add (4, new Color (0.65f, 0.65f, 0.65f));
+		colorParticleDrop.Add (5, new Color (0.28f, 0.74f, 0.13f));
+		colorParticleDrop.Add (6, Color.red);
 	}
 
 	public void		PlayerNew(int id, int posX, int posY, int orientation, int level, string teamName) {
@@ -80,35 +84,19 @@ public class Player : MonoBehaviour {
 		if (_inventory[positionInv] != value)
 			_inventory [positionInv] = value;
 	}
-	/*
-	public void		GetOrDrop(int idInv, bool drop) {
-		for (int obj = 0; obj < _inventory.Length; obj++) {
-			if (idInv == obj){
-				if (drop) {
-					_inventory [idInv] -= 1;
-					if (_inventory [idInv] < 0)
-						_inventory [idInv] = 0;
-				}
-				else
-					_inventory [idInv] += 1;
-				break ;
-			}
-		}
-	}
-	*/
+	
 	public void		SetObjConcern(int id){
-		id = _idObjTmp;
-//		anim.SetInteger ("Wait", 0);
-		AnimatePlay("Attack");
+		_idObjTmp = id;
+		Animate (2);
+		Debug.Log (id);
+		GameObject particleDrop = GameObject.Instantiate(drop_obj);
+		particleDrop.GetComponent<ParticleSystemRenderer> ().material.color = colorParticleDrop [id];
+		particleDrop.transform.SetParent(transform);
+		particleDrop.transform.localPosition = Vector3.zero;
+		particleDrop.transform.localScale = Vector3.one;
+
+		Destroy(particleDrop, particleDrop.GetComponent<ParticleSystem>().startLifetime);
 	}
-	/*
-	public void		UpdateInventory(){
-		if (_idObjTmp == -1)
-			return ;
-		for (int obj = 0; obj < _inventory.Length; obj++) {
-			if (_idObjTmp == obj)
-		}
-	}*/
 
 	public void		SetPosOrient(int posX, int posY, int orientation){
 		if (_orientation[0] != orientation) {
@@ -116,53 +104,46 @@ public class Player : MonoBehaviour {
 			_orientation[0] = orientation;
 		}
 		if (_posX == posX && _posY == posY) {
-			AnimatePlay("Wait");
+			Animate (0);
 		}
 		if (_posX != posX) {
 			_posX = posX;
-			AnimatePlay("Move");
+			Animate (1);
 			StartCoroutine("_MoveLeftRight", posX);
 		}
 		if (_posY != posY) {
 			_posY = posY;
-			AnimatePlay("Move");
+			Animate (1);
 			StartCoroutine("_MoveUpDown", posY);
 		}
 	}
 
-	void	AnimateStop(string action){
-	}
-
-	void	AnimatePlay(string action){
-		anim.SetInteger (action, CardinalDirection());
-	}
-
-	int		CardinalDirection(){
+	string	CardinalDirection(){
 		if (_orientation[0] == NORTH) {
 			if (_orientation[1] == EST)
-				return (AnimNE);
+				return ("NE");
 			else
-				return (AnimNW);
+				return ("NW");
 		}
 		else if (_orientation[0] == EST) {
 			if (_orientation[1] == NORTH)
-				return (AnimNE);
+				return ("NE");
 			else
-				return (AnimSE);
+				return ("SE");
 		}
 		else if (_orientation[0] == SOUTH) {
 			if (_orientation[1] == EST)
-				return (AnimSE);
+				return ("SE");
 			else
-				return (AnimSW);
+				return ("SW");
 		}
 		else if (_orientation[0] == WEST) {
 			if (_orientation[1] == NORTH)
-				return (AnimNW);
+				return ("NW");
 			else
-				return (AnimSW);
+				return ("SW");
 		}
-		return (AnimSW);
+		return ("SW");
 	}
 	
 	private IEnumerator	_MoveLeftRight(int posX){
@@ -174,6 +155,7 @@ public class Player : MonoBehaviour {
 			_posX = posX;
 			yield return null;
 		}
+		Animate (0);
 	}
 
 	private IEnumerator	_MoveUpDown(int posY){
@@ -185,6 +167,7 @@ public class Player : MonoBehaviour {
 			_posY = posY;
 			yield return null;
 		}
+		Animate (0);
 	}
 	
 	public void		SetLevel(int level) {
@@ -192,31 +175,29 @@ public class Player : MonoBehaviour {
 			_level = level;
 			transform.localScale += Vector3.one;
 			transform.position = new Vector3(transform.position.x, transform.position.y + 0.275f, transform.position.z);
+			GameObject particleLvl = GameObject.Instantiate(lvlUp_obj);
+			particleLvl.transform.SetParent(transform);
+			particleLvl.transform.localPosition = Vector3.zero;
+			particleLvl.transform.localScale = Vector3.one;
+			particleLvl.GetComponent<ParticleSystem>().startLifetime = transform.localScale.x / 10;
+			Destroy(particleLvl, particleLvl.GetComponent<ParticleSystem>().startLifetime);
 		}
 	}
-	
-	public void		SetMoveSpeed(int unitTime) {
-		_moveSpeed = unitTime * 7.0f;
-	}
 
-	public void		Idle(){
-//		anim.SetInteger ("Move", 0);
-//		anim.SetInteger ("Attack", 0);
-		AnimatePlay ("Wait");
+
+	public void		Animate(int etat){
+		anim.SetInteger("Etat", etat);
+		anim.SetTrigger(CardinalDirection());
 	}
 
 	void			Start(){
-		AnimatePlay ("Wait");
+		Animate (0);
+		Debug.Log (_teamName);
+		transform.GetChild (0).GetComponent<SpriteRenderer> ().color = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().teamName [_teamName];
 	}
-
-	public void			Death(){
-		AnimatePlay ("Die");
-		StartCoroutine("DieTime", 5.0f);
-	}
-
-	IEnumerator		DieTime(float time)
+	
+	public void		DestroyMe()
 	{
-		yield return new WaitForSeconds (time);
 		Destroy(gameObject);
 	}
 }
