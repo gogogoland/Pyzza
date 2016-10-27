@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 23:55:59 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/27 15:46:42 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static const char	*g_mcl[] =
 void		client_init_data(t_client *clt, t_server *srv)
 {
 	srand(time(NULL));
+	clt->mom = 0;
 	clt->action = 0;
 	clt->pos.x = srv ? rand() % srv->plateau.x : 0;
 	clt->pos.y = srv ? rand() % srv->plateau.y : 0;
@@ -55,8 +56,8 @@ t_client	*client_init(t_server *srv)
 		clt->pos.rsc[clt->socket - 1] = 0;
 	clt->len = sizeof(struct sockaddr_in);
 	clt->next = NULL;
+	clt->name = srv ? ++srv->name : 0;
 	client_init_data(clt, srv);
-	clt->name = ++srv->name;
 	return (clt);
 }
 

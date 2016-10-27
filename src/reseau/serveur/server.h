@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/22 16:12:46 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/27 15:45:12 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct				s_client
 	int						team;
 	int						name;
 	bool					fork;
+	int						mom;
 	int						lvl;
 	int						tolvl;
 	int						action;
@@ -244,6 +245,6 @@ void		command_void(t_fds *fds, t_server *srv, t_client *clt, char *cmd);
 
 char		*command_write_msg(t_client *clt, int action, int n, char *pbc);
 char		*command_write_msg_incant_end(t_client *clt);
-char		*command_write_msg_end_fork(t_client *clt, t_client *frk);
+char		*command_write_msg_end_fork(t_client *frk);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/20 17:18:51 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/22 16:16:00 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/27 15:44:44 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,13 @@ char	*command_write_msg_incant_end(t_client *clt)
 	return (msg);
 }
 
-char	*command_write_msg_end_fork(t_client *clt, t_client *frk)
+char	*command_write_msg_end_fork(t_client *frk)
 {
 	char *msg;
 
-	asprintf(&msg, g_msg_cmd[16], clt->name, frk->name, clt->pos.x, clt->pos.y);
+	msg = NULL;
+	if (!frk)
+		return (NULL);
+	asprintf(&msg, g_msg_cmd[16], frk->name, frk->mom, frk->pos.x, frk->pos.y);
 	return (msg);
 }

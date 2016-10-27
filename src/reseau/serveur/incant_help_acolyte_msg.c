@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/21 23:10:47 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/10/27 15:20:17 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static const char	*g_msg_acolyte[] =
 	"ko\n",
 	"elevation en cours, niveau actuel : %i\n",
 	"ok\n",
-	"pic %i %i #%i",
+	"pic %i %i %i #%i",
 	"%s #%i",
 };
 
@@ -41,25 +41,24 @@ static void	incant_msg_acolyte_graphic_begin(t_server *srv, t_client *clt,
 
 	msg = NULL;
 	tmp = NULL;
-	if (asprintf(&msg, g_msg_acolyte[3], clt->pos.x, clt->pos.y, clt->name) < 0)
-		return ;
-	while (lim_acolyte--)
+	asprintf(&msg, g_msg_acolyte[3],
+				clt->pos.x, clt->pos.y, clt->lvl, clt->name);
+	while (msg && lim_acolyte--)
 	{
 		acolyte = srv->clt;
 		while (acolyte && !(acolyte->name == clt->acolyte[lim_acolyte]
 							&& acolyte->socket > 0))
 			acolyte = acolyte->next;
 		if (acolyte && asprintf(&tmp, g_msg_acolyte[4], msg, acolyte->name) < 0)
-		{
 			ft_memdel((void **)&msg);
-			return ;
-		}
 		else if (acolyte && msg && tmp)
 			msg = incant_msg_acolyte_graphic_add(msg, tmp);
 	}
-	asprintf(&tmp, "%s\n", msg);
+	if (!msg)
+		return ;
+	if (asprintf(&tmp, "%s\n", msg))
+		send_graphe_action(srv, tmp, 1, clt);
 	ft_memdel((void **)&msg);
-	send_graphe_action(srv, tmp, 1, clt);
 }
 
 static void	incant_msg_acolyte_graphic_end(t_server *srv, t_client *clt,
