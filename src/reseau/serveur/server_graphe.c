@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 15:04:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 23:59:08 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/11/07 17:29:18 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_gfx		*graphe_news(t_server *srv, t_gfx *prev, t_fds *fds, int s)
 	tmp.len = sizeof(struct sockaddr_in);
 	if (!(gfx = (t_gfx *)malloc(sizeof(t_gfx))))
 	{
-		if ((s = accept(s, (struct sockaddr *)&tmp.sin, &tmp.len)) < 0)
+		if ((s = accept(s, (struct sockaddr *)&tmp.sin, &tmp.len)) >= 0)
 			close(s);
 		graphe_log(srv, 1, gfx);
 		return (gfx);
