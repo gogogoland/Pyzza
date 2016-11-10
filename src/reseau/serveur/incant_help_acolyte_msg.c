@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/27 15:20:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/11/10 02:56:55 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	incant_msg_acolyte_graphic_end(t_server *srv, t_client *clt,
 
 	send_graphe_action(srv, command_write_msg_incant_end(clt), 0, NULL);
 	send_graphe_action(srv, command_write_msg(clt, 12, clt->lvl, NULL), 0, 0);
-	while (lim_acolyte--)
+	while (clt->acolyte && lim_acolyte--)
 	{
 		acolyte = srv->clt;
 		while (acolyte && !(acolyte->name == clt->acolyte[lim_acolyte]
@@ -94,7 +94,7 @@ void		incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte,
 		send(clt->socket, msg, ft_strlen(msg), 0);
 	state ? incant_msg_acolyte_graphic_end(srv, clt, lim_acolyte)
 			: incant_msg_acolyte_graphic_begin(srv, clt, lim_acolyte);
-	while (error > 0 && lim_acolyte--)
+	while (error > 0 && clt->acolyte && lim_acolyte--)
 	{
 		acolyte = srv->clt;
 		while (acolyte && !(acolyte->name == clt->acolyte[lim_acolyte]

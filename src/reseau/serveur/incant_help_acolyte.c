@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/22 17:19:20 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/11/10 02:53:33 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,12 @@ void		incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	int			i;
 
 	i = -1;
-	while (++i < lim_acolyte)
+	while (clt->acolyte && ++i < lim_acolyte)
 	{
 		player = srv->clt;
 		while (player && player->name != clt->acolyte[i])
 			player = player->next;
-		if (player->lvl == clt->lvl && player->pos.y == clt->pos.y
+		if (player && player->lvl == clt->lvl && player->pos.y == clt->pos.y
 				&& player->pos.x == clt->pos.x)
 			player->casting = false;
 		clt->acolyte[i] = 0;
