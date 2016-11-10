@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/11/10 02:53:33 by tbalea           ###   ########.fr       */
+/*   Updated: 2016/11/10 04:05:49 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ static bool	incant_init_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 					&& player->name > 0 && player->name != clt->name)
 			{
 				player->casting = true;
-				lim_acolyte--;
 				clt->acolyte[fix_lim_acolyte - lim_acolyte] = player->name;
+				lim_acolyte--;
 			}
 			player = player->next;
 		}
