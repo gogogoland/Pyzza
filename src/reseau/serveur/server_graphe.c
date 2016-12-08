@@ -83,6 +83,7 @@ t_gfx		*graphe_init(t_server *srv)
 	}
 	gfx->socket = 0;
 	gfx->ring = ring_init(srv, 1);
+	gfx->isgfx = false;
 	gfx->prev = NULL;
 	gfx->next = NULL;
 	return (gfx);

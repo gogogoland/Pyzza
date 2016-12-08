@@ -185,7 +185,7 @@ void		send_graphe_action(t_server *srv, char *msg,
 	gfx = srv->gfx;
 	while (msg && gfx)
 	{
-		if (gfx->isgfx)
+		if (gfx->isgfx && gfx->socket > 0)
 		{
 			send(gfx->socket, msg, strlen(msg), 0);
 			if (spec == 1 && clt)

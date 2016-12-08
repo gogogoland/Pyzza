@@ -66,7 +66,7 @@ char		*ft_strdelvoid(char *str)
 	i = -1;
 	j = 0;
 	t = ft_strdelvoid_new_size(str);
-	if ((new = (char *)malloc(t * sizeof(char *))) == NULL)
+	if ((new = (char *)malloc((1 + t) * sizeof(char *))) == NULL)
 		return (NULL);
 	while (str && str[j] != '\0'
 			&& (str[j] == ' ' || str[j] == '\t' || str[j] == '\n'))
