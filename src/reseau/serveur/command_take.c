@@ -14,13 +14,13 @@
 
 static const char	*g_cmd_take[] =
 {
-	"nourriture",
-	"linemate",
-	"deraumere",
-	"sibur",
-	"mendiane",
-	"phiras",
-	"thystame"
+	"nourriture\0",
+	"linemate\0",
+	"deraumere\0",
+	"sibur\0",
+	"mendiane\0",
+	"phiras\0",
+	"thystame\0"
 };
 
 void	command_take(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
@@ -32,7 +32,8 @@ void	command_take(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	ook = false;
 	r = 0;
 	while (r < 7 && strncmp(g_cmd_take[r], clt->current_cmd,
-							ft_strlen(g_cmd_take[r])))
+							ft_strlen(clt->current_cmd)))
+//							ft_strlen(g_cmd_take[r])))
 		r++;
 	if (r < 7 && srv->map[clt->pos.y][clt->pos.x][r] > 0)
 		ook = true;

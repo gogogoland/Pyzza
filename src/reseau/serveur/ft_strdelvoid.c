@@ -71,7 +71,7 @@ char		*ft_strdelvoid(char *str)
 	while (str && str[j] != '\0'
 			&& (str[j] == ' ' || str[j] == '\t' || str[j] == '\n'))
 		j++;
-	while (++i < (t - 1))
+	while (++i < t)
 	{
 		new[i] = str[j];
 		j += ft_strdelvoid_jump_space(str, j);

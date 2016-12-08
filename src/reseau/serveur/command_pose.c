@@ -31,7 +31,8 @@ void	command_pose(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	ook = false;
 	r = 0;
 	while (r < 7 && strncmp(g_cmd_pose[r], clt->current_cmd,
-							ft_strlen(g_cmd_pose[r])))
+							ft_strlen(clt->current_cmd)))
+//							ft_strlen(g_cmd_pose[r])))
 		r++;
 	if (r < 7 && clt->pos.rsc[r] > 0)
 		ook = true;
