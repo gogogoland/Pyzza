@@ -14,13 +14,13 @@
 
 static const char	*g_cmd_pose[] =
 {
-	"nourriture",
-	"linemate",
-	"deraumere",
-	"sibur",
-	"mendiane",
-	"phiras",
-	"thystame"
+	"nourriture\n",
+	"linemate\n",
+	"deraumere\n",
+	"sibur\n",
+	"mendiane\n",
+	"phiras\n",
+	"thystame\n"
 };
 
 void	command_pose(t_fds *fds, t_server *srv, t_client *clt, char *cmd)

@@ -14,13 +14,13 @@
 
 static const char	*g_cmd_take[] =
 {
-	"nourriture\0",
-	"linemate\0",
-	"deraumere\0",
-	"sibur\0",
-	"mendiane\0",
-	"phiras\0",
-	"thystame\0"
+	"nourriture\n",
+	"linemate\n",
+	"deraumere\n",
+	"sibur\n",
+	"mendiane\n",
+	"phiras\n",
+	"thystame\n"
 };
 
 void	command_take(t_fds *fds, t_server *srv, t_client *clt, char *cmd)

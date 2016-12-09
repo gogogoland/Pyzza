@@ -100,7 +100,6 @@ static const float	g_cmd_time[] =
 static char	*time_lapse(t_fds *fds, t_server *srv, float tim)
 {
 	t_client	*clt;
-	float		old_time;
 
 	clt = srv->clt;
 	while (clt)
