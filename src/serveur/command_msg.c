@@ -80,7 +80,7 @@ void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		}
 		cur = cur->next;
 	}
-	send_client_action(clt, !!clt->current_cmd);
+	send_client_action(srv, clt, !!clt->current_cmd);
 	send_graphe_action(srv, command_write_msg(clt, 14, 0, clt->current_cmd),
 						0, NULL);
 	if (clt && clt->current_cmd)

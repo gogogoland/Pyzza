@@ -37,7 +37,7 @@ void	command_take(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		r++;
 	if (r < 7 && srv->map[clt->pos.y][clt->pos.x][r] > 0)
 		ook = true;
-	send_client_action(clt, ook);
+	send_client_action(srv, clt, ook);
 	if (!ook)
 		return ;
 	clt->pos.rsc[r]++;

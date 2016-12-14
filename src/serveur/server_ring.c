@@ -22,7 +22,7 @@ static const char	*g_srv_ring_msg[] =
 	"command from socket %i : %s"
 };
 
-void		ring_recv(t_server *srv, char *cmd, t_ring *ring, int socket)
+void		ring_recv(t_server *srv, char *cmd, t_ring *ring, int sock)
 {
 	char	*log;
 	int		limit;
@@ -43,7 +43,7 @@ void		ring_recv(t_server *srv, char *cmd, t_ring *ring, int socket)
 		server_log(srv, g_srv_ring_msg[0]);
 		return ;
 	}
-	asprintf(&log, g_srv_ring_msg[5], socket, cmd) ? server_log(srv, cmd) : 0;
+	asprintf(&log, g_srv_ring_msg[5], sock, cmd) > 0 ? server_log(srv, log) : 0;
 	log ? ft_memdel((void **)&log) : 0;
 	j = -1;
 	while (++j < len)

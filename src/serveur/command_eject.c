@@ -73,5 +73,5 @@ void			command_eject(t_fds *fds, t_server *srv, t_client *clt, \
 	}
 	if (msg)
 		ft_memdel((void **)&msg);
-	send_client_action(clt, ok);
+	send_client_action(srv, clt, ok);
 }

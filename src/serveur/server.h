@@ -170,7 +170,7 @@ void		server_log(t_server *srv, const char *msg);
 bool		recv_client(t_fds *fds, t_server *srv, int ret);
 void		send_client(t_fds *fds, t_server *srv, float tom);
 bool		save_cur_cmd(t_client *clt, char *msg, int action);
-void		send_client_action(t_client *clt, bool ok);
+void		send_client_action(t_server *srv, t_client *clt, bool ok);
 void		send_graphe_action(t_server *srv, char *msg, int spec,
 								t_client *clt);
 

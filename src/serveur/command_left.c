@@ -15,6 +15,6 @@
 void	command_left(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	clt->sens = (clt->sens + 1) % 4;
-	send_client_action(clt, true);
+	send_client_action(srv, clt, true);
 	send_graphe_action(srv, command_write_msg(clt, 7, 0, NULL), 0, NULL);
 }

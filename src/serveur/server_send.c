@@ -168,10 +168,19 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 	}
 }
 
-void		send_client_action(t_client *clt, bool ok)
+void		send_client_action(t_server *srv, t_client *clt, bool ok)
 {
+	char	*msg;
+
+	msg = NULL;
 	if (clt && clt->socket)
+	{
 		send(clt->socket, ok ? "ok\n" : "ko\n", 3, 0);
+		asprintf(&msg, "Result of command from %i is %s", clt->socket,
+				ok ? "ok\n" : "ko\n");
+		server_log(srv, msg);
+		ft_memdel((void **)&msg);
+	}
 }
 
 void		send_graphe_action(t_server *srv, char *msg,

@@ -28,5 +28,5 @@ void	command_eat(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 		send_graphe_action(srv, command_write_msg(clt, 6, 0, NULL), 0, NULL);
 		send_graphe_action(srv, command_write_msg(clt, 9, 0, NULL), 1, clt);
 	}
-	send_client_action(clt, ook);
+	send_client_action(srv, clt, ook);
 }

@@ -18,7 +18,7 @@ void	command_fork(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	t_client	*new;
 
 	if (!(new = client_init(srv)))
-		return (send_client_action(clt, false));
+		return (send_client_action(srv, clt, false));
 	cur = srv->clt;
 	while (cur && cur->next)
 		cur = cur->next;
@@ -38,5 +38,5 @@ void	command_fork(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	new->fork = true;
 	new->mom = clt->name;
 	send_graphe_action(srv, command_write_msg_end_fork(new), 0, NULL);
-	send_client_action(clt, true);
+	send_client_action(srv, clt, true);
 }
