@@ -11,6 +11,8 @@ public class DataGame : MonoBehaviour {
 	public GameObject						player_obj;
 	public GameObject						bubble_obj;
 	public GameObject						invok_obj;
+	public int								invok_id;
+	public int								invok_id2;
 	public Sprite							expulse_tex;
 	public Sprite							pensee_tex;
 	public int								height;
@@ -52,6 +54,8 @@ public class DataGame : MonoBehaviour {
 		typeResrc[4] = "Mendiane";
 		typeResrc[5] = "Phiras";
 		typeResrc[6] = "Thystame";
+		invok_id = 0;
+		invok_id2 = 0;
 	}
 
 	public void		MapSize(string []cmd) {
@@ -85,11 +89,14 @@ public class DataGame : MonoBehaviour {
 	}
 
 	void			InvockPentacle(int x, int z) {
-		GameObject.Instantiate(invok_obj, GameObject.Find ("Tile(" + z + ", " + x + ")").transform.position, Quaternion.identity);
+		invok_id++;
+		GameObject clone = GameObject.Instantiate(invok_obj, GameObject.Find ("Tile(" + z + ", " + x + ")").transform.position, Quaternion.identity) as GameObject;
+		clone.name += "" + invok_id;
 	}
 
 	void			DestroyPentacle(int x, int z){
-		GameObject pentacle = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)").gameObject;
+		invok_id2++;
+		GameObject pentacle = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)" + invok_id2).gameObject;
 		if (pentacle != null)
 			Destroy (pentacle);
 	}
@@ -103,7 +110,6 @@ public class DataGame : MonoBehaviour {
 	public void		TileContent(string []cmd) {
 		if (cmd.Length < 10 && cmd.Length > 11)
 			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
-
 		foreach (c_datamap tile in structDataMap) {
 			if (tile.x == int.Parse (cmd[1]) && tile.z == int.Parse (cmd[2])) {
 				for (int data = 0; data < 7; data++) {
@@ -126,7 +132,7 @@ public class DataGame : MonoBehaviour {
 				tmp.tileColor = 0;
 			else
 				tmp.tileColor = int.Parse(cmd[10]);
-			if (tmp.nbr > 0 && update == true && vectupdate.x != -1 && vectupdate.y != -1) {
+			if (update == true && vectupdate.x != -1 && vectupdate.y != -1) {
 				GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().UpdateTile(tmp);
 			}
 			structDataMap.Add(tmp);
@@ -234,12 +240,10 @@ public class DataGame : MonoBehaviour {
 		}
 	}
 
-	//TODO
 	public void		PlayerIncantBegin(string []cmd){
 		if (cmd.Length < 5)
 			throw new Exception("Donnees du debut de l'incantation erronees");
 		InvockPentacle (int.Parse (cmd [1]), int.Parse (cmd [2]));
-
 		for (int id = 4; id < cmd.Length; id++) {
 			foreach (GameObject player in players) {
 				Player script = player.GetComponent<Player>();
@@ -253,7 +257,6 @@ public class DataGame : MonoBehaviour {
 		}
 	}
 
-	//TODO
 	public void		PlayerIncantEnd(string []cmd){
 		if (cmd.Length != 4)
 			throw new Exception("Donnees de la fin de l'incantation erronees");
@@ -317,7 +320,6 @@ public class DataGame : MonoBehaviour {
 		scriptGM.resrcs.Add(resrc);
 	}
 
-	//TODO
 	public void		PlayerDie(string []cmd) {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la mort d'un joueur erronees");
@@ -325,8 +327,8 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("Joueur #" + script.GetID () + " meurt");
+				script.Die ();
 				players.Remove(player);
-				Destroy(player);
 				break ;
 			}
 		}
@@ -335,6 +337,7 @@ public class DataGame : MonoBehaviour {
 	public void		EggNew(string []cmd){
 		if (cmd.Length != 5)
 			throw new Exception("Donnees d'un oeuf erronees");
+		Debug.LogWarning("pupu");
 		clone_egg = GameObject.Instantiate(egg_obj, CoordCase(int.Parse (cmd[3]), int.Parse (cmd[4]), true), Quaternion.identity) as GameObject;
 		Egg script = clone_egg.GetComponent<Egg> ();
 		script.EggNew(int.Parse (cmd [1].Substring (1, cmd [1].Length - 1)),
@@ -352,7 +355,6 @@ public class DataGame : MonoBehaviour {
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("L'oeuf #" + script.GetID() + " eclos");
 				script.Hatch();
-				eggs.Remove(egg);
 				break ;
 			}
 		}
@@ -366,6 +368,7 @@ public class DataGame : MonoBehaviour {
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("Un joueur est nee a partir de l'oeuf #" + script.GetID());
 				script.Die(true);
+				eggs.Remove(egg);
 				break ;
 			}
 		}

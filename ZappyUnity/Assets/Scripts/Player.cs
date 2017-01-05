@@ -9,7 +9,6 @@ public class Player : MonoBehaviour {
 
 	private Dictionary<int, Color>		colorParticleDrop;
 
-	private	int							_idObjTmp = -1;
 	[SerializeField]private int			_id;
 	[SerializeField]private int			_posX;
 	[SerializeField]private int			_posY;
@@ -86,7 +85,6 @@ public class Player : MonoBehaviour {
 	}
 	
 	public void		SetObjConcern(int id){
-		_idObjTmp = id;
 		Animate (2);
 		Debug.Log (id);
 		GameObject particleDrop = GameObject.Instantiate(drop_obj);
@@ -194,6 +192,10 @@ public class Player : MonoBehaviour {
 		Animate (0);
 		Debug.Log (_teamName);
 		transform.GetChild (0).GetComponent<SpriteRenderer> ().color = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().teamName [_teamName];
+	}
+
+	public void		Die() {
+		Animate (3);
 	}
 	
 	public void		DestroyMe()

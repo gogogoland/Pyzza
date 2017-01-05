@@ -12,7 +12,8 @@ public class BubbleTalk : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
-		transform.position = new Vector3(Camera.main.WorldToScreenPoint (posPlayer.position).x, Camera.main.WorldToScreenPoint (posPlayer.position).y + 80.0f, 0);
+		if (posPlayer)
+			transform.position = new Vector3(Camera.main.WorldToScreenPoint (posPlayer.position).x, Camera.main.WorldToScreenPoint (posPlayer.position).y + 80.0f, 0);
 	}
 
 	IEnumerator		BubbleDeath(){

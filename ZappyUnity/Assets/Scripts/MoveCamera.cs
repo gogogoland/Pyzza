@@ -8,6 +8,7 @@ public class MoveCamera : MonoBehaviour {
 	public GameObject	cameraBorder;
 	public GameObject	[]cloneBorderCamera;
 	public GameObject	select;
+	public GameObject	camLocation;
 
 	private GenerateMap	scriptmap;
 	private float		tile_x;
@@ -16,10 +17,26 @@ public class MoveCamera : MonoBehaviour {
 	private int			height;
 	private Vector3		[]PosCameras;
 	private GameObject	orientationCam;
+	private Camera		camMinimap;
 
 	void	CenterCamera() {
 		float x = (width * scriptmap.tile.transform.localScale.x * 10 / 2 ) - (scriptmap.tile.transform.localScale.x * 10 / 2);
 		transform.position = new Vector3(x, transform.position.y, transform.position.z);
+	}
+
+	void	MiniMap() {
+		GameObject minimap = GameObject.Find ("CamMiniMap");
+		float x = width / 2.0f * 10.0f;
+		float z = -height / 2.0f * 10.0f;
+		float size;
+		if (height > width)
+			size = height / 2 * 10;
+		else
+			size = width / 2 * 10;
+		minimap.transform.position = new Vector3 (x, 100.0f, z);
+		camMinimap = minimap.GetComponent<Camera>();
+		camMinimap.orthographicSize = size;
+		camMinimap.enabled = false;
 	}
 
 	// Use this for initialization
@@ -32,10 +49,13 @@ public class MoveCamera : MonoBehaviour {
 		width = scriptmap.width;
 		GenerateCameras();
 		CenterCamera();
+		MiniMap ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKeyDown(KeyCode.Tab))
+			camMinimap.enabled = !camMinimap.enabled;
 		if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
 			transform.Translate(-orientationCam.transform.right * Time.deltaTime * speed, Space.World);
 		if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
@@ -113,5 +133,9 @@ public class MoveCamera : MonoBehaviour {
 		}
 		orientationCam = new GameObject("Orientation");
 		orientationCam.transform.SetParent(this.transform);
+
+		GameObject cloneLocation = GameObject.Instantiate (camLocation, Vector3.zero, Quaternion.identity) as GameObject;
+		cloneLocation.transform.SetParent (cloneBorderCamera [0].transform);
+		cloneLocation.transform.position = Vector3.zero;
 	}
 }
