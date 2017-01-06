@@ -86,7 +86,6 @@ public class Player : MonoBehaviour {
 	
 	public void		SetObjConcern(int id){
 		Animate (2);
-		Debug.Log (id);
 		GameObject particleDrop = GameObject.Instantiate(drop_obj);
 		particleDrop.GetComponent<ParticleSystemRenderer> ().material.color = colorParticleDrop [id];
 		particleDrop.transform.SetParent(transform);
@@ -190,7 +189,6 @@ public class Player : MonoBehaviour {
 
 	void			Start(){
 		Animate (0);
-		Debug.Log (_teamName);
 		transform.GetChild (0).GetComponent<SpriteRenderer> ().color = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().teamName [_teamName];
 	}
 

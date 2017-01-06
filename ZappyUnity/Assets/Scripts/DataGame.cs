@@ -7,10 +7,6 @@ using System.Collections.Generic;
 public class DataGame : MonoBehaviour {
 
 	public Animator							anim;
-	public GameObject						egg_obj;
-	public GameObject						player_obj;
-	public GameObject						bubble_obj;
-	public GameObject						invok_obj;
 	public int								invok_id;
 	public int								invok_id2;
 	public Sprite							expulse_tex;
@@ -30,8 +26,13 @@ public class DataGame : MonoBehaviour {
 	public Dictionary<string, Color>		teamName;
 	public List<GameObject>					players;
 	public List<GameObject>					eggs;
+
+	private GameObject						egg_obj;
+	private GameObject						player_obj;
+	private GameObject						bubble_obj;
 	private GameObject						clone_player;
 	private GameObject						clone_egg;
+	private GameObject						invok_obj;
 
 	private string							[]typeResrc;
 
@@ -40,6 +41,14 @@ public class DataGame : MonoBehaviour {
 
 	private GameObject						victory;
 	private bool							startSceneGame = true;
+
+	void	Awake()
+	{
+		player_obj = Resources.Load ("Prefabs/Player") as GameObject;
+		egg_obj = Resources.Load ("Prefabs/Egg") as GameObject;
+		bubble_obj = Resources.Load ("Prefabs/BubbleTalk") as GameObject;
+		invok_obj = Resources.Load ("Prefabs/Invocation") as GameObject;
+	}
 
 	public void		Init(){
 		structDataMap = new List<c_datamap> ();
@@ -337,9 +346,11 @@ public class DataGame : MonoBehaviour {
 	public void		EggNew(string []cmd){
 		if (cmd.Length != 5)
 			throw new Exception("Donnees d'un oeuf erronees");
-		Debug.LogWarning("pupu");
 		clone_egg = GameObject.Instantiate(egg_obj, CoordCase(int.Parse (cmd[3]), int.Parse (cmd[4]), true), Quaternion.identity) as GameObject;
+
 		Egg script = clone_egg.GetComponent<Egg> ();
+		if (script == null)
+			Debug.LogError ("!!!");
 		script.EggNew(int.Parse (cmd [1].Substring (1, cmd [1].Length - 1)),
 			           int.Parse (cmd [2].Substring (1, cmd [2].Length - 1)),
 			           int.Parse (cmd [3]),
@@ -352,6 +363,8 @@ public class DataGame : MonoBehaviour {
 			throw new Exception("Donnees de l'eclosion d'un oeuf erronees");
 		foreach (GameObject egg in eggs) {
 			Egg script = egg.GetComponent<Egg> ();
+			if (!script)
+
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				Debug.Log ("L'oeuf #" + script.GetID() + " eclos");
 				script.Hatch();

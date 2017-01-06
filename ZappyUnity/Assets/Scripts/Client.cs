@@ -91,7 +91,7 @@ public class Client : MonoBehaviour {
 			switch (cutCmd[0]) {
 			case "Bienvenue" : _scriptData.Init();break;
 			case "msz" : _scriptData.MapSize(cutCmd);break;
-			case "bct" : _scriptData.TileContent(cutCmd);/*Debug.Log (cutBlockData[line]);*/break;
+			case "bct" : _scriptData.TileContent(cutCmd);break;
 			case "tna" : _scriptData.TeamName(cutCmd);break;
 			case "pnw" : _scriptData.PlayerNew(cutCmd);break;
 			case "ppo" : _scriptData.PlayerPositionOrientation(cutCmd);break;
@@ -137,6 +137,8 @@ public class Client : MonoBehaviour {
 				DontDestroyOnLoad(gameObject);
 				for (int player=0; player < _scriptData.players.Count; player++)
 					DontDestroyOnLoad(_scriptData.players [player]);
+				for (int egg = 0; egg < _scriptData.eggs.Count; egg++)
+					DontDestroyOnLoad(_scriptData.eggs [egg]);
 				Application.LoadLevel("Game");
 
 //				DemandInfo();
@@ -172,16 +174,6 @@ public class Client : MonoBehaviour {
 			if (_socket.Connected) {
 				if (checktile)
 					SendBCT();
-				
-				/*Send (MCT);
-				for (int player=0; player < _scriptData.players.Count; player++) {
-					Player script = _scriptData.players [player].GetComponent<Player>();
-					Send (PPO + script.GetID() + "\n");
-					Send (PLV + script.GetID() + "\n");
-					Send (PIN + script.GetID() + "\n");
-				}
-				Send (SGT);
-				*/
 				if (newTime) {
 					Send (SST + newTimeValue + "\n");
 					newTime = false;

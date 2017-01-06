@@ -26,13 +26,13 @@ public class MoveCamera : MonoBehaviour {
 
 	void	MiniMap() {
 		GameObject minimap = GameObject.Find ("CamMiniMap");
-		float x = width / 2.0f * 10.0f;
-		float z = -height / 2.0f * 10.0f;
+		float x = width / 2.0f * 10.0f - 5.0f;
+		float z = -height / 2.0f * 10.0f + 5.0f;
 		float size;
-		if (height > width)
-			size = height / 2 * 10;
+		if (height >= width)
+			size = height / 2 * 10 + 5.0f;
 		else
-			size = width / 2 * 10;
+			size = width * 4 - 10;
 		minimap.transform.position = new Vector3 (x, 100.0f, z);
 		camMinimap = minimap.GetComponent<Camera>();
 		camMinimap.orthographicSize = size;

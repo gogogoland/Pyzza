@@ -198,17 +198,17 @@ public class GenerateMap : MonoBehaviour {
 		if (newNbr > newTile.nbr) {
 
 		}
-			Debug.Log ("CreateResrc");
+//			Debug.Log ("CreateResrc");
 //		else if (newNbr < newTile.nbr)
-			Debug.Log ("SupprResrc");
+//			Debug.Log ("SupprResrc");
 
 		foreach (Transform child in tile.GetComponentsInChildren<Transform>()) {
 			if (child.name == resrcName[newTile.type]) {
 
 			}
 		}
-		Debug.Log (newNbr);
-		Debug.Log (newTile.nbr);
+//		Debug.Log (newNbr);
+//		Debug.Log (newTile.nbr);
 
 	}
 
