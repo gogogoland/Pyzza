@@ -7,8 +7,6 @@ using System.Collections.Generic;
 public class DataGame : MonoBehaviour {
 
 	public Animator							anim;
-	public int								invok_id;
-	public int								invok_id2;
 	public Sprite							expulse_tex;
 	public Sprite							pensee_tex;
 	public int								height;
@@ -63,8 +61,6 @@ public class DataGame : MonoBehaviour {
 		typeResrc[4] = "Mendiane";
 		typeResrc[5] = "Phiras";
 		typeResrc[6] = "Thystame";
-		invok_id = 0;
-		invok_id2 = 0;
 	}
 
 	public void		MapSize(string []cmd) {
@@ -98,14 +94,16 @@ public class DataGame : MonoBehaviour {
 	}
 
 	void			InvockPentacle(int x, int z) {
-		invok_id++;
-		GameObject clone = GameObject.Instantiate(invok_obj, GameObject.Find ("Tile(" + z + ", " + x + ")").transform.position, Quaternion.identity) as GameObject;
-		clone.name += "" + invok_id;
+		GameObject clone = GameObject.Instantiate(invok_obj, Vector3.zero, Quaternion.identity) as GameObject;
+		clone.transform.SetParent (GameObject.Find ("Tile(" + z + ", " + x + ")").transform);
+		clone.transform.localPosition = Vector3.up * 0.1f;
 	}
 
-	void			DestroyPentacle(int x, int z){
-		invok_id2++;
-		GameObject pentacle = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)" + invok_id2).gameObject;
+	void			DestroyPentacle(int x, int z) {
+		Transform tile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)");
+		if (!tile)
+			Debug.LogWarning("BWAAAAA");
+		GameObject pentacle = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)").gameObject;
 		if (pentacle != null)
 			Destroy (pentacle);
 	}

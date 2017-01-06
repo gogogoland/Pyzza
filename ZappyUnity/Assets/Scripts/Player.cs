@@ -189,7 +189,9 @@ public class Player : MonoBehaviour {
 
 	void			Start(){
 		Animate (0);
-		transform.GetChild (0).GetComponent<SpriteRenderer> ().color = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().teamName [_teamName];
+		Color color = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().teamName [_teamName];
+		transform.GetChild (0).GetComponent<SpriteRenderer> ().color = color;
+		transform.GetChild (1).GetComponent<SpriteRenderer> ().color = color;
 	}
 
 	public void		Die() {
