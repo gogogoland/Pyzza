@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/20 17:18:51 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/27 15:44:44 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/06 19:52:11 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static const char *g_msg_cmd[] =
 	"plv #%i %i\n",
 	"seg #%i %s\n",
 	"pbc #%i %s\n",
-	"pie #%i %i %i\n",
+	"pie %i %i %i\n",
 	"enw #%i #%i %i %i\n",
 };
 
@@ -66,7 +66,8 @@ char	*command_write_msg_incant_end(t_client *clt)
 {
 	char *msg;
 
-	asprintf(&msg, g_msg_cmd[15], clt->pos.x, clt->pos.y, clt->lvl);
+	asprintf(&msg, g_msg_cmd[15],
+				clt->pos.x, clt->pos.y, clt->lvl == clt->tolvl);
 	return (msg);
 }
 

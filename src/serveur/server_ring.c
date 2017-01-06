@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 15:45:44 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/02 00:03:16 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/06 20:36:30 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,11 @@ static const char	*g_srv_ring_msg[] =
 	"Malloc failed for ring (t_ring *.)\n",
 	"Malloc failed for ring->command (**char).\n",
 	"No data allocated in ring.\n",
-	"command from socket %i : %s"
+	"command from socket %i : %s",
+	"command from player #%i : %s"
 };
 
-void		ring_recv(t_server *srv, char *cmd, t_ring *ring, int sock)
+void		ring_recv(t_server *srv, char *cmd, t_ring *ring, int who)
 {
 	char	*log;
 	int		limit;
@@ -35,15 +36,15 @@ void		ring_recv(t_server *srv, char *cmd, t_ring *ring, int sock)
 	i = ring->cur;
 	while (++limit < ring->len && ring->command && ring->command[i])
 		i = (i + 1) % ring->len;
-	if (limit == ring->len)
+	if (limit == ring->len || (len = strlen(cmd)) <= 0)
 		return ;
-	len = strlen(cmd);
 	if (!(ring->command[i] = (char *)malloc((len + 1) * sizeof(char))))
 	{
 		server_log(srv, g_srv_ring_msg[0]);
 		return ;
 	}
-	asprintf(&log, g_srv_ring_msg[5], sock, cmd) > 0 ? server_log(srv, log) : 0;
+	asprintf(&log, g_srv_ring_msg[5 + (who > 0)], who * ((who > 0) - (who < 0)),
+			cmd) > 0 ? server_log(srv, log) : 0;
 	log ? ft_memdel((void **)&log) : 0;
 	j = -1;
 	while (++j < len)

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 19:38:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/02 00:04:20 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/06 19:57:06 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	client_command(t_fds *fds, t_server *srv, int s)
 	else
 	{
 		ring_recv(srv, buffer, !clt ? gfx->ring : clt->ring,
-					!clt ? gfx->socket : clt->socket);
+					!clt ? gfx->socket * -1 : clt->name);
 	}
 }
 
