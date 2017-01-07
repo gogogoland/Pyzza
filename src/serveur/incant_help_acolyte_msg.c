@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/11/10 02:56:55 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/07 17:24:32 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,12 @@ static const char	*g_msg_acolyte[] =
 	"%s #%i",
 };
 
-static char	*incant_msg_acolyte_graphic_add(char *s1, char *s2)
+static char	*incant_msg_acolyte_graphic_swap(char *s1, char *s2)
 {
-	char	*ret;
-
-	ret = NULL;
-	asprintf(&ret, "%s%s", s1, s2);
 	ft_memdel((void **)&s1);
+	asprintf(&s1, "%s", s2);
 	ft_memdel((void **)&s2);
-	return (ret);
+	return (s1);
 }
 
 static void	incant_msg_acolyte_graphic_begin(t_server *srv, t_client *clt,
@@ -52,7 +49,7 @@ static void	incant_msg_acolyte_graphic_begin(t_server *srv, t_client *clt,
 		if (acolyte && asprintf(&tmp, g_msg_acolyte[4], msg, acolyte->name) < 0)
 			ft_memdel((void **)&msg);
 		else if (acolyte && msg && tmp)
-			msg = incant_msg_acolyte_graphic_add(msg, tmp);
+			msg = incant_msg_acolyte_graphic_swap(msg, tmp);
 	}
 	if (!msg)
 		return ;
