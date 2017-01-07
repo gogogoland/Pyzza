@@ -164,12 +164,37 @@ public class GenerateMap : MonoBehaviour {
 				NbrResrcPerTile(ressources_obj, data, 5);
 		}
 	}
-
+	
 	void	GenerateResrc(DataGame.c_datamap upTile) {
 		if (upTile.type == FOOD)
 			NbrResrcPerTile(food_obj, upTile, 20);
 		else if (upTile.type >= RESRC)
 			NbrResrcPerTile(ressources_obj, upTile, 5);
+	}
+
+	void	OneResrcInTile(GameObject modelToClone, DataGame.c_datamap upTile, int resize) {
+		Vector3 vec = Vector3.zero;
+
+		GameObject tmp;
+		vec = new Vector3 (0, modelToClone.transform.position.y, 0);
+		tmp = GameObject.Instantiate(modelToClone, vec, Quaternion.identity) as GameObject;
+		tmp.transform.localScale *= resize;
+		tmp.transform.SetParent(tiles[upTile.z, upTile.x].transform);
+		tmp.GetComponent<SpriteRenderer>().sprite = ressources_sprite[upTile.type];
+		RepositioningResrc(tmp, upTile.type);
+		resrcs.Add(tmp);
+	}
+	
+	void	GenerateOneResrc(DataGame.c_datamap upTile) {
+		if (upTile.type == FOOD)
+			OneResrcInTile(food_obj, upTile, 20);
+		else if (upTile.type >= RESRC)
+			OneResrcInTile(ressources_obj, upTile, 5);
+	}
+
+	void	DeleteResrc(DataGame.c_datamap downTile, GameObject tile) {
+		Transform delete = tile.transform.FindChild (resrcName [downTile.type]);
+		Destroy (delete.gameObject);
 	}
 
 	public Vector2 CheckAllTiles() {
@@ -196,7 +221,12 @@ public class GenerateMap : MonoBehaviour {
 		GameObject tile = GameObject.Find ("Tile(" + newTile.z + ", " + newTile.x + ")");
 
 		if (newNbr > newTile.nbr) {
-
+			newTile.nbr = newNbr;
+			GenerateOneResrc(newTile);
+		}
+		else if (newNbr < newTile.nbr) {
+			newTile.nbr = newNbr;
+			DeleteResrc(newTile, tile);
 		}
 //			Debug.Log ("CreateResrc");
 //		else if (newNbr < newTile.nbr)

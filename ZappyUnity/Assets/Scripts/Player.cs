@@ -6,6 +6,7 @@ public class Player : MonoBehaviour {
 
 	public GameObject					lvlUp_obj;
 	public GameObject					drop_obj;
+	public Sprite						[]lvlPizzaSprite;
 
 	private Dictionary<int, Color>		colorParticleDrop;
 
@@ -24,19 +25,23 @@ public class Player : MonoBehaviour {
 	private int							SOUTH = 2;//= 3;
 	private int							EST = 3;//= 4;
 
+	private Transform					lvlPizza;
+
+
 	// Use this for initialization
 	void Awake () {
 		anim = GetComponent<Animator> ();
 		_orientation = new int[2];
 		_inventory = new int[7];
 		colorParticleDrop = new Dictionary<int, Color> ();
-		colorParticleDrop.Add (0, new Color (0.93f, 0.87f, 0.84f));
-		colorParticleDrop.Add (1, new Color (1.0f, 1.0f, 0.52f));
-		colorParticleDrop.Add (2, new Color (0.83f, 0.88f, 0.76f));
-		colorParticleDrop.Add (3, new Color (0.43f, 0.73f, 1.0f));
-		colorParticleDrop.Add (4, new Color (0.65f, 0.65f, 0.65f));
-		colorParticleDrop.Add (5, new Color (0.28f, 0.74f, 0.13f));
+		colorParticleDrop.Add (0, Color.white);
+		colorParticleDrop.Add (1, Color.red + Color.yellow);
+		colorParticleDrop.Add (2, Color.grey);
+		colorParticleDrop.Add (3, Color.cyan);
+		colorParticleDrop.Add (4, Color.black);
+		colorParticleDrop.Add (5, Color.green);
 		colorParticleDrop.Add (6, Color.red);
+		lvlPizza = transform.GetChild (1).transform.GetChild (0);
 	}
 
 	public void		PlayerNew(int id, int posX, int posY, int orientation, int level, string teamName) {
@@ -178,6 +183,9 @@ public class Player : MonoBehaviour {
 			particleLvl.transform.localScale = Vector3.one;
 			particleLvl.GetComponent<ParticleSystem>().startLifetime = transform.localScale.x / 10;
 			Destroy(particleLvl, particleLvl.GetComponent<ParticleSystem>().startLifetime);
+			lvlPizza.GetComponent<SpriteRenderer>().sprite = lvlPizzaSprite[_level - 1];
+			if (_level == 9)
+				lvlPizza.GetComponent<SpriteRenderer>().color = Color.red;
 		}
 	}
 

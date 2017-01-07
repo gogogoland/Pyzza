@@ -100,12 +100,11 @@ public class DataGame : MonoBehaviour {
 	}
 
 	void			DestroyPentacle(int x, int z) {
-		Transform tile = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)");
-		if (!tile)
-			Debug.LogWarning("BWAAAAA");
-		GameObject pentacle = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)").gameObject;
-		if (pentacle != null)
-			Destroy (pentacle);
+		Transform invoc = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)");
+		if (!invoc)
+			return ;
+		if (invoc.gameObject)
+			Destroy (invoc.gameObject);
 	}
 
 	public void		UpdateTile(int x, int y) {
