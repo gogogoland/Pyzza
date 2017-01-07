@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 14:06:53 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 23:41:00 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/07 04:54:54 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static const char	*g_cmd_death[] =
 {
-	"Player client from ip %s, port %d has disconnected.\n",
+	"Player #%i from ip %s, port %d has disconnected.\n",
 	"Socket %i closed.\n"
 };
 
@@ -22,8 +22,8 @@ static void	command_death_log(t_server *srv, int type, char *ip, int port)
 {
 	char	*log;
 
-	if (!type ? asprintf(&log, g_cmd_death[type], ip, port) :
-				asprintf(&log, g_cmd_death[type], port))
+	if (type ? asprintf(&log, g_cmd_death[!type], type, ip, port) :
+				asprintf(&log, g_cmd_death[!type], port))
 	{
 		server_log(srv, log);
 		ft_memdel((void **)&log);
@@ -51,9 +51,9 @@ void		command_death(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	{
 		getpeername(clt->socket, (struct sockaddr*)&clt->sin,
 					(socklen_t*)&clt->len);
-		command_death_log(srv, 0, inet_ntoa(clt->sin.sin_addr),
+		command_death_log(srv, clt->name, inet_ntoa(clt->sin.sin_addr),
 				ntohs(clt->sin.sin_port));
-		command_death_log(srv, 1, NULL, clt->socket);
+		command_death_log(srv, 0, NULL, clt->socket);
 		send(clt->socket, "mort\n", 4, 0);
 		send_graphe_action(srv, command_write_msg(clt, 4, 0, NULL), 0, NULL);
 	}
