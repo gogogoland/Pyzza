@@ -38,6 +38,7 @@ public class DataGame : MonoBehaviour {
 
 	private GameObject						victory;
 	private bool							startSceneGame = true;
+	private GameUI							scriptUI;
 
 	void	Awake()
 	{
@@ -220,7 +221,7 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				InvockBubbleTalk(player.transform, "FUS ROH DA !", 1);
-				Debug.Log ("Expulsion du joueur #" + script.GetID());
+//				scriptUI.AddMsgInfo("Expulsion du joueur #" + script.GetID());
 				break ;
 			}
 		}
@@ -244,7 +245,7 @@ public class DataGame : MonoBehaviour {
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				if (cmd.Length >= 3) {
 					InvockBubbleTalk(player.transform, talk, 0);
-					Debug.Log ("Joueur #" + script.GetID() + " dit : " + talk);
+					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " dit : " + talk);
 				}
 				break ;
 			}
@@ -262,7 +263,7 @@ public class DataGame : MonoBehaviour {
 				if (script.GetPosX() == int.Parse (cmd[1])
 				    && script.GetPosY() == int.Parse (cmd[2])
 				    && script.GetID() == int.Parse (cmd [id].Substring (1, cmd [id].Length - 1))){
-					Debug.Log ("Joueur #" + script.GetID() + " incante au level: " + cmd [3]);
+					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " incante au level: " + cmd [3]);
 				}
 			}
 		}
@@ -273,9 +274,9 @@ public class DataGame : MonoBehaviour {
 			throw new Exception("Donnees de la fin de l'incantation erronees");
 		DestroyPentacle(int.Parse (cmd [1]), int.Parse (cmd [2]));
 		if (int.Parse (cmd[3]) == 0)
-			Debug.Log ("L'incantation [" + cmd[1] + ", " + cmd[2] + "] est un echec");
+			scriptUI.AddMsgInfo("L'incantation [" + cmd[1] + ", " + cmd[2] + "] est un echec");
 		else
-			Debug.Log ("L'incantation [" + cmd[1] + ", " + cmd[2] + "] est une reussite");
+			scriptUI.AddMsgInfo("L'incantation [" + cmd[1] + ", " + cmd[2] + "] est une reussite");
 	}
 	
 	public void		PlayerForkEgg(string []cmd){
@@ -285,7 +286,7 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				InvockBubbleTalk(player.transform, "Je pond un oeuf", 2);
-				Debug.Log ("Joueur #" + script.GetID() + " pond un oeuf");
+//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pond un oeuf");
 				break ;
 			}
 		}
@@ -299,7 +300,7 @@ public class DataGame : MonoBehaviour {
 
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.SetObjConcern(int.Parse (cmd[2]));
-				Debug.Log ("Joueur #" + script.GetID() + " prend " + int.Parse (cmd[2]));
+//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " prend " + int.Parse (cmd[2]));
 				break ;
 			}
 		}
@@ -312,7 +313,7 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.SetObjConcern(int.Parse (cmd[2]));
-				Debug.Log ("Joueur #" + script.GetID() + " pose " + int.Parse (cmd[2]));
+//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pose " + int.Parse (cmd[2]));
 			}
 		}
 	}
@@ -337,7 +338,7 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Joueur #" + script.GetID () + " meurt");
+				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " meurt");
 				script.Die ();
 				players.Remove(player);
 				break ;
@@ -368,7 +369,7 @@ public class DataGame : MonoBehaviour {
 			if (!script)
 
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("L'oeuf #" + script.GetID() + " eclos");
+//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos");
 				script.Hatch();
 				break ;
 			}
@@ -381,7 +382,7 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject egg in eggs) {
 			Egg script = egg.GetComponent<Egg> ();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("Un joueur est nee a partir de l'oeuf #" + script.GetID());
+//				scriptUI.AddMsgInfo("Un joueur est nee a partir de l'oeuf #" + script.GetID());
 				script.Die(true);
 				eggs.Remove(egg);
 				break ;
@@ -395,7 +396,7 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject egg in eggs) {
 			Egg script = egg.GetComponent<Egg> ();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				Debug.Log ("L'oeuf #" + script.GetID() + " eclos mais pourri");
+//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos mais pourri");
 				script.Die(false);
 				eggs.Remove(egg);
 				break ;
@@ -417,12 +418,12 @@ public class DataGame : MonoBehaviour {
 		Text text = victory.transform.GetChild (1).GetComponent<Text> ();
 		text.text = cmd [1];
 		text.color = teamName [cmd [1]];
-		Debug.Log ("Victoire de l'equipe : " + cmd[1]);
+		scriptUI.AddMsgInfo("Victoire de l'equipe : " + cmd[1]);
 	}
 
 	public void		ServerMessage(string []cmd, bool error) {
 		if (error) {
-			Debug.Log ("Pizza le Hutt s'enerve : Je ne comprends pas ton langage !");
+			scriptUI.AddMsgInfo("Pizza le Hutt s'enerve : Je ne comprends pas ton langage !");
 			return ;
 		}
 		string talk = "...";
@@ -434,7 +435,7 @@ public class DataGame : MonoBehaviour {
 				talk += cmd[word] + " ";
 			talk += cmd[word];
 		}
-		Debug.Log ("Pizza le Hutt dit : " + talk);
+		scriptUI.AddMsgInfo("Pizza le Hutt dit : " + talk);
 	}
 
 	public void		PlayerEat (string[]cmd) {
@@ -444,7 +445,7 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				InvockBubbleTalk(player.transform, "* miam *", 2);
-				Debug.Log ("Joueur #" + script.GetID () + " mange");
+//				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " mange");
 				break ;
 			}
 		}
@@ -454,6 +455,7 @@ public class DataGame : MonoBehaviour {
 	void StartSceneGame () {
 		if (Application.loadedLevelName == "Game" && startSceneGame == true) {
 			victory = GameObject.Find ("Canvas/Victory");
+			scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
 			victory.SetActive (false);
 			startSceneGame = false;
 		}

@@ -15,11 +15,14 @@ public class GameUI : MonoBehaviour {
 	private Client		_scriptClient;
 	private Slider		_slider;
 	private Text		_timeUI;
+	private Transform	_contentMsgInfo;
+	private GameObject	_msgInfo;
 
 	// Use this for initialization
 	void		Start () {
 		information_case = GameObject.Find ("Information");
 		GameObject client = GameObject.Find ("Client(Clone)");
+		_contentMsgInfo = GameObject.Find ("MsgContent").transform;
 		_scriptData = client.GetComponent<DataGame>();
 		_scriptClient = client.GetComponent<Client> ();
 		_slider = GameObject.Find ("SliderTime").GetComponent<Slider> ();
@@ -28,6 +31,7 @@ public class GameUI : MonoBehaviour {
 		value_slider = _scriptData.unitTime;
 		_slider.value = value_slider;
 		_timeUI.text = "" + value_slider;
+		_msgInfo = Resources.Load ("Prefabs/MsgInfo") as GameObject;
 	}
 
 	// Update is called once per frame
@@ -48,5 +52,9 @@ public class GameUI : MonoBehaviour {
 		_scriptClient.newTimeValue = (int)_slider.value;
 	}
 
-
+	public void AddMsgInfo(string msg) {
+		GameObject cloneMsgInfo = GameObject.Instantiate (_msgInfo, Vector3.zero, Quaternion.identity) as GameObject;
+		cloneMsgInfo.transform.SetParent (_contentMsgInfo);
+		cloneMsgInfo.GetComponent<Text> ().text = msg;
+	}
 }
