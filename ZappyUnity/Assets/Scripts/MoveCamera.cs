@@ -136,6 +136,6 @@ public class MoveCamera : MonoBehaviour {
 
 		GameObject cloneLocation = GameObject.Instantiate (camLocation, Vector3.zero, Quaternion.identity) as GameObject;
 		cloneLocation.transform.SetParent (cloneBorderCamera [0].transform);
-		cloneLocation.transform.position = Vector3.zero;
+		cloneLocation.transform.localPosition = Vector3.zero;
 	}
 }
