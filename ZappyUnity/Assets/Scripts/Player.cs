@@ -24,6 +24,8 @@ public class Player : MonoBehaviour {
 	private int							WEST = 1;//= 2;
 	private int							SOUTH = 2;//= 3;
 	private int							EST = 3;//= 4;
+	private int							Xmax;
+	private int							Ymax;
 
 	private Transform					lvlPizza;
 
@@ -42,6 +44,7 @@ public class Player : MonoBehaviour {
 		colorParticleDrop.Add (5, Color.green);
 		colorParticleDrop.Add (6, Color.red);
 		lvlPizza = transform.GetChild (1).transform.GetChild (0);
+
 	}
 
 	public void		PlayerNew(int id, int posX, int posY, int orientation, int level, string teamName) {
@@ -100,23 +103,33 @@ public class Player : MonoBehaviour {
 		Destroy(particleDrop, particleDrop.GetComponent<ParticleSystem>().startLifetime);
 	}
 
-	public void		SetPosOrient(int posX, int posY, int orientation){
+	public void		SetPosOrient(int newPosX, int newPosY, int orientation){
 		if (_orientation[0] != orientation) {
 			_orientation[1] = _orientation[0];
 			_orientation[0] = orientation;
 		}
-		if (_posX == posX && _posY == posY) {
+		if (_posX == newPosX && _posY == newPosY) {
 			Animate (0);
 		}
-		if (_posX != posX) {
-			_posX = posX;
+		if (_posX != newPosX) {
 			Animate (1);
-			StartCoroutine("_MoveLeftRight", posX);
+			if (_posX == 0 && newPosX == Xmax)
+				StartCoroutine("_MoveLeftRight", -1);
+			else if (_posX == Xmax && newPosX == 0)
+				StartCoroutine("_MoveLeftRight", Xmax + 1);
+			else
+				StartCoroutine("_MoveLeftRight", newPosX);
+			_posX = newPosX;
 		}
-		if (_posY != posY) {
-			_posY = posY;
+		if (_posY != newPosY) {
 			Animate (1);
-			StartCoroutine("_MoveUpDown", posY);
+			if (_posY == 0 && newPosY == Ymax)
+				StartCoroutine("_MoveUpDown", -1);
+			else if (_posY == Ymax && newPosY == 0)
+				StartCoroutine("_MoveUpDown", Xmax + 1);
+			else
+				StartCoroutine("_MoveUpDown", newPosY);
+			_posY = newPosY;
 		}
 	}
 
@@ -158,10 +171,16 @@ public class Player : MonoBehaviour {
 			yield return null;
 		}
 		Animate (0);
+		if (posX == -1)
+			_posX = Xmax;
+		else if (posX == Xmax + 1)
+			_posX = 0;
+		transform.position = new Vector3 (_posX * 10.0f, transform.position.y, transform.position.z);
+
 	}
 
 	private IEnumerator	_MoveUpDown(int posY){
-		Vector3 target = new Vector3 (transform.position.x, transform.position.y, posY * -10);
+		Vector3 target = new Vector3 (transform.position.x, transform.position.y, posY * -10.0f);
 		float t = 0.0f;
 		while (t < 1) {
 			t += Time.deltaTime;
@@ -170,6 +189,11 @@ public class Player : MonoBehaviour {
 			yield return null;
 		}
 		Animate (0);
+		if (posY == -1)
+			_posY = Ymax;
+		else if (posY == Ymax + 1)
+			_posY = 0;
+		transform.position = new Vector3 (transform.position.x, transform.position.y, _posY * -10.0f);
 	}
 	
 	public void		SetLevel(int level) {
@@ -197,9 +221,14 @@ public class Player : MonoBehaviour {
 
 	void			Start(){
 		Animate (0);
+
 		Color color = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().teamName [_teamName];
 		transform.GetChild (0).GetComponent<SpriteRenderer> ().color = color;
+		color.a = 1.0f;
 		transform.GetChild (1).GetComponent<SpriteRenderer> ().color = color;
+		Xmax = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().width - 1;
+		Ymax = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().height - 1;
+
 	}
 
 	public void		Die() {

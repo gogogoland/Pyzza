@@ -114,6 +114,7 @@ public class Client : MonoBehaviour {
 			case "smg" : _scriptData.ServerMessage(cutCmd, false);break;
 			case "suc" : _scriptData.ServerMessage(cutCmd, true);break;
 			case "sbp" : _scriptData.ServerMessage(cutCmd, true);break;
+			case "pet" : _scriptData.PlayerEat(cutCmd);break ;
 			default : break;
 			}
 		}

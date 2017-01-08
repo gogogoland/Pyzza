@@ -7,8 +7,7 @@ using System.Collections.Generic;
 public class DataGame : MonoBehaviour {
 
 	public Animator							anim;
-	public Sprite							expulse_tex;
-	public Sprite							pensee_tex;
+	public Sprite							[]bubbleTex;
 	public int								height;
 	public int								width;
 	public class							c_datamap {
@@ -87,10 +86,7 @@ public class DataGame : MonoBehaviour {
 		cloneBubble.transform.SetParent (GameObject.Find ("CanvasTalk").transform);
 		cloneBubble.transform.GetChild(0).GetComponent<Text>().text = talk;
 		cloneBubble.GetComponent<BubbleTalk>().posPlayer = player;
-		if (typeBubble == 1)
-			cloneBubble.GetComponent<Image> ().sprite = expulse_tex;
-		else if (typeBubble == 2)
-			cloneBubble.GetComponent<Image> ().sprite = pensee_tex;
+		cloneBubble.GetComponent<Image> ().sprite = bubbleTex[typeBubble];
 	}
 
 	void			InvockPentacle(int x, int z) {
@@ -113,23 +109,24 @@ public class DataGame : MonoBehaviour {
 		vectupdate.y = y;
 	}
 
-	public void		TileContent(string []cmd) {
-		if (cmd.Length < 10 && cmd.Length > 11)
-			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
+	private bool	_GetOrDropResrc(string []cmd){
 		foreach (c_datamap tile in structDataMap) {
 			if (tile.x == int.Parse (cmd[1]) && tile.z == int.Parse (cmd[2])) {
 				for (int data = 0; data < 7; data++) {
 					if (tile.type == data && tile.nbr != int.Parse (cmd[3+data])) {
 						GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().UpdateResrc(tile, int.Parse (cmd[3+data]));
-						return ;
+						return (true);
 					}
 				}
 			}
 		}
+		return (false);
+	}
 
+	private void	_TileBadUpload(string []cmd){
 		for (int data = 0; data < 7; data++) {
 			c_datamap	tmp = new c_datamap();
-
+			
 			tmp.x = int.Parse (cmd[1]);
 			tmp.z = int.Parse (cmd[2]);
 			tmp.type = data;
@@ -143,6 +140,14 @@ public class DataGame : MonoBehaviour {
 			}
 			structDataMap.Add(tmp);
 		}
+	}
+
+	public void		TileContent(string []cmd) {
+		if (cmd.Length < 10 && cmd.Length > 11)
+			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
+		if (_GetOrDropResrc (cmd))
+			return ;
+		_TileBadUpload (cmd);
 	}
 	
 	public void		TeamName(string []cmd) {
@@ -430,6 +435,19 @@ public class DataGame : MonoBehaviour {
 			talk += cmd[word];
 		}
 		Debug.Log ("Pizza le Hutt dit : " + talk);
+	}
+
+	public void		PlayerEat (string[]cmd) {
+		if (cmd.Length != 2)
+			throw new Exception("Donnees du dejeuner du joueur erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				InvockBubbleTalk(player.transform, "* miam *", 2);
+				Debug.Log ("Joueur #" + script.GetID () + " mange");
+				break ;
+			}
+		}
 	}
 
 	// Use this for initialization

@@ -194,7 +194,8 @@ public class GenerateMap : MonoBehaviour {
 
 	void	DeleteResrc(DataGame.c_datamap downTile, GameObject tile) {
 		Transform delete = tile.transform.FindChild (resrcName [downTile.type]);
-		Destroy (delete.gameObject);
+		if (delete)
+			Destroy (delete.gameObject);
 	}
 
 	public Vector2 CheckAllTiles() {
@@ -221,17 +222,13 @@ public class GenerateMap : MonoBehaviour {
 		GameObject tile = GameObject.Find ("Tile(" + newTile.z + ", " + newTile.x + ")");
 
 		if (newNbr > newTile.nbr) {
+			Debug.LogWarning ("CreateResrc");
 			newTile.nbr = newNbr;
-			GenerateOneResrc(newTile);
 		}
 		else if (newNbr < newTile.nbr) {
 			newTile.nbr = newNbr;
 			DeleteResrc(newTile, tile);
 		}
-//			Debug.Log ("CreateResrc");
-//		else if (newNbr < newTile.nbr)
-//			Debug.Log ("SupprResrc");
-
 		foreach (Transform child in tile.GetComponentsInChildren<Transform>()) {
 			if (child.name == resrcName[newTile.type]) {
 
