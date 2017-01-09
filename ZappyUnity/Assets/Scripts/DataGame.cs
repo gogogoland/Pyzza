@@ -263,7 +263,7 @@ public class DataGame : MonoBehaviour {
 				if (script.GetPosX() == int.Parse (cmd[1])
 				    && script.GetPosY() == int.Parse (cmd[2])
 				    && script.GetID() == int.Parse (cmd [id].Substring (1, cmd [id].Length - 1))){
-					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " incante au level: " + cmd [3]);
+					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " incante au level: " + cmd [3] + " en [" + cmd[1] + ", " + cmd[2] + "]");
 				}
 			}
 		}

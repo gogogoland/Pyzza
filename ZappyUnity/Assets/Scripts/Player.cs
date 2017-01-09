@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,6 +10,7 @@ public class Player : MonoBehaviour {
 	public Sprite						[]lvlPizzaSprite;
 
 	private Dictionary<int, Color>		colorParticleDrop;
+	private GameObject					playername_obj;
 
 	[SerializeField]private int			_id;
 	[SerializeField]private int			_posX;
@@ -28,7 +30,7 @@ public class Player : MonoBehaviour {
 	private int							Ymax;
 
 	private Transform					lvlPizza;
-
+	private GameObject					nameUI;
 
 	// Use this for initialization
 	void Awake () {
@@ -44,6 +46,7 @@ public class Player : MonoBehaviour {
 		colorParticleDrop.Add (5, Color.green);
 		colorParticleDrop.Add (6, Color.red);
 		lvlPizza = transform.GetChild (1).transform.GetChild (0);
+		playername_obj = Resources.Load ("Prefabs/PlayerName") as GameObject;
 
 	}
 
@@ -85,6 +88,10 @@ public class Player : MonoBehaviour {
 
 	public int		[]GetInventory(){
 		return (_inventory);
+	}
+
+	public int		GetInventory(int id) {
+		return (_inventory [id]);
 	}
 
 	public void		SetResource(int positionInv, int value){
@@ -228,7 +235,13 @@ public class Player : MonoBehaviour {
 		transform.GetChild (1).GetComponent<SpriteRenderer> ().color = color;
 		Xmax = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().width - 1;
 		Ymax = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().height - 1;
+		nameUI = GameObject.Instantiate (playername_obj, transform.position, Quaternion.identity) as GameObject;
+		nameUI.transform.SetParent(GameObject.Find ("CanvasTalk").transform);
+		nameUI.transform.GetComponent<Text> ().text += _id;
+	}
 
+	void			LateUpdate(){
+		nameUI.transform.position = new Vector3(Camera.main.WorldToScreenPoint (transform.position).x, Camera.main.WorldToScreenPoint (transform.position).y - 60.0f, 0);
 	}
 
 	public void		Die() {
@@ -237,6 +250,7 @@ public class Player : MonoBehaviour {
 	
 	public void		DestroyMe()
 	{
+		Destroy (nameUI);
 		Destroy(gameObject);
 	}
 }

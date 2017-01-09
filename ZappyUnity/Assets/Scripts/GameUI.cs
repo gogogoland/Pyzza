@@ -16,13 +16,15 @@ public class GameUI : MonoBehaviour {
 	private Slider		_slider;
 	private Text		_timeUI;
 	private Transform	_contentMsgInfo;
+	private Transform	_scrollviewMsgInfo;
 	private GameObject	_msgInfo;
 
 	// Use this for initialization
-	void		Start () {
+	void					Start () {
 		information_case = GameObject.Find ("Information");
 		GameObject client = GameObject.Find ("Client(Clone)");
 		_contentMsgInfo = GameObject.Find ("MsgContent").transform;
+		_scrollviewMsgInfo = GameObject.Find ("MsgScrollView").transform;
 		_scriptData = client.GetComponent<DataGame>();
 		_scriptClient = client.GetComponent<Client> ();
 		_slider = GameObject.Find ("SliderTime").GetComponent<Slider> ();
@@ -35,26 +37,23 @@ public class GameUI : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void		Update () {
+	void					Update () {
 		_timeUI.text = "" + (int)_slider.value;
 	}
-	/*
-	void		LateUpdate() {
-		GameObject []bubbles = GameObject.FindGameObjectsWithTag ("Talk");
-		foreach (GameObject bubble in bubbles) {
 
-		}
-	}*/
-
-	public void	SST(){
+	public void				SST(){
 		value_slider = (int)_slider.value;
 		_scriptClient.newTime = true;
 		_scriptClient.newTimeValue = (int)_slider.value;
 	}
 
-	public void AddMsgInfo(string msg) {
+	public void 			AddMsgInfo(string msg) {
 		GameObject cloneMsgInfo = GameObject.Instantiate (_msgInfo, Vector3.zero, Quaternion.identity) as GameObject;
 		cloneMsgInfo.transform.SetParent (_contentMsgInfo);
 		cloneMsgInfo.GetComponent<Text> ().text = msg;
+		Canvas.ForceUpdateCanvases();
+		_scrollviewMsgInfo.GetComponent<ScrollRect> ().verticalScrollbar.value = 0.0f;
+		_scrollviewMsgInfo.GetComponentInChildren<Scrollbar> ().value = 0.0f;
+		Canvas.ForceUpdateCanvases();
 	}
 }

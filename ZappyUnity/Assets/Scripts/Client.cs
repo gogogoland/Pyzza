@@ -140,6 +140,7 @@ public class Client : MonoBehaviour {
 					DontDestroyOnLoad(_scriptData.players [player]);
 				for (int egg = 0; egg < _scriptData.eggs.Count; egg++)
 					DontDestroyOnLoad(_scriptData.eggs [egg]);
+				DontDestroyOnLoad(GameObject.Find ("CanvasTalk"));
 				Application.LoadLevel("Game");
 
 //				DemandInfo();

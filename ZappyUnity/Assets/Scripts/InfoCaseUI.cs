@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections;
@@ -7,12 +7,14 @@ using System.Collections.Generic;
 public class InfoCaseUI : MonoBehaviour {
 
 	public GameObject		lineInfo;
+	public GameObject		lineInfoPlayer;
 	public GameObject		tile;
 	
 	private GameObject		_informationCase;
 	private GameObject		_contentInfo;
 	private GenerateMap		_scriptMap;
 	private GameUI			_scriptUI;
+	private DataGame		_scriptDataGame;
 	private Text			_coordCase;
 	private class			c_info
 	{
@@ -22,10 +24,14 @@ public class InfoCaseUI : MonoBehaviour {
 	};
 	private c_info			_info;
 
+	private int				_coordX;
+	private int				_coordY;
+
 	// Use this for initialization
 	void	Start () {
 		_scriptMap = GameObject.Find ("GenerateMap").GetComponent<GenerateMap> ();
 		_scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI> ();
+		_scriptDataGame = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ();
 
 		_informationCase = _scriptUI.information_case;
 		_contentInfo = _informationCase.transform.GetChild (1).transform.GetChild (0).transform.GetChild (0).gameObject;
@@ -60,7 +66,9 @@ public class InfoCaseUI : MonoBehaviour {
 	}
 
 	void	CoordCase(){
-		_coordCase.text = "x " + (int)(tile.transform.position.x / 10) + " y " + (int)(-tile.transform.position.z / 10);
+		_coordX = (int)(tile.transform.position.x / 10);
+		_coordY = (int)(-tile.transform.position.z / 10);
+		_coordCase.text = "x " + _coordX + " y " + _coordY;
 	}
 
 	void	StockAllNameResrc() {
@@ -74,9 +82,7 @@ public class InfoCaseUI : MonoBehaviour {
 		}
 	}
 
-	void	GetInfoCase() {
-		CoordCase ();
-		StockAllNameResrc ();
+	void	GetInfoResrc(){
 		for (int resrc = 0; resrc < _info.ressources.Length; resrc++) {
 			if (_info.nbr[resrc] > 0)
 			{
@@ -88,6 +94,30 @@ public class InfoCaseUI : MonoBehaviour {
 					lineInfoClone.transform.GetChild(1).GetComponent<RectTransform>().rect.Set (15.0f, 0.0f, 38.0f, 38.0f) ;//= new Rect(0.0f, 0.0f, 38.0f, 38.0f);
 			}
 		}
+	}
+
+	void	GetInfoPlayer() {
+		foreach (GameObject player in _scriptDataGame.players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetPosX() == _coordX
+			    && script.GetPosY () == _coordY){
+				GameObject lineInfoClone = GameObject.Instantiate (lineInfoPlayer, lineInfo.transform.position, Quaternion.identity) as GameObject;
+				lineInfoClone.transform.SetParent(_contentInfo.transform);
+				lineInfoClone.transform.GetChild(0).GetComponent<Text>().text += script.GetID();
+				int i = 0;
+				for (int resrcText = 1; resrcText < 14; resrcText += 2) {
+					lineInfoClone.transform.GetChild(2).GetChild (resrcText).GetComponent<Text>().text = script.GetInventory(i) + "";
+					i++;
+				}
+			}
+		}
+	}
+
+	void	GetInfoCase() {
+		CoordCase ();
+		StockAllNameResrc ();
+		GetInfoResrc ();
+		GetInfoPlayer ();
 	}
 	
 	// Update is called once per frame
