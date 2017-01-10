@@ -101,13 +101,12 @@ public class Player : MonoBehaviour {
 	
 	public void		SetObjConcern(int id){
 		Animate (2);
-		GameObject particleDrop = GameObject.Instantiate(drop_obj);
+		GameObject particleDrop = GameObject.Instantiate(drop_obj, transform);
 		particleDrop.GetComponent<ParticleSystemRenderer> ().material.color = colorParticleDrop [id];
-		particleDrop.transform.SetParent(transform);
 		particleDrop.transform.localPosition = Vector3.zero;
 		particleDrop.transform.localScale = Vector3.one;
 
-		Destroy(particleDrop, particleDrop.GetComponent<ParticleSystem>().startLifetime);
+		Destroy(particleDrop, particleDrop.GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
 	}
 
 	public void		SetPosOrient(int newPosX, int newPosY, int orientation){
@@ -206,14 +205,9 @@ public class Player : MonoBehaviour {
 	public void		SetLevel(int level) {
 		if (_level != level) {
 			_level = level;
-			transform.localScale += Vector3.one;
-			transform.position = new Vector3(transform.position.x, transform.position.y + 0.275f, transform.position.z);
-			GameObject particleLvl = GameObject.Instantiate(lvlUp_obj);
-			particleLvl.transform.SetParent(transform);
+			GameObject particleLvl = GameObject.Instantiate(lvlUp_obj, transform);
 			particleLvl.transform.localPosition = Vector3.zero;
-			particleLvl.transform.localScale = Vector3.one;
-			particleLvl.GetComponent<ParticleSystem>().startLifetime = transform.localScale.x / 10;
-			Destroy(particleLvl, particleLvl.GetComponent<ParticleSystem>().startLifetime);
+			Destroy(particleLvl, particleLvl.GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
 			lvlPizza.GetComponent<SpriteRenderer>().sprite = lvlPizzaSprite[_level - 1];
 			if (_level == 9)
 				lvlPizza.GetComponent<SpriteRenderer>().color = Color.red;
@@ -235,8 +229,7 @@ public class Player : MonoBehaviour {
 		transform.GetChild (1).GetComponent<SpriteRenderer> ().color = color;
 		Xmax = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().width - 1;
 		Ymax = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().height - 1;
-		nameUI = GameObject.Instantiate (playername_obj, transform.position, Quaternion.identity) as GameObject;
-		nameUI.transform.SetParent(GameObject.Find ("CanvasTalk").transform);
+		nameUI = GameObject.Instantiate (playername_obj, transform.position, Quaternion.identity, GameObject.Find ("CanvasTalk").transform) as GameObject;
 		nameUI.transform.GetComponent<Text> ().text += _id;
 	}
 

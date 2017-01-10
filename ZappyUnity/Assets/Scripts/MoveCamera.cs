@@ -111,8 +111,7 @@ public class MoveCamera : MonoBehaviour {
 
 		for (int cam = 0; cam < cloneBorderCamera.Length; cam++)
 		{
-			cloneBorderCamera[cam] = GameObject.Instantiate(cameraBorder, PosCameras[cam], Quaternion.Euler(rotate)) as GameObject;
-			cloneBorderCamera[cam].transform.SetParent(this.transform);
+			cloneBorderCamera[cam] = GameObject.Instantiate(cameraBorder, PosCameras[cam], Quaternion.Euler(rotate), transform) as GameObject;
 			cloneBorderCamera[cam].GetComponent<SelectTile>().select = select;
 			if (cam > 0)
 				cloneBorderCamera[cam].GetComponent<AudioListener>().enabled = false;
@@ -134,8 +133,7 @@ public class MoveCamera : MonoBehaviour {
 		orientationCam = new GameObject("Orientation");
 		orientationCam.transform.SetParent(this.transform);
 
-		GameObject cloneLocation = GameObject.Instantiate (camLocation, Vector3.zero, Quaternion.identity) as GameObject;
-		cloneLocation.transform.SetParent (cloneBorderCamera [0].transform);
+		GameObject cloneLocation = GameObject.Instantiate (camLocation, Vector3.zero, Quaternion.identity, cloneBorderCamera[0].transform) as GameObject;
 		cloneLocation.transform.localPosition = Vector3.zero;
 	}
 }

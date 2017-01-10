@@ -48,12 +48,13 @@ public class GameUI : MonoBehaviour {
 	}
 
 	public void 			AddMsgInfo(string msg) {
-		GameObject cloneMsgInfo = GameObject.Instantiate (_msgInfo, Vector3.zero, Quaternion.identity) as GameObject;
-		cloneMsgInfo.transform.SetParent (_contentMsgInfo);
+		GameObject cloneMsgInfo = GameObject.Instantiate (_msgInfo, Vector3.zero, Quaternion.identity, _contentMsgInfo) as GameObject;
 		cloneMsgInfo.GetComponent<Text> ().text = msg;
 		Canvas.ForceUpdateCanvases();
 		_scrollviewMsgInfo.GetComponent<ScrollRect> ().verticalScrollbar.value = 0.0f;
-		_scrollviewMsgInfo.GetComponentInChildren<Scrollbar> ().value = 0.0f;
+		Scrollbar bar = _scrollviewMsgInfo.GetComponentInChildren<Scrollbar> ();
+		if (bar)
+			bar.value = 0.0f;
 		Canvas.ForceUpdateCanvases();
 	}
 }

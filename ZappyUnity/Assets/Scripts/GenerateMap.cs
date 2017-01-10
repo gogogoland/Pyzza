@@ -71,8 +71,7 @@ public class GenerateMap : MonoBehaviour {
 		lineTmp = new GameObject("Lines");
 		lines = new GameObject[height];
 		for (int z = 0; z < height; z++) {
-			lines[z] = GameObject.Instantiate(lineTmp, map.transform.position, Quaternion.identity) as GameObject;
-			lines[z].transform.parent = map.transform;
+			lines[z] = GameObject.Instantiate(lineTmp, map.transform.position, Quaternion.identity, map.transform) as GameObject;
 			lines[z].name = "Lines (" + z + ")";
 		}
 	}
@@ -117,8 +116,7 @@ public class GenerateMap : MonoBehaviour {
 			{
 				vec.x = x * tile.transform.localScale.x * 10;
 				vec.z = -z * tile.transform.localScale.z * 10;
-				tiles[z, x] = GameObject.Instantiate(tile, vec, tile.transform.rotation) as GameObject;
-				tiles[z, x].transform.parent = lines[z].transform;
+				tiles[z, x] = GameObject.Instantiate(tile, vec, tile.transform.rotation, lines[z].transform) as GameObject;
 				tiles[z, x].transform.name = "Tile(" + z + ", " + x + ")";
 				tiles[z, x].GetComponent<Renderer>().material = variant_materials[z, x];
 			}
@@ -131,9 +129,8 @@ public class GenerateMap : MonoBehaviour {
 		for (int nbr = 0; nbr < _scriptData.structDataMap[index].nbr; nbr++) {
 			GameObject	tmp;
 			vec = new Vector3(0, modelToClone.transform.position.y, 0);
-			tmp = GameObject.Instantiate(modelToClone, vec, Quaternion.identity) as GameObject;
+			tmp = GameObject.Instantiate(modelToClone, vec, Quaternion.identity, tiles[_scriptData.structDataMap[index].z,_scriptData.structDataMap[index].x].transform) as GameObject;
 			tmp.transform.localScale *= resize;
-			tmp.transform.SetParent(tiles[_scriptData.structDataMap[index].z,_scriptData.structDataMap[index].x].transform);
 			tmp.GetComponent<SpriteRenderer>().sprite = ressources_sprite[_scriptData.structDataMap[index].type];
 			RepositioningResrc(tmp, _scriptData.structDataMap[index].type);
 			resrcs.Add(tmp);
@@ -146,9 +143,8 @@ public class GenerateMap : MonoBehaviour {
 		for (int nbr = 0; nbr < upTile.nbr; nbr++) {
 			GameObject	tmp;
 			vec = new Vector3(0, modelToClone.transform.position.y, 0);
-			tmp = GameObject.Instantiate(modelToClone, vec, Quaternion.identity) as GameObject;
+			tmp = GameObject.Instantiate(modelToClone, vec, Quaternion.identity, tiles[upTile.z, upTile.x].transform) as GameObject;
 			tmp.transform.localScale *= resize;
-			tmp.transform.SetParent(tiles[upTile.z, upTile.x].transform);
 			tmp.GetComponent<SpriteRenderer>().sprite = ressources_sprite[upTile.type];
 			RepositioningResrc(tmp, upTile.type);
 			resrcs.Add(tmp);
@@ -177,9 +173,8 @@ public class GenerateMap : MonoBehaviour {
 
 		GameObject tmp;
 		vec = new Vector3 (0, modelToClone.transform.position.y, 0);
-		tmp = GameObject.Instantiate(modelToClone, vec, Quaternion.identity) as GameObject;
+		tmp = GameObject.Instantiate(modelToClone, vec, Quaternion.identity, tiles[upTile.z, upTile.x].transform) as GameObject;
 		tmp.transform.localScale *= resize;
-		tmp.transform.SetParent(tiles[upTile.z, upTile.x].transform);
 		tmp.GetComponent<SpriteRenderer>().sprite = ressources_sprite[upTile.type];
 		RepositioningResrc(tmp, upTile.type);
 		resrcs.Add(tmp);
@@ -234,9 +229,6 @@ public class GenerateMap : MonoBehaviour {
 
 			}
 		}
-//		Debug.Log (newNbr);
-//		Debug.Log (newTile.nbr);
-
 	}
 
 	// Update is called once per frame

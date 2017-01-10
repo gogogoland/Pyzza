@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 using System.Collections;
@@ -82,17 +83,15 @@ public class DataGame : MonoBehaviour {
 	}
 
 	void			InvockBubbleTalk(Transform player, string talk, int typeBubble){
-		GameObject cloneBubble = GameObject.Instantiate(bubble_obj, player.transform.position, Quaternion.identity) as GameObject;
+		GameObject cloneBubble = GameObject.Instantiate(bubble_obj, player.transform.position, Quaternion.identity, GameObject.Find ("CanvasTalk").transform) as GameObject;
 
-		cloneBubble.transform.SetParent (GameObject.Find ("CanvasTalk").transform);
 		cloneBubble.transform.GetChild(0).GetComponent<Text>().text = talk;
 		cloneBubble.GetComponent<BubbleTalk>().posPlayer = player;
 		cloneBubble.GetComponent<Image> ().sprite = bubbleTex[typeBubble];
 	}
 
 	void			InvockPentacle(int x, int z) {
-		GameObject clone = GameObject.Instantiate(invok_obj, Vector3.zero, Quaternion.identity) as GameObject;
-		clone.transform.SetParent (GameObject.Find ("Tile(" + z + ", " + x + ")").transform);
+		GameObject clone = GameObject.Instantiate(invok_obj, Vector3.zero, Quaternion.identity, GameObject.Find ("Tile(" + z + ", " + x + ")").transform) as GameObject;
 		clone.transform.localPosition = Vector3.up * 0.1f;
 	}
 
@@ -324,9 +323,8 @@ public class DataGame : MonoBehaviour {
 		
 		GameObject	resrc;
 		vec = new Vector3(0, modelToClone.transform.position.y, 0);
-		resrc = GameObject.Instantiate(modelToClone, vec, Quaternion.identity) as GameObject;
+		resrc = GameObject.Instantiate(modelToClone, vec, Quaternion.identity, tile) as GameObject;
 		resrc.transform.localScale *= resize;
-		resrc.transform.SetParent(tile);
 		resrc.GetComponent<SpriteRenderer>().sprite = scriptGM.ressources_sprite[idResrc];
 		scriptGM.RepositioningResrc(resrc, idResrc);
 		scriptGM.resrcs.Add(resrc);
@@ -453,7 +451,7 @@ public class DataGame : MonoBehaviour {
 
 	// Use this for initialization
 	void StartSceneGame () {
-		if (Application.loadedLevelName == "Game" && startSceneGame == true) {
+		if (SceneManager.GetActiveScene().name == "Game" && startSceneGame == true) {
 			victory = GameObject.Find ("Canvas/Victory");
 			scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
 			victory.SetActive (false);

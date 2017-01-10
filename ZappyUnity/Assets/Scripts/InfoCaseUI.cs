@@ -86,8 +86,7 @@ public class InfoCaseUI : MonoBehaviour {
 		for (int resrc = 0; resrc < _info.ressources.Length; resrc++) {
 			if (_info.nbr[resrc] > 0)
 			{
-				GameObject lineInfoClone = GameObject.Instantiate (lineInfo, lineInfo.transform.position, Quaternion.identity) as GameObject;
-				lineInfoClone.transform.SetParent (_contentInfo.transform);
+				GameObject lineInfoClone = GameObject.Instantiate (lineInfo, lineInfo.transform.position, Quaternion.identity, _contentInfo.transform) as GameObject;
 				lineInfoClone.transform.GetChild(0).GetComponent<Text>().text = _info.ressources[resrc] + "\nNombre(s): " + _info.nbr[resrc];
 				lineInfoClone.transform.GetChild(1).GetComponent<Image>().sprite = _info.sprite[resrc];
 				if (resrc == 0)
@@ -101,8 +100,7 @@ public class InfoCaseUI : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetPosX() == _coordX
 			    && script.GetPosY () == _coordY){
-				GameObject lineInfoClone = GameObject.Instantiate (lineInfoPlayer, lineInfo.transform.position, Quaternion.identity) as GameObject;
-				lineInfoClone.transform.SetParent(_contentInfo.transform);
+				GameObject lineInfoClone = GameObject.Instantiate (lineInfoPlayer, lineInfo.transform.position, Quaternion.identity, _contentInfo.transform) as GameObject;
 				lineInfoClone.transform.GetChild(0).GetComponent<Text>().text += script.GetID();
 				int i = 0;
 				for (int resrcText = 1; resrcText < 14; resrcText += 2) {

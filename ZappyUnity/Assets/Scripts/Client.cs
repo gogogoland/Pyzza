@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Net.Sockets;
 using System;
@@ -63,7 +64,7 @@ public class Client : MonoBehaviour {
 	void	CheckData(){
 		if (_socket.Connected) {
 			if (_socket.Poll(100,SelectMode.SelectRead) && _socket.Available == 0) {
-				Application.Quit ();
+				SceneManager.LoadScene ("Menu");
 				throw new Exception("La connexion au serveur est interrompue.");
 			}
 		}
@@ -141,20 +142,19 @@ public class Client : MonoBehaviour {
 				for (int egg = 0; egg < _scriptData.eggs.Count; egg++)
 					DontDestroyOnLoad(_scriptData.eggs [egg]);
 				DontDestroyOnLoad(GameObject.Find ("CanvasTalk"));
-				Application.LoadLevel("Game");
-
-//				DemandInfo();
+				SceneManager.LoadScene("Game");
 			}
 		}
 		catch (Exception e)
 		{
 			_socket.Disconnect(true);
-			if (Application.loadedLevelName != "Game") {
+			Debug.Log ("yep");
+			if (SceneManager.GetActiveScene().name != "Game") {
 				error.text = "Error : " + e;
 				error.color = Color.red;
 			}
 			else
-				Application.LoadLevel("Menu");
+				SceneManager.LoadScene("Menu");
 			Debug.LogError(e);
 			Destroy(gameObject);
 		}
@@ -188,14 +188,22 @@ public class Client : MonoBehaviour {
 
 	// Update is called once per frame
 	void		Update () {
-		if (Application.loadedLevelName == "Game") {
-			CheckData();
-			if (rtfContent != null)
-				DataDistribution();
-			if (Time.time > nextSend) {
-				nextSend = Time.time + sendRate;
-				DemandInfo();
+		try {
+			if (SceneManager.GetActiveScene().name == "Game") {
+				CheckData();
+				if (rtfContent != null)
+					DataDistribution();
+				if (Time.time > nextSend) {
+					nextSend = Time.time + sendRate;
+					DemandInfo();
+				}
 			}
+		}
+		catch (Exception e){
+			_socket.Disconnect(true);
+			SceneManager.LoadScene("Menu");
+			Debug.LogError(e);
+			Destroy(gameObject);
 		}
 	}
 
