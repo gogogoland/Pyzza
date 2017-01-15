@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/11/10 04:05:49 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/13 02:21:51 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,30 @@
 static bool	incant_init_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 {
 	int			fix_lim_acolyte;
-	t_client	*player;
+	t_client	*aco;
 
 	fix_lim_acolyte = lim_acolyte;
 	if ((clt->tolvl = clt->lvl + 1) < 9 && lim_acolyte)
 	{
-		player = srv->clt;
+		aco = srv->clt;
 		clt->acolyte = (int *)malloc(lim_acolyte * sizeof(int));
-		while (player && lim_acolyte)
+		while (aco && lim_acolyte)
 		{
-			if (player->lvl == clt->lvl && player->pos.y == clt->pos.y
-					&& !player->casting && player->pos.x == clt->pos.x
-					&& player->name > 0 && player->name != clt->name)
+			if (aco->lvl == clt->lvl && aco->name > 0 && aco->socket > 0
+					&& !aco->casting && aco->name != clt->name
+					&& aco->pos.y == clt->pos.y && aco->pos.x == clt->pos.x
+					&& aco->time <= 0.0)
 			{
-				player->casting = true;
-				clt->acolyte[fix_lim_acolyte - lim_acolyte] = player->name;
+				aco->casting = true;
+				clt->acolyte[fix_lim_acolyte - lim_acolyte] = aco->name;
 				lim_acolyte--;
 			}
-			player = player->next;
+			aco = aco->next;
 		}
 	}
 	clt->casting = true;
-	!(lim_acolyte) ? incant_msg_acolyte(srv, clt, fix_lim_acolyte, 0) :
-		incant_reset_acolyte(srv, clt, fix_lim_acolyte);
+	incant_msg_acolyte(srv, clt, fix_lim_acolyte, 0);
+	!(lim_acolyte) ? 0 : incant_reset_acolyte(srv, clt, fix_lim_acolyte);
 	return (lim_acolyte ? false : true);
 }
 
@@ -50,7 +51,8 @@ static bool	incant_check_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	while (++i < lim_acolyte)
 	{
 		player = srv->clt;
-		while (player && !(clt->acolyte[i] == player->name
+		while (player && !(player->time <= 0.0
+				&& clt->acolyte[i] == player->name && player->socket > 0
 				&& player->lvl == clt->lvl && player->casting
 				&& player->pos.x == clt->pos.x && player->pos.y == clt->pos.y))
 			player = player->next;

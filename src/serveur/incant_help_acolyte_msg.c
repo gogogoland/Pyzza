@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/07 17:24:32 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/13 04:06:03 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static void	incant_msg_acolyte_graphic_end(t_server *srv, t_client *clt,
 		while (acolyte && !(acolyte->name == clt->acolyte[lim_acolyte]
 							&& acolyte->socket > 0))
 			acolyte = acolyte->next;
-		if (acolyte)
+		if (acolyte && acolyte->name != clt->name)
 		{
 			send_graphe_action(srv, command_write_msg(acolyte, 12,
 							acolyte->lvl, NULL), 0, NULL);
@@ -88,7 +88,7 @@ void		incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte,
 
 	msg = NULL;
 	if ((error = asprintf(&msg, g_msg_acolyte[state + 1], clt->lvl)) > 0)
-		send(clt->socket, msg, ft_strlen(msg), 0);
+		clt->health > 0.0 ? send(clt->socket, msg, ft_strlen(msg), 0): 0 ;
 	state ? incant_msg_acolyte_graphic_end(srv, clt, lim_acolyte)
 			: incant_msg_acolyte_graphic_begin(srv, clt, lim_acolyte);
 	while (error > 0 && clt->acolyte && lim_acolyte--)
@@ -99,11 +99,6 @@ void		incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte,
 			acolyte = acolyte->next;
 		if (acolyte)
 			send(acolyte->socket, msg, ft_strlen(msg), 0);
-		if (state)
-		{
-			send_graphe_action(srv,
-				command_write_msg(clt, 12, clt->lvl, NULL), 0, NULL);
-		}
 	}
 	ft_memdel((void **)&msg);
 }
