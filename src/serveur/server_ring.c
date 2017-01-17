@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 15:45:44 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/06 20:36:30 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/17 20:34:04 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ static const char	*g_srv_ring_msg[] =
 	"Malloc failed for ring (t_ring *.)\n",
 	"Malloc failed for ring->command (**char).\n",
 	"No data allocated in ring.\n",
-	"command from socket %i : %s",
-	"command from player #%i : %s"
+	"command from socket %i : %s\n",
+	"command from player #%i : %s\n",
+	"No more space for new command\n"
 };
 
-void		ring_recv(t_server *srv, char *cmd, t_ring *ring, int who)
+void		ring_recv(t_server *srv, t_cmd cmd, t_ring *ring, int who)
 {
 	char	*log;
 	int		limit;
 	int		i;
-	int		j;
 	int		len;
 
 	log = NULL;
@@ -36,20 +36,23 @@ void		ring_recv(t_server *srv, char *cmd, t_ring *ring, int who)
 	i = ring->cur;
 	while (++limit < ring->len && ring->command && ring->command[i])
 		i = (i + 1) % ring->len;
-	if (limit == ring->len || (len = strlen(cmd)) <= 0)
+	i = ring->end ? i + (ring->len * !i) - 1 : i;
+	//if (ring->end != 0)
+	//	i = (!i ? ring->len : i) - 1;
+	//printf("end = %i, i = %i. len = %i\n", ring->end, i, ring->len);
+	if (cmd.end - cmd.beg == 0)
 		return ;
-	if (!(ring->command[i] = (char *)malloc((len + 1) * sizeof(char))))
+	if ((limit == ring->len && ring->end == 0)
+			|| ((i = ring_recv_allow(cmd, ring, i)) < 0))
 	{
-		server_log(srv, g_srv_ring_msg[0]);
+		i >= 0 ? server_log(srv, g_srv_ring_msg[7])
+			: server_log(srv, g_srv_ring_msg[0]);
 		return ;
 	}
-	asprintf(&log, g_srv_ring_msg[5 + (who > 0)], who * ((who > 0) - (who < 0)),
-			cmd) > 0 ? server_log(srv, log) : 0;
+	!ring->end && asprintf(&log, g_srv_ring_msg[5 + (who > 0)], who * ((who > 0)
+				- (who < 0)), ring->command[i]) > 0 ? server_log(srv, log) : 0;
+	//printf("end = %i, cur = %i.\n", ring->end, ring->cur);
 	log ? ft_memdel((void **)&log) : 0;
-	j = -1;
-	while (++j < len)
-		ring->command[i][j] = cmd[j];
-	ring->command[i][j] = '\0';
 }
 
 char		*ring_send(t_server *srv, t_ring *ring)
@@ -63,7 +66,7 @@ char		*ring_send(t_server *srv, t_ring *ring)
 		server_log(srv, g_srv_ring_msg[4]);
 		return (NULL);
 	}
-	else if (!ring->command[ring->cur])
+	else if (!ring->command[ring->cur] || ring->end == ring->cur + 1)
 		return (NULL);
 	len = strlen(ring->command[ring->cur]);
 	if (!(cmd = (char *)malloc((len + 1) * sizeof(char))))
@@ -100,6 +103,7 @@ t_ring		*ring_init(t_server *srv, int len)
 	while (--len >= 0)
 		ring->command[len] = NULL;
 	ring->cur = 0;
+	ring->end = 0;
 	return (ring);
 }
 
@@ -135,5 +139,6 @@ void		ring_zero(t_ring *ring)
 			ring->command[i] = NULL;
 		}
 	}
+	ring->end = 0;
 	ring->cur = 0;
 }

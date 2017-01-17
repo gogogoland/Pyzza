@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 19:38:10 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/06 19:57:06 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/17 12:04:27 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,28 @@ static const char	*g_scr[] =
 	"Client tried to connect, but malloc failed.\n",
 	"Client disconnected , ip %s , port %d.\n"
 };
+
+static void client_concatenate(t_server *srv, char *cmd, t_ring *ring, int who)
+{
+	t_cmd	cur;
+
+	cur.beg = 0;
+	cur.end = 0;
+	cur.cmd = cmd;
+	while (cur.cmd[cur.end] != '\0')
+	{
+		if (cur.cmd[cur.end] == '\n')
+		{
+			printf("beg = %i, end = %i, cmd = %s.\n", cur.beg, cur.end, cur.cmd);
+			ring_recv(srv, cur, ring, who);
+			cur.beg = cur.end;
+			printf("beg = %i, end = %i, cmd = %s.\n", cur.beg, cur.end, cur.cmd);
+		}
+		cur.end++;
+	}
+	if (cur.end > 1 + cur.beg)
+		ring_recv(srv, cur, ring, who);
+}
 
 static void	client_command(t_fds *fds, t_server *srv, int s)
 {
@@ -43,7 +65,7 @@ static void	client_command(t_fds *fds, t_server *srv, int s)
 		!clt ? graphe_kill(srv, gfx, fds, 0) : command_death(fds, srv, clt, 0);
 	else
 	{
-		ring_recv(srv, buffer, !clt ? gfx->ring : clt->ring,
+		client_concatenate(srv, buffer, !clt ? gfx->ring : clt->ring,
 					!clt ? gfx->socket * -1 : clt->name);
 	}
 }

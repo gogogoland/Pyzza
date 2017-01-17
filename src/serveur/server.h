@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/27 15:45:12 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/17 01:38:50 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,17 @@ typedef struct sockaddr_in	t_sokadr_in;
 typedef struct sockaddr		t_sokadr;
 typedef struct in_addr		t_i_adr;
 
+typedef struct				s_cmd
+{
+	int						beg;
+	int						end;
+	char					*cmd;
+}							t_cmd;
+
 typedef struct				s_ring
 {
 	char					**command;
+	char					end;
 	int						cur;
 	int						len;
 }							t_ring;
@@ -141,7 +149,8 @@ typedef struct				s_server
 	bool					bonus_fork;
 }							t_server;
 
-void		ring_recv(t_server *srv, char *command, t_ring *ring, int socket);
+void		ring_recv(t_server *srv, t_cmd cmd, t_ring *ring, int socket);
+int			ring_recv_allow(t_cmd cmd, t_ring *ring, int cur);
 char		*ring_send(t_server *srv, t_ring *ring);
 t_ring		*ring_init(t_server *srv, int len);
 void		ring_zero(t_ring *ring);

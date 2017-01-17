@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2016/10/22 16:12:03 by tbalea           ###   ########.fr        #
+#    Updated: 2017/01/17 01:33:23 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,7 @@ SRC = ft_atoi.c\
 	  server_send.c\
 	  server_recv.c\
 	  server_ring.c\
+	  server_ring_recv.c\
 	  server_map.c\
 	  server_log.c\
 	  save_cur_cmd.c\

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/07 04:48:50 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/17 01:28:58 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,68 +33,68 @@ typedef void	(*t_x_clt)(t_fds *fds, t_server *srv, t_client *clt, char *cmd);
 
 static const t_x_clt g_tfc[] =
 {
+	command_nbr_co,
+	command_inventory,
+	command_take,
+	command_msg,
+	command_eat,
 	command_forward,
 	command_right,
 	command_left,
 	command_seek,
-	command_inventory,
-	command_take,
 	command_pose,
 	command_eject,
-	command_msg,
-	command_incant,
 	command_fork,
-	command_nbr_co,
-	command_eat,
+	command_incant,
 	command_death
 };
 
 static const char	*g_gfx_cmd[] =
 {
 	"GRAPHIC",
-	"tna\n",
-	"mct\n",
+	"tna",
+	"mct",
 	"bct ",
 	"pin #",
 	"plv #",
 	"ppo #",
-	"msz\n",
-	"sgt\n",
+	"msz",
+	"sgt",
 	"sst "
 };
 
 static const char	*g_clt_cmd[] =
 {
-	"avance\n",
-	"droite\n",
-	"gauche\n",
-	"voir\n",
-	"inventaire\n",
+	"connect_nbr",
+	"inventaire",
 	"prend",
-	"pose",
-	"expulse\n",
 	"broadcast",
-	"incantation\n",
-	"fork\n",
-	"connect_nbr\n",
-	"mange"
+	"mange",
+	"avance",
+	"droite",
+	"gauche",
+	"voir",
+	"pose",
+	"expulse",
+	"fork",
+	"incantation"
 };
 
 static const float	g_cmd_time[] =
 {
-	7.0f,
-	7.0f,
-	7.0f,
-	7.0f,
+	0.0f,
 	1.0f,
 	7.0f,
 	7.0f,
 	7.0f,
 	7.0f,
-	300.0f,
+	7.0f,
+	7.0f,
+	7.0f,
+	7.0f,
+	7.0f,
 	42.0f,
-	0.0f,
-	7.0f
+	300.0f
 };
 
 static char	*time_lapse(t_fds *fds, t_server *srv, float tim)
