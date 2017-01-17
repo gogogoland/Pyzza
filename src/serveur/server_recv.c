@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 19:38:10 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/17 12:04:27 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/17 21:03:26 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ static void client_concatenate(t_server *srv, char *cmd, t_ring *ring, int who)
 	{
 		if (cur.cmd[cur.end] == '\n')
 		{
-			printf("beg = %i, end = %i, cmd = %s.\n", cur.beg, cur.end, cur.cmd);
+			//printf("beg = %i, end = %i, cmd = %s.\n", cur.beg, cur.end, cur.cmd);
 			ring_recv(srv, cur, ring, who);
 			cur.beg = cur.end;
-			printf("beg = %i, end = %i, cmd = %s.\n", cur.beg, cur.end, cur.cmd);
+			//printf("beg = %i, end = %i, cmd = %s.\n", cur.beg, cur.end, cur.cmd);
 		}
 		cur.end++;
 	}
