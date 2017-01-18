@@ -204,7 +204,7 @@ public class Client : MonoBehaviour {
 			Application.Quit ();
 //			_socket.Disconnect(true);
 //			SceneManager.LoadScene("Menu");
-//			Debug.LogError(e);
+			Debug.LogError(e);
 //			Destroy(gameObject);
 		}
 	}

@@ -104,13 +104,13 @@ public class InfoCaseUI : MonoBehaviour {
 			if (script.GetPosX() == _coordX
 			    && script.GetPosY () == _coordY){
 				GameObject lineInfoClone = GameObject.Instantiate (lineInfoPlayer, lineInfo.transform.position, Quaternion.identity, _contentInfo.transform) as GameObject;
-				lineInfoClone.transform.GetChild(0).GetComponent<Text>().text += script.GetID();
+				lineInfoClone.transform.GetChild(0).GetChild(0).GetComponent<Text>().text += script.GetID();
 				Toggle toggle = lineInfoClone.GetComponentInChildren<Toggle> ();
 				toggle.group = _contentInfo.GetComponent<ToggleGroup>();
 				toggle.onValueChanged.AddListener ((value) => {Unselection(value);});
 				int i = 0;
 				for (int resrcText = 1; resrcText < 14; resrcText += 2) {
-					lineInfoClone.transform.GetChild(2).GetChild (resrcText).GetComponent<Text>().text = script.GetInventory(i) + "";
+					lineInfoClone.transform.GetChild(0).GetChild(2).GetChild (resrcText).GetComponent<Text>().text = script.GetInventory(i) + "";
 					i++;
 				}
 			}
