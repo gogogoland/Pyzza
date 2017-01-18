@@ -27,6 +27,8 @@ public class InfoCaseUI : MonoBehaviour {
 	private int				_coordX;
 	private int				_coordY;
 
+	private Toggle			[]_cadenas;
+
 	// Use this for initialization
 	void	Start () {
 		_scriptMap = GameObject.Find ("GenerateMap").GetComponent<GenerateMap> ();
@@ -40,6 +42,7 @@ public class InfoCaseUI : MonoBehaviour {
 		InitStructInfo ();
 		ClearInfoCase ();
 		GetInfoCase ();
+		_cadenas = _contentInfo.GetComponentsInChildren<Toggle> ();
 	}
 
 	void	ClearInfoCase() {
@@ -102,12 +105,21 @@ public class InfoCaseUI : MonoBehaviour {
 			    && script.GetPosY () == _coordY){
 				GameObject lineInfoClone = GameObject.Instantiate (lineInfoPlayer, lineInfo.transform.position, Quaternion.identity, _contentInfo.transform) as GameObject;
 				lineInfoClone.transform.GetChild(0).GetComponent<Text>().text += script.GetID();
+				Toggle toggle = lineInfoClone.GetComponentInChildren<Toggle> ();
+				toggle.group = _contentInfo.GetComponent<ToggleGroup>();
+				toggle.onValueChanged.AddListener ((value) => {Unselection(value);});
 				int i = 0;
 				for (int resrcText = 1; resrcText < 14; resrcText += 2) {
 					lineInfoClone.transform.GetChild(2).GetChild (resrcText).GetComponent<Text>().text = script.GetInventory(i) + "";
 					i++;
 				}
 			}
+		}
+	}
+
+	public static void Unselection(bool value){
+		if (value) {
+		} else {
 		}
 	}
 
@@ -120,6 +132,7 @@ public class InfoCaseUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void	Update () {
-	
+//		if (Input.GetKey (KeyCode.K))
+			
 	}
 }

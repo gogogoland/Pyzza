@@ -32,8 +32,11 @@ public class Player : MonoBehaviour {
 	private Transform					lvlPizza;
 	private GameObject					nameUI;
 
+	private DataGame					_scriptDataGame;
+
 	// Use this for initialization
 	void Awake () {
+		_scriptDataGame = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ();
 		anim = GetComponent<Animator> ();
 		_orientation = new int[2];
 		_inventory = new int[7];
@@ -220,17 +223,36 @@ public class Player : MonoBehaviour {
 		anim.SetTrigger(CardinalDirection());
 	}
 
+	Color			MyColorTeam(){
+		Color color = Color.white;
+		foreach(DataGame.c_team team in _scriptDataGame.teamName)
+		{
+			if (team.name == _teamName)
+				return (team.color);
+		}
+		return (Color.white);
+	}
+
 	void			Start(){
 		Animate (0);
 
-		Color color = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().teamName [_teamName];
+		Color color = MyColorTeam ();
 		transform.GetChild (0).GetComponent<SpriteRenderer> ().color = color;
 		color.a = 1.0f;
 		transform.GetChild (1).GetComponent<SpriteRenderer> ().color = color;
-		Xmax = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().width - 1;
-		Ymax = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ().height - 1;
+		Xmax = _scriptDataGame.width - 1;
+		Ymax = _scriptDataGame.height - 1;
 		nameUI = GameObject.Instantiate (playername_obj, transform.position, Quaternion.identity, GameObject.Find ("CanvasTalk").transform) as GameObject;
 		nameUI.transform.GetComponent<Text> ().text += _id;
+	}
+
+	void			Update(){
+		if (_scriptDataGame.colorChanged) {
+			Color color = MyColorTeam ();
+			transform.GetChild (0).GetComponent<SpriteRenderer> ().color = color;
+			color.a = 1.0f;
+			transform.GetChild (1).GetComponent<SpriteRenderer> ().color = color;
+		}
 	}
 
 	void			LateUpdate(){

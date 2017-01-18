@@ -18,13 +18,24 @@ public class MoveCamera : MonoBehaviour {
 	private Vector3		[]PosCameras;
 	private GameObject	orientationCam;
 	private Camera		camMinimap;
+	private bool 		lockPlayer = false;
+	private Transform	lockPlayerTransform;
 
-	void	CenterCamera() {
+	public bool LockPlayer {
+		get {
+			return lockPlayer;
+		}
+		set {
+			lockPlayer = value;
+		}
+	}
+
+	void		CenterCamera() {
 		float x = (width * scriptmap.tile.transform.localScale.x * 10 / 2 ) - (scriptmap.tile.transform.localScale.x * 10 / 2);
 		transform.position = new Vector3(x, transform.position.y, transform.position.z);
 	}
 
-	void	MiniMap() {
+	void		MiniMap() {
 		GameObject minimap = GameObject.Find ("CamMiniMap");
 		float x = width / 2.0f * 10.0f - 5.0f;
 		float z = -height / 2.0f * 10.0f + 5.0f;
@@ -40,7 +51,7 @@ public class MoveCamera : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void		Start () {
 		cloneBorderCamera = new GameObject[9];
 		scriptmap = GameObject.Find("GenerateMap").GetComponent<GenerateMap>();
 		tile_x = scriptmap.tile.transform.localScale.x;
@@ -51,35 +62,50 @@ public class MoveCamera : MonoBehaviour {
 		CenterCamera();
 		MiniMap ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	public void	LockCameraToPlayer(Transform player) {
+		lockPlayerTransform = player;
+	}
+
+	void		InputMiniMap(){
 		if (Input.GetKeyDown(KeyCode.Tab))
 			camMinimap.enabled = !camMinimap.enabled;
-		if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+	}
+
+	void		InputMoveCamera(){
+		if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !lockPlayer)
 			transform.Translate(-orientationCam.transform.right * Time.deltaTime * speed, Space.World);
-		if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+		if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !lockPlayer)
 			transform.Translate(orientationCam.transform.right * Time.deltaTime * speed, Space.World);
-		if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+		if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !lockPlayer)
 			transform.Translate(orientationCam.transform.forward * Time.deltaTime * speed, Space.World);
-		if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+		if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !lockPlayer)
 			transform.Translate(-orientationCam.transform.forward * Time.deltaTime * speed, Space.World);
-		if (Input.GetKey(KeyCode.PageUp))
+	}
+
+	void		InputRotateCamera(){
+		if (Input.GetKey(KeyCode.PageUp) && !lockPlayer)
 		{
 			for (int cam = 0; cam < cloneBorderCamera.Length; cam++)
 				cloneBorderCamera[cam].transform.Rotate(Vector3.up * Time.deltaTime * speedRot, Space.World);
 			orientationCam.transform.Rotate(Vector3.up * Time.deltaTime * speedRot, Space.World);
 		}
-		if (Input.GetKey(KeyCode.PageDown))
+		if (Input.GetKey(KeyCode.PageDown) && !lockPlayer)
 		{
 			for (int cam = 0; cam < cloneBorderCamera.Length; cam++)
 				cloneBorderCamera[cam].transform.Rotate(Vector3.up * Time.deltaTime * -speedRot, Space.World);
 			orientationCam.transform.Rotate(Vector3.up * Time.deltaTime * -speedRot, Space.World);
 		}
-		if (Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift))
+	}
+
+	void		InputSpeedCamera(){
+		if ((Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift)) && !lockPlayer)
 			speed = 100;
 		else
 			speed = 50;
+	}
+
+	void		LimitMapTeleportCamera(){
 		if (transform.position.x < -tile_x)
 			transform.position = new Vector3(width * 10 - tile_x, transform.position.y, transform.position.z);
 		if (width * 10 - tile_x < transform.position.x)
@@ -88,6 +114,18 @@ public class MoveCamera : MonoBehaviour {
 			transform.position = new Vector3(transform.position.x, transform.position.y, -height * 10);
 		if (transform.position.z < -height * 10)//150
 			transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+	}
+
+	// Update is called once per frame
+	void		Update () {
+		
+		if (lockPlayer)
+			Debug.Log ("locking");
+		InputMiniMap ();
+		InputMoveCamera ();
+		InputRotateCamera ();
+		InputSpeedCamera ();
+		LimitMapTeleportCamera ();
 	}
 	
 	void	GenerateCameras()

@@ -21,9 +21,15 @@ public class DataGame : MonoBehaviour {
 	};
 	public List<c_datamap>					structDataMap;
 	public int								unitTime = 0;
-	public Dictionary<string, Color>		teamName;
+	public class c_team
+	{
+		public string						name;
+		public Color						color;
+	};
+	public List<c_team>						teamName;
 	public List<GameObject>					players;
 	public List<GameObject>					eggs;
+	public bool								colorChanged = false;
 
 	private GameObject						egg_obj;
 	private GameObject						player_obj;
@@ -41,6 +47,7 @@ public class DataGame : MonoBehaviour {
 	private bool							startSceneGame = true;
 	private GameUI							scriptUI;
 
+
 	void	Awake()
 	{
 		player_obj = Resources.Load ("Prefabs/Player") as GameObject;
@@ -51,7 +58,7 @@ public class DataGame : MonoBehaviour {
 
 	public void		Init(){
 		structDataMap = new List<c_datamap> ();
-		teamName = new Dictionary<string, Color> ();
+		teamName = new List<c_team> ();
 		players = new List<GameObject> ();
 		eggs = new List<GameObject> ();
 		typeResrc = new string[7];
@@ -153,10 +160,10 @@ public class DataGame : MonoBehaviour {
 	public void		TeamName(string []cmd) {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees du nom d'equipe erronees");
-		Color color = new Color( UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0.78f );
-		if (teamName.ContainsValue (color))
-			TeamName (cmd);
-		teamName.Add (cmd [1], color);
+		c_team	team = new c_team ();
+		team.color = new Color( UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0.78f );
+		team.name = cmd [1];
+		teamName.Add (team);
 	}
 
 	public void		PlayerNew(string []cmd) {
@@ -412,10 +419,15 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la fin de partie erronees");
 		victory.SetActive (true);
-		victory.GetComponent<Image> ().color = new Color (1.0f - teamName [cmd [1]].r, 1.0f - teamName [cmd [1]].g, 1.0f - teamName [cmd [1]].b);
 		Text text = victory.transform.GetChild (1).GetComponent<Text> ();
 		text.text = cmd [1];
-		text.color = teamName [cmd [1]];
+		foreach (c_team team in teamName) {
+			if (team.name == cmd [1]) {
+				victory.GetComponent<Image> ().color = new Color (1.0f - team.color.r, 1.0f - team.color.g, 1.0f - team.color.b);
+				text.color = team.color;
+				break ;
+			}
+		}
 		scriptUI.AddMsgInfo("Victoire de l'equipe : " + cmd[1]);
 	}
 
@@ -449,6 +461,14 @@ public class DataGame : MonoBehaviour {
 		}
 	}
 
+	void			InputColorTeamChanged() {
+		if (Input.GetKey(KeyCode.C)) {
+			foreach(c_team team in teamName)
+				team.color = new Color (UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0.78f);
+			colorChanged = true;
+		}
+	}
+
 	// Use this for initialization
 	void StartSceneGame () {
 		if (SceneManager.GetActiveScene().name == "Game" && startSceneGame == true) {
@@ -462,5 +482,6 @@ public class DataGame : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		StartSceneGame ();
+		InputColorTeamChanged ();
 	}
 }
