@@ -199,11 +199,22 @@ public class Client : MonoBehaviour {
 				}
 			}
 		}
-		catch (Exception e){
+		catch (Exception e) {
 			_socket.Disconnect(true);
-			SceneManager.LoadScene("Menu");
-			Debug.LogError(e);
-			Destroy(gameObject);
+			Application.Quit ();
+//			_socket.Disconnect(true);
+//			SceneManager.LoadScene("Menu");
+//			Debug.LogError(e);
+//			Destroy(gameObject);
+		}
+	}
+
+	IEnumerator		DisconnectServer(Exception e){
+		GameUI	scriptUI = GameObject.Find("Canvas").GetComponent<GameUI>();
+		while(true) 
+		{ 
+			scriptUI.AddMsgInfo("Deconnexion du server dans " + (int)Time.time + "...");
+			yield return new WaitForSeconds(1f);
 		}
 	}
 
