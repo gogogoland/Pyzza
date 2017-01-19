@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -27,13 +28,14 @@ public class InfoCaseUI : MonoBehaviour {
 	private int				_coordX;
 	private int				_coordY;
 
-	private Toggle			[]_cadenas;
+	private MoveCamera 		_scriptCamera;
 
 	// Use this for initialization
 	void	Start () {
 		_scriptMap = GameObject.Find ("GenerateMap").GetComponent<GenerateMap> ();
 		_scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI> ();
 		_scriptDataGame = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ();
+		_scriptCamera = GameObject.Find ("Cameras").GetComponent<MoveCamera> ();
 
 		_informationCase = _scriptUI.information_case;
 		_contentInfo = _informationCase.transform.GetChild (1).transform.GetChild (0).transform.GetChild (0).gameObject;
@@ -42,7 +44,6 @@ public class InfoCaseUI : MonoBehaviour {
 		InitStructInfo ();
 		ClearInfoCase ();
 		GetInfoCase ();
-		_cadenas = _contentInfo.GetComponentsInChildren<Toggle> ();
 	}
 
 	void	ClearInfoCase() {
@@ -106,8 +107,7 @@ public class InfoCaseUI : MonoBehaviour {
 				GameObject lineInfoClone = GameObject.Instantiate (lineInfoPlayer, lineInfo.transform.position, Quaternion.identity, _contentInfo.transform) as GameObject;
 				lineInfoClone.transform.GetChild(0).GetChild(0).GetComponent<Text>().text += script.GetID();
 				Toggle toggle = lineInfoClone.GetComponentInChildren<Toggle> ();
-				toggle.group = _contentInfo.GetComponent<ToggleGroup>();
-				toggle.onValueChanged.AddListener ((value) => {Unselection(value);});
+				toggle.group = lineInfoClone.GetComponentInParent<ToggleGroup>();
 				int i = 0;
 				for (int resrcText = 1; resrcText < 14; resrcText += 2) {
 					lineInfoClone.transform.GetChild(0).GetChild(2).GetChild (resrcText).GetComponent<Text>().text = script.GetInventory(i) + "";
@@ -117,22 +117,28 @@ public class InfoCaseUI : MonoBehaviour {
 		}
 	}
 
-	public static void Unselection(bool value){
-		if (value) {
-		} else {
-		}
-	}
-
 	void	GetInfoCase() {
 		CoordCase ();
 		StockAllNameResrc ();
-		GetInfoResrc ();
 		GetInfoPlayer ();
+		GetInfoResrc ();
+	}
+
+	public void SetToggleOff(){
+		_contentInfo.GetComponent<ToggleGroup> ().SetAllTogglesOff ();
 	}
 	
 	// Update is called once per frame
 	void	Update () {
-//		if (Input.GetKey (KeyCode.K))
-			
+		if (_contentInfo.GetComponent<ToggleGroup>().AnyTogglesOn()) {
+			Toggle	toggle = _contentInfo.GetComponent<ToggleGroup>().ActiveToggles().FirstOrDefault();
+			string	name = toggle.transform.parent.GetChild (0).GetComponent<Text> ().text;
+			foreach (GameObject player in _scriptDataGame.players) {
+				if (player.GetComponent<Player>().GetID() == int.Parse(name.Substring(7))) {
+					_scriptCamera.LockPlayerCamera (player.transform);
+					break;
+				}
+			}
+		}
 	}
 }

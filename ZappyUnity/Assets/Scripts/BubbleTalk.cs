@@ -16,7 +16,7 @@ public class BubbleTalk : MonoBehaviour {
 			transform.position = new Vector3(Camera.main.WorldToScreenPoint (posPlayer.position).x, Camera.main.WorldToScreenPoint (posPlayer.position).y + 80.0f, 0);
 	}
 
-	IEnumerator		BubbleDeath(){
+	IEnumerator		BubbleDeath() {
 		yield return new WaitForSeconds (3);
 		Destroy (this.gameObject);
 	}

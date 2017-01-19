@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class MoveCamera : MonoBehaviour {
@@ -18,17 +19,8 @@ public class MoveCamera : MonoBehaviour {
 	private Vector3		[]PosCameras;
 	private GameObject	orientationCam;
 	private Camera		camMinimap;
-	private bool 		lockPlayer = false;
-	private Transform	lockPlayerTransform;
 
-	public bool LockPlayer {
-		get {
-			return lockPlayer;
-		}
-		set {
-			lockPlayer = value;
-		}
-	}
+	private Vector3		rotationDefault = new Vector3(40, 0, 0);
 
 	void		CenterCamera() {
 		float x = (width * scriptmap.tile.transform.localScale.x * 10 / 2 ) - (scriptmap.tile.transform.localScale.x * 10 / 2);
@@ -63,8 +55,10 @@ public class MoveCamera : MonoBehaviour {
 		MiniMap ();
 	}
 
-	public void	LockCameraToPlayer(Transform player) {
-		lockPlayerTransform = player;
+	void		EyeToggleOff(){
+		GameObject selection = GameObject.Find ("Selection(Clone)");
+		if (selection)
+			selection.GetComponent<InfoCaseUI> ().SetToggleOff ();
 	}
 
 	void		InputMiniMap(){
@@ -73,33 +67,43 @@ public class MoveCamera : MonoBehaviour {
 	}
 
 	void		InputMoveCamera(){
-		if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !lockPlayer)
-			transform.Translate(-orientationCam.transform.right * Time.deltaTime * speed, Space.World);
-		if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !lockPlayer)
-			transform.Translate(orientationCam.transform.right * Time.deltaTime * speed, Space.World);
-		if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !lockPlayer)
-			transform.Translate(orientationCam.transform.forward * Time.deltaTime * speed, Space.World);
-		if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !lockPlayer)
-			transform.Translate(-orientationCam.transform.forward * Time.deltaTime * speed, Space.World);
+		if ((Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow))) {
+			transform.Translate (-orientationCam.transform.right * Time.deltaTime * speed, Space.World);
+			EyeToggleOff();
+		}
+		if ((Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow))) {
+			transform.Translate (orientationCam.transform.right * Time.deltaTime * speed, Space.World);
+			EyeToggleOff();
+		}
+		if ((Input.GetKey (KeyCode.W) || Input.GetKey (KeyCode.UpArrow))) {
+			transform.Translate (orientationCam.transform.forward * Time.deltaTime * speed, Space.World);
+			EyeToggleOff();
+		}
+		if ((Input.GetKey (KeyCode.S) || Input.GetKey (KeyCode.DownArrow))) {
+			transform.Translate (-orientationCam.transform.forward * Time.deltaTime * speed, Space.World);
+			EyeToggleOff();
+		}
 	}
 
 	void		InputRotateCamera(){
-		if (Input.GetKey(KeyCode.PageUp) && !lockPlayer)
+		if (Input.GetKey(KeyCode.PageUp))
 		{
 			for (int cam = 0; cam < cloneBorderCamera.Length; cam++)
 				cloneBorderCamera[cam].transform.Rotate(Vector3.up * Time.deltaTime * speedRot, Space.World);
 			orientationCam.transform.Rotate(Vector3.up * Time.deltaTime * speedRot, Space.World);
+			EyeToggleOff();
 		}
-		if (Input.GetKey(KeyCode.PageDown) && !lockPlayer)
+		if (Input.GetKey(KeyCode.PageDown))
 		{
 			for (int cam = 0; cam < cloneBorderCamera.Length; cam++)
 				cloneBorderCamera[cam].transform.Rotate(Vector3.up * Time.deltaTime * -speedRot, Space.World);
 			orientationCam.transform.Rotate(Vector3.up * Time.deltaTime * -speedRot, Space.World);
+			EyeToggleOff();
 		}
 	}
 
 	void		InputSpeedCamera(){
-		if ((Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift)) && !lockPlayer)
+		if ((Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift)))
 			speed = 100;
 		else
 			speed = 50;
@@ -116,11 +120,15 @@ public class MoveCamera : MonoBehaviour {
 			transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 	}
 
+	public void	LockPlayerCamera(Transform player) {
+		transform.position = new Vector3 (player.position.x, transform.position.y, player.position.z - 35.0f);
+		for (int cam = 0; cam < cloneBorderCamera.Length; cam++)
+			cloneBorderCamera [cam].transform.rotation = Quaternion.Euler(rotationDefault);
+		orientationCam.transform.rotation = Quaternion.identity;
+	}
+
 	// Update is called once per frame
 	void		Update () {
-		
-		if (lockPlayer)
-			Debug.Log ("locking");
 		InputMiniMap ();
 		InputMoveCamera ();
 		InputRotateCamera ();
@@ -130,9 +138,6 @@ public class MoveCamera : MonoBehaviour {
 	
 	void	GenerateCameras()
 	{
-		Vector3		rotate = new Vector3(40, 0, 0);
-
-
 		PosCameras = new Vector3[9];
 		PosCameras[0] = Vector3.up * 20;
 
@@ -149,7 +154,7 @@ public class MoveCamera : MonoBehaviour {
 
 		for (int cam = 0; cam < cloneBorderCamera.Length; cam++)
 		{
-			cloneBorderCamera[cam] = GameObject.Instantiate(cameraBorder, PosCameras[cam], Quaternion.Euler(rotate), transform) as GameObject;
+			cloneBorderCamera[cam] = GameObject.Instantiate(cameraBorder, PosCameras[cam], Quaternion.Euler(rotationDefault), transform) as GameObject;
 			cloneBorderCamera[cam].GetComponent<SelectTile>().select = select;
 			if (cam > 0)
 				cloneBorderCamera[cam].GetComponent<AudioListener>().enabled = false;

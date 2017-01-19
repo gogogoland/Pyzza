@@ -177,6 +177,8 @@ public class DataGame : MonoBehaviour {
 		                 int.Parse (cmd[4]),
 		                 int.Parse (cmd[5]),
 		                 cmd[6]);
+		if (SceneManager.GetActiveScene().name == "Game")
+			scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " apparait en [" + script.GetPosX() + ", " + script.GetPosY() + "]");
 		players.Add(clone_player);
 	}
 
