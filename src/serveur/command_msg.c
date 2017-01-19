@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:50:09 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/17 01:30:30 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/19 00:56:00 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	t_client	*cur;
 
 	cur = srv->clt;
+	oldtonew_cmd(clt);
 	while (clt->current_cmd && cur)
 	{
 		if (cur->socket > 0 && cur->socket != clt->socket)
@@ -83,6 +84,5 @@ void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	send_client_action(srv, clt, !!clt->current_cmd);
 	send_graphe_action(srv, command_write_msg(clt, 14, 0, clt->current_cmd),
 						0, NULL);
-	if (clt && clt->current_cmd)
-		ft_memdel((void **)&clt->current_cmd);
+	erasecur_cmd(clt);
 }

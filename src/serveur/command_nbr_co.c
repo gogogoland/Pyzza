@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:20:37 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/20 17:13:15 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/18 23:17:49 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	command_nbr_co(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	co = 0;
 	while (cur)
 	{
-		co += (!cur->socket && (!cur->team || cur->team == clt->team)) ? 1 : 0;
+		if (!cur->socket && (cur->team == -1 || cur->team == clt->team))
+			co++;
 		cur = cur->next;
 	}
 	if (asprintf(&msg, "%i\n", co) > 0)

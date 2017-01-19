@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 16:00:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/20 17:35:12 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/19 01:25:22 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ static const char	*g_cmd_take[] =
 
 void	command_take(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
-	int		i;
 	int		r;
 	bool	ook;
 
-	ook = false;
 	r = 0;
-	while (r < 7 && strncmp(g_cmd_take[r], clt->current_cmd,
+	ook = false;
+	oldtonew_cmd(clt);
+	while (r < 7 && clt->current_cmd && strncmp(g_cmd_take[r], clt->current_cmd,
 							ft_strlen(clt->current_cmd)))
 //							ft_strlen(g_cmd_take[r])))
 		r++;
@@ -44,4 +44,5 @@ void	command_take(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	srv->map[clt->pos.y][clt->pos.x][r]--;
 	send_graphe_action(srv, command_write_msg(clt, 10, r, NULL), 0, NULL);
 	send_graphe_action(srv, command_write_msg(clt, 9, 0, NULL), 1, clt);
+	erasecur_cmd(clt);
 }

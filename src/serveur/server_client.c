@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2016/11/07 17:28:01 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/19 00:00:32 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void		client_init_data(t_client *clt, t_server *srv)
 	clt->time = 0.0f;
 	clt->health = 0.0f;
 	clt->current_cmd = NULL;
+	clt->fornext_cmd = NULL;
 	clt->acolyte = NULL;
 	clt->casting = 0;
 	clt->fork = false;
@@ -76,6 +77,8 @@ void		client_kill(t_client *clt, t_fds *fds)
 	clt->lvl = 0;
 	if (clt->current_cmd)
 		free(clt->current_cmd);
+	if (clt->fornext_cmd)
+		free(clt->fornext_cmd);
 	if (clt->acolyte)
 		free(clt->acolyte);
 	client_init_data(clt, NULL);
@@ -93,6 +96,8 @@ void		client_zero(t_client *clt, t_fds *fds, t_server *srv)
 	}
 	if (clt->current_cmd)
 		free(clt->current_cmd);
+	if (clt->fornext_cmd)
+		free(clt->fornext_cmd);
 	if (clt->acolyte)
 		free(clt->acolyte);
 	ring_zero(clt->ring);
