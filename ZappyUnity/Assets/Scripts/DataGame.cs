@@ -47,7 +47,6 @@ public class DataGame : MonoBehaviour {
 	private bool							startSceneGame = true;
 	private GameUI							scriptUI;
 
-
 	void	Awake()
 	{
 		player_obj = Resources.Load ("Prefabs/Player") as GameObject;
@@ -228,6 +227,7 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.PlaySound ("Expulse");
 				InvockBubbleTalk(player.transform, "FUS ROH DA !", 1);
 //				scriptUI.AddMsgInfo("Expulsion du joueur #" + script.GetID());
 				break ;
@@ -252,6 +252,7 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				if (cmd.Length >= 3) {
+					script.PlaySound ("meow" + UnityEngine.Random.Range (1, 3));
 					InvockBubbleTalk(player.transform, talk, 0);
 					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " dit : " + talk);
 				}
@@ -281,10 +282,10 @@ public class DataGame : MonoBehaviour {
 		if (cmd.Length != 4)
 			throw new Exception("Donnees de la fin de l'incantation erronees");
 		DestroyPentacle(int.Parse (cmd [1]), int.Parse (cmd [2]));
-		if (int.Parse (cmd[3]) == 0)
-			scriptUI.AddMsgInfo("L'incantation [" + cmd[1] + ", " + cmd[2] + "] est un echec");
+		if (int.Parse (cmd [3]) == 0)
+			scriptUI.AddMsgInfo ("L'incantation [" + cmd [1] + ", " + cmd [2] + "] est un echec");
 		else
-			scriptUI.AddMsgInfo("L'incantation [" + cmd[1] + ", " + cmd[2] + "] est une reussite");
+			scriptUI.AddMsgInfo ("L'incantation [" + cmd [1] + ", " + cmd [2] + "] est une reussite");
 	}
 	
 	public void		PlayerForkEgg(string []cmd){
@@ -346,6 +347,7 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " meurt");
+				script.PlaySound ("CatDie");
 				script.Die ();
 				players.Remove(player);
 				break ;
@@ -457,6 +459,7 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				InvockBubbleTalk(player.transform, "* miam *", 2);
+				script.PlaySound ("Eat");
 //				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " mange");
 				break ;
 			}

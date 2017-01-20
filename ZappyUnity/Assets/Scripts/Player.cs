@@ -33,6 +33,7 @@ public class Player : MonoBehaviour {
 	private GameObject					nameUI;
 
 	private DataGame					_scriptDataGame;
+	private AudioSource					[]audiosrcs;
 
 	// Use this for initialization
 	void Awake () {
@@ -50,7 +51,7 @@ public class Player : MonoBehaviour {
 		colorParticleDrop.Add (6, Color.red);
 		lvlPizza = transform.GetChild (1).transform.GetChild (0);
 		playername_obj = Resources.Load ("Prefabs/PlayerName") as GameObject;
-
+		audiosrcs = GetComponentsInChildren<AudioSource> ();
 	}
 
 	public void		PlayerNew(int id, int posX, int posY, int orientation, int level, string teamName) {
@@ -121,6 +122,7 @@ public class Player : MonoBehaviour {
 			Animate (0);
 		}
 		if (_posX != newPosX) {
+			PlaySound ("Walk");
 			Animate (1);
 			if (_posX == 0 && newPosX == Xmax)
 				StartCoroutine("_MoveLeftRight", -1);
@@ -131,6 +133,7 @@ public class Player : MonoBehaviour {
 			_posX = newPosX;
 		}
 		if (_posY != newPosY) {
+			PlaySound ("Walk");
 			Animate (1);
 			if (_posY == 0 && newPosY == Ymax)
 				StartCoroutine("_MoveUpDown", -1);
@@ -208,12 +211,15 @@ public class Player : MonoBehaviour {
 	public void		SetLevel(int level) {
 		if (_level != level) {
 			_level = level;
-			GameObject particleLvl = GameObject.Instantiate(lvlUp_obj, transform);
+			GameObject particleLvl = GameObject.Instantiate (lvlUp_obj, transform);
+			PlaySound ("LevelUp");
 			particleLvl.transform.localPosition = Vector3.zero;
-			Destroy(particleLvl, particleLvl.GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
-			lvlPizza.GetComponent<SpriteRenderer>().sprite = lvlPizzaSprite[_level - 1];
+			Destroy (particleLvl, particleLvl.GetComponent<ParticleSystem> ().main.startLifetimeMultiplier);
+			lvlPizza.GetComponent<SpriteRenderer> ().sprite = lvlPizzaSprite [_level - 1];
 			if (_level == 9)
-				lvlPizza.GetComponent<SpriteRenderer>().color = Color.red;
+				lvlPizza.GetComponent<SpriteRenderer> ().color = Color.red;
+		} else {
+			PlaySound ("FailedLvlUp");
 		}
 	}
 
@@ -267,5 +273,14 @@ public class Player : MonoBehaviour {
 	{
 		Destroy (nameUI);
 		Destroy(gameObject);
+	}		
+
+	public void PlaySound(string name){
+		foreach(AudioSource audio in audiosrcs){
+			if (audio.clip.name == name) {
+				audio.Play ();
+				break;
+			}
+		}
 	}
 }
