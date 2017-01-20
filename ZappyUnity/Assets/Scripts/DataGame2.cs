@@ -5,21 +5,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class DataGame : MonoBehaviour {
+public class DataGame2 : MonoBehaviour {
 
 	public Animator							anim;
 	public Sprite							[]bubbleTex;
 	public int								height;
 	public int								width;
-	public class							c_datamap {
-		public int							x;
-		public int							z;
-		public int							type;
-		public int							nbr;
+	public class c_tile
+	{
+		public int							posX;
+		public int							posY;
 		public int							tileColor;
-		public GameObject					resrc;
+		public int							[]resrcs;
 	};
-	public List<c_datamap>					structDataMap;
+	public List<c_tile>						dataTiles;
 	public int								unitTime = 0;
 	public class c_team
 	{
@@ -56,7 +55,7 @@ public class DataGame : MonoBehaviour {
 	}
 
 	public void		Init(){
-		structDataMap = new List<c_datamap> ();
+		dataTiles = new List<c_tile> ();
 		teamName = new List<c_team> ();
 		players = new List<GameObject> ();
 		eggs = new List<GameObject> ();
@@ -88,6 +87,42 @@ public class DataGame : MonoBehaviour {
 		return coord;
 	}
 
+	bool			GetOrDropResrcUpdate(string []cmd){
+		foreach(c_tile tile in dataTiles){
+			for (int data = 0; data < tile.resrcs.Length; data++) {
+				if (tile.resrcs [data] != int.Parse (cmd [3 + data])) {
+					GameObject.Find ("GenerateMap").GetComponent<GenerateMap2> ().UpdateResrcGetDrop(tile, int.Parse (cmd [3 + data]), data);
+					return (true);
+				}
+			}
+		}
+		return (false);
+	}
+
+	void			GenerateTilesMap(string []cmd){
+		c_tile	tmp = new c_tile();
+
+		tmp.posX = int.Parse(cmd[1]);
+		tmp.posY = int.Parse(cmd[2]);
+		tmp.resrcs = new int[7];
+		for (int data = 0; data < 7; data++) {
+			tmp.resrcs[data] = int.Parse(cmd[3+data]);
+		}
+		tmp.tileColor = (cmd.Length == 11) ? int.Parse (cmd [10]) : 0;
+		if (update == true && vectupdate.x != -1 && vectupdate.y != -1) {
+			GameObject.Find ("GenerateMap").GetComponent<GenerateMap2>().UpdateTileBadUpload(tmp);
+		}
+		dataTiles.Add (tmp);
+	}
+
+	public void		TileContent(string []cmd) {
+		if (cmd.Length < 10 && cmd.Length > 11)
+			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
+		if (GetOrDropResrcUpdate (cmd))
+			return;
+		GenerateTilesMap (cmd);
+	}
+
 	void			InvockBubbleTalk(Transform player, string talk, int typeBubble){
 		GameObject cloneBubble = GameObject.Instantiate(bubble_obj, player.transform.position, Quaternion.identity, GameObject.Find ("CanvasTalk").transform) as GameObject;
 
@@ -115,47 +150,7 @@ public class DataGame : MonoBehaviour {
 		vectupdate.y = y;
 	}
 
-	private bool	_GetOrDropResrc(string []cmd){
-		foreach (c_datamap tile in structDataMap) {
-			if (tile.x == int.Parse (cmd[1]) && tile.z == int.Parse (cmd[2])) {
-				for (int data = 0; data < 7; data++) {
-					if (tile.type == data && tile.nbr != int.Parse (cmd[3+data])) {
-						GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().UpdateResrc(tile, int.Parse (cmd[3+data]));
-						return (true);
-					}
-				}
-			}
-		}
-		return (false);
-	}
 
-	private void	_TileBadUpload(string []cmd){
-		for (int data = 0; data < 7; data++) {
-			c_datamap	tmp = new c_datamap();
-			
-			tmp.x = int.Parse (cmd[1]);
-			tmp.z = int.Parse (cmd[2]);
-			tmp.type = data;
-			tmp.nbr = int.Parse (cmd[3+data]);
-			if (cmd.Length == 10)
-				tmp.tileColor = 0;
-			else
-				tmp.tileColor = int.Parse(cmd[10]);
-			if (update == true && vectupdate.x != -1 && vectupdate.y != -1) {
-				GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().UpdateTile(tmp);
-			}
-			structDataMap.Add(tmp);
-		}
-	}
-
-	public void		TileContent(string []cmd) {
-		if (cmd.Length < 10 && cmd.Length > 11)
-			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
-		if (_GetOrDropResrc (cmd))
-			return ;
-		_TileBadUpload (cmd);
-	}
-	
 	public void		TeamName(string []cmd) {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees du nom d'equipe erronees");
@@ -171,11 +166,11 @@ public class DataGame : MonoBehaviour {
 		clone_player = GameObject.Instantiate(player_obj, CoordCase(int.Parse (cmd[2]), int.Parse (cmd[3]), false), Quaternion.identity) as GameObject;
 		Player script = clone_player.GetComponent<Player> ();
 		script.PlayerNew(int.Parse (cmd [1].Substring (1, cmd [1].Length - 1)),
-		                 int.Parse (cmd[2]),
-		                 int.Parse (cmd[3]),
-		                 int.Parse (cmd[4]),
-		                 int.Parse (cmd[5]),
-		                 cmd[6]);
+			int.Parse (cmd[2]),
+			int.Parse (cmd[3]),
+			int.Parse (cmd[4]),
+			int.Parse (cmd[5]),
+			cmd[6]);
 		if (SceneManager.GetActiveScene().name == "Game")
 			scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " apparait en [" + script.GetPosX() + ", " + script.GetPosY() + "]");
 		players.Add(clone_player);
@@ -188,8 +183,8 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.SetPosOrient(int.Parse (cmd[2]),
-									int.Parse (cmd[3]),
-									int.Parse (cmd[4]));
+					int.Parse (cmd[3]),
+					int.Parse (cmd[4]));
 				break ;
 			}
 		}
@@ -229,7 +224,7 @@ public class DataGame : MonoBehaviour {
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.PlaySound ("Expulse");
 				InvockBubbleTalk(player.transform, "FUS ROH DA !", 1);
-//				scriptUI.AddMsgInfo("Expulsion du joueur #" + script.GetID());
+				//				scriptUI.AddMsgInfo("Expulsion du joueur #" + script.GetID());
 				break ;
 			}
 		}
@@ -270,8 +265,8 @@ public class DataGame : MonoBehaviour {
 				Player script = player.GetComponent<Player>();
 
 				if (script.GetPosX() == int.Parse (cmd[1])
-				    && script.GetPosY() == int.Parse (cmd[2])
-				    && script.GetID() == int.Parse (cmd [id].Substring (1, cmd [id].Length - 1))){
+					&& script.GetPosY() == int.Parse (cmd[2])
+					&& script.GetID() == int.Parse (cmd [id].Substring (1, cmd [id].Length - 1))){
 					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " incante au level: " + cmd [3] + " en [" + cmd[1] + ", " + cmd[2] + "]");
 				}
 			}
@@ -287,7 +282,7 @@ public class DataGame : MonoBehaviour {
 		else
 			scriptUI.AddMsgInfo ("L'incantation [" + cmd [1] + ", " + cmd [2] + "] est une reussite");
 	}
-	
+
 	public void		PlayerForkEgg(string []cmd){
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de la ponte d'un oeuf erronees");
@@ -295,12 +290,13 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				InvockBubbleTalk(player.transform, "Je pond un oeuf", 2);
-//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pond un oeuf");
+				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pond un oeuf");
 				break ;
 			}
 		}
 	}
-	
+
+
 	public void		PlayerGet(string []cmd){
 		if (cmd.Length != 3)
 			throw new Exception("Donnees d'une action sur une ressource erronees");
@@ -309,7 +305,7 @@ public class DataGame : MonoBehaviour {
 
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.SetObjConcern(int.Parse (cmd[2]));
-//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " prend " + int.Parse (cmd[2]));
+				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " prend " + int.Parse (cmd[2]));
 				break ;
 			}
 		}
@@ -322,10 +318,11 @@ public class DataGame : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.SetObjConcern(int.Parse (cmd[2]));
-//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pose " + int.Parse (cmd[2]));
+				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pose " + int.Parse (cmd[2]));
 			}
 		}
 	}
+
 
 	public void		PlayerDie(string []cmd) {
 		if (cmd.Length != 2)
@@ -351,9 +348,9 @@ public class DataGame : MonoBehaviour {
 		if (script == null)
 			Debug.LogError ("!!!");
 		script.EggNew(int.Parse (cmd [1].Substring (1, cmd [1].Length - 1)),
-			           int.Parse (cmd [2].Substring (1, cmd [2].Length - 1)),
-			           int.Parse (cmd [3]),
-		    	       int.Parse (cmd [4]));
+			int.Parse (cmd [2].Substring (1, cmd [2].Length - 1)),
+			int.Parse (cmd [3]),
+			int.Parse (cmd [4]));
 		eggs.Add(clone_egg);
 	}
 
@@ -365,7 +362,7 @@ public class DataGame : MonoBehaviour {
 			if (!script)
 
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos");
+				//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos");
 				script.Hatch();
 				break ;
 			}
@@ -378,7 +375,7 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject egg in eggs) {
 			Egg script = egg.GetComponent<Egg> ();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-//				scriptUI.AddMsgInfo("Un joueur est nee a partir de l'oeuf #" + script.GetID());
+				//				scriptUI.AddMsgInfo("Un joueur est nee a partir de l'oeuf #" + script.GetID());
 				script.Die(true);
 				eggs.Remove(egg);
 				break ;
@@ -392,14 +389,14 @@ public class DataGame : MonoBehaviour {
 		foreach (GameObject egg in eggs) {
 			Egg script = egg.GetComponent<Egg> ();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos mais pourri");
+				//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos mais pourri");
 				script.Die(false);
 				eggs.Remove(egg);
 				break ;
 			}
 		}
 	}
-	
+
 	public void		ServerGetTime(string []cmd) {
 		if (cmd.Length != 2)
 			throw new Exception("Donnees de l'unite de temps erronees");
@@ -447,7 +444,7 @@ public class DataGame : MonoBehaviour {
 			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				InvockBubbleTalk(player.transform, "* miam *", 2);
 				script.PlaySound ("Eat");
-//				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " mange");
+				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " mange");
 				break ;
 			}
 		}
@@ -460,6 +457,7 @@ public class DataGame : MonoBehaviour {
 			colorChanged = true;
 		}
 	}
+
 
 	// Use this for initialization
 	void StartSceneGame () {

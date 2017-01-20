@@ -42,7 +42,7 @@ public class GenerateMap : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Awake(){
+	void Awake() {
 		_scriptData = GameObject.Find ("Client(Clone)").GetComponent<DataGame>();
 		height = _scriptData.height;
 		width = _scriptData.width;
@@ -160,31 +160,12 @@ public class GenerateMap : MonoBehaviour {
 				NbrResrcPerTile(ressources_obj, data, 5);
 		}
 	}
-	
+
 	void	GenerateResrc(DataGame.c_datamap upTile) {
 		if (upTile.type == FOOD)
 			NbrResrcPerTile(food_obj, upTile, 20);
 		else if (upTile.type >= RESRC)
 			NbrResrcPerTile(ressources_obj, upTile, 5);
-	}
-
-	void	OneResrcInTile(GameObject modelToClone, DataGame.c_datamap upTile, int resize) {
-		Vector3 vec = Vector3.zero;
-
-		GameObject tmp;
-		vec = new Vector3 (0, modelToClone.transform.position.y, 0);
-		tmp = GameObject.Instantiate(modelToClone, vec, Quaternion.identity, tiles[upTile.z, upTile.x].transform) as GameObject;
-		tmp.transform.localScale *= resize;
-		tmp.GetComponent<SpriteRenderer>().sprite = ressources_sprite[upTile.type];
-		RepositioningResrc(tmp, upTile.type);
-		resrcs.Add(tmp);
-	}
-	
-	void	GenerateOneResrc(DataGame.c_datamap upTile) {
-		if (upTile.type == FOOD)
-			OneResrcInTile(food_obj, upTile, 20);
-		else if (upTile.type >= RESRC)
-			OneResrcInTile(ressources_obj, upTile, 5);
 	}
 
 	void	DeleteResrc(DataGame.c_datamap downTile, GameObject tile) {
