@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/18 23:25:36 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/22 22:46:19 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,8 +176,8 @@ void		send_client_action(t_server *srv, t_client *clt, bool ok)
 	if (clt && clt->socket)
 	{
 		send(clt->socket, ok ? "ok\n" : "ko\n", 3, 0);
-		asprintf(&msg, "Result of command from player #%i is %s", clt->name,
-				ok ? "ok\n" : "ko\n");
+		asprintf(&msg, "Result of command from player #%i is %s",
+				clt->name, ok ? "ok\n" : "ko\n");
 		server_log(srv, msg);
 		ft_memdel((void **)&msg);
 	}

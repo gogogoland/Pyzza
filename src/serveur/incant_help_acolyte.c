@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/13 02:21:51 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/23 17:56:56 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,7 @@ bool		incant_help_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	else if (clt->acolyte)
 	{
 		if (!incant_check_acolyte(srv, clt, lim_acolyte))
-		{
-			incant_reset_acolyte(srv, clt, lim_acolyte);
 			return (false);
-		}
 	}
 	else if (clt->casting && lim_acolyte)
 		return (false);
