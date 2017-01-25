@@ -6,13 +6,13 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:40:06 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/18 22:51:23 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/25 17:44:14 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static const int	g_cmd_incant[7][7] =
+static const int	g_cmd_incant[8][7] =
 {
 	{0, 1, 0, 0, 0, 0, 0},
 	{1, 1, 1, 1, 0, 0, 0},
@@ -20,7 +20,8 @@ static const int	g_cmd_incant[7][7] =
 	{3, 1, 1, 2, 0, 1, 0},
 	{3, 1, 2, 1, 3, 0, 0},
 	{5, 1, 2, 3, 0, 1, 0},
-	{5, 2, 2, 2, 2, 2, 1}
+	{5, 2, 2, 2, 2, 2, 1},
+	{0, 0, 0, 0, 0, 0, 0}
 };
 
 static bool	incant_interrupt(t_client *clt, t_server *srv)

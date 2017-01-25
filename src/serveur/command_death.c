@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 14:06:53 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/16 00:19:21 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/01/25 19:58:10 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	command_death_fork(t_fds *fds, t_server *srv, t_client *clt)
 
 void		command_death(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
-	clt->health = 0.0;
+	clt->health = 0.0f;
 	if (clt->action == 10)
 	{
 		incant_msg_acolyte(srv, clt, g_cmd_death_acolytes[clt->lvl - 1], -1);
