@@ -26,7 +26,7 @@ public class SelectTile : MonoBehaviour {
 			Ray			ray = cam.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast (ray, out hit) && hit.collider != null && hit.transform.gameObject != cloneselect) {
 				cloneselect = GameObject.Instantiate(select, select.transform.position + hit.transform.position, select.transform.rotation) as GameObject;
-				cloneselect.GetComponent<InfoCaseUI>().tile = hit.transform.gameObject;
+				cloneselect.GetComponent<InfoCaseUI2>().tile = hit.transform.gameObject;
 			}
 		}
 	}

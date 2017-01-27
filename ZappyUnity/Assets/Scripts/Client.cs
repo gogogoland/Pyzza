@@ -25,12 +25,11 @@ public class Client : MonoBehaviour {
 	private const string					SGT =		"sgt\n";
 	private const string					SST =		"sst ";
 	private string							rtfContent = null;
-	private DataGame						_scriptData;
+	private DataGame2						_scriptData;
 
 	private Socket							_socket;
 	private GameObject						_loading_panel;
 	private float							nextSend = 0.0f;
-	private bool							checktile = true;
 	
 	// Use this for initialization
 
@@ -124,7 +123,7 @@ public class Client : MonoBehaviour {
 
 	void		Start () {
 		error = GameObject.Find("Error").GetComponent<Text>();
-		_scriptData = GetComponent<DataGame> ();
+		_scriptData = GetComponent<DataGame2> ();
 		_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		try {
 			_socket.Connect(inputIP, ip);
@@ -148,7 +147,6 @@ public class Client : MonoBehaviour {
 		catch (Exception e)
 		{
 			_socket.Disconnect(true);
-			Debug.Log ("yep");
 			if (SceneManager.GetActiveScene().name != "Game") {
 				error.text = "Error : " + e;
 				error.color = Color.red;
@@ -160,22 +158,13 @@ public class Client : MonoBehaviour {
 		}
 	}
 
-	public void SendBCT()
-	{
-		Vector2 ret = GameObject.Find ("GenerateMap").GetComponent<GenerateMap>().CheckAllTiles();
-		if (ret.x != -1) {
-			Send (BCT + ret.x + " " + ret.y + "\n");
-			_scriptData.UpdateTile((int)ret.x, (int)ret.y);
-		}
-		else
-			checktile = false;
+	public void SendBCT(int x, int y){
+		Send (BCT + x + " " + y + "\n");
 	}
 
 	void		DemandInfo() {
 		try {
 			if (_socket.Connected) {
-				if (checktile)
-					SendBCT();
 				if (newTime) {
 					Send (SST + newTimeValue + "\n");
 					newTime = false;

@@ -11,19 +11,19 @@ public class MoveCamera : MonoBehaviour {
 	public GameObject	select;
 	public GameObject	camLocation;
 
-	private GenerateMap	scriptmap;
-	private float		tile_x;
-	private float		tile_z;
-	private int			width;
-	private int			height;
-	private Vector3		[]PosCameras;
-	private GameObject	orientationCam;
-	private Camera		camMinimap;
+	private GenerateMap2	scriptmap;
+	private float			tile_x;
+	private float			tile_z;
+	private int				width;
+	private int				height;
+	private Vector3			[]PosCameras;
+	private GameObject		orientationCam;
+	private Camera			camMinimap;
 
 	private Vector3		rotationDefault = new Vector3(40, 0, 0);
 
 	void		CenterCamera() {
-		float x = (width * scriptmap.tile.transform.localScale.x * 10 / 2 ) - (scriptmap.tile.transform.localScale.x * 10 / 2);
+		float x = (width * scriptmap.tile_obj.transform.localScale.x * 10 / 2 ) - (scriptmap.tile_obj.transform.localScale.x * 10 / 2);
 		transform.position = new Vector3(x, transform.position.y, transform.position.z);
 	}
 
@@ -45,9 +45,9 @@ public class MoveCamera : MonoBehaviour {
 	// Use this for initialization
 	void		Start () {
 		cloneBorderCamera = new GameObject[9];
-		scriptmap = GameObject.Find("GenerateMap").GetComponent<GenerateMap>();
-		tile_x = scriptmap.tile.transform.localScale.x;
-		tile_z = scriptmap.tile.transform.localScale.z;
+		scriptmap = GameObject.Find("GenerateMap").GetComponent<GenerateMap2>();
+		tile_x = scriptmap.tile_obj.transform.localScale.x;
+		tile_z = scriptmap.tile_obj.transform.localScale.z;
 		height = scriptmap.height;
 		width = scriptmap.width;
 		GenerateCameras();
@@ -58,7 +58,7 @@ public class MoveCamera : MonoBehaviour {
 	void		EyeToggleOff(){
 		GameObject selection = GameObject.Find ("Selection(Clone)");
 		if (selection)
-			selection.GetComponent<InfoCaseUI> ().SetToggleOff ();
+			selection.GetComponent<InfoCaseUI2> ().SetToggleOff ();
 	}
 
 	void		InputMiniMap(){

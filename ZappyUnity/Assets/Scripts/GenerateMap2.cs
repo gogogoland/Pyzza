@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Threading;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,6 +35,7 @@ public class GenerateMap2 : MonoBehaviour {
 		resrcName[4] = "Mendiane";
 		resrcName[5] = "Phiras";
 		resrcName[6] = "Thystame";
+
 	}
 
 	void		AssignTilesColor() {
@@ -143,26 +145,6 @@ public class GenerateMap2 : MonoBehaviour {
 		
 	}
 
-	public Vector2 CheckAllTiles() {
-		Vector2 ret = new Vector2 (-1.0f, -1.0f);
-		for (int z = 0; z < height; z++) {
-			for (int x = 0; x < width; x++) {
-				if (tiles[z, x].GetComponent<Renderer>().material.mainTexture == null) {
-					ret.x = x;
-					ret.y = z;
-					break ;
-				}
-			}
-		}
-		return (ret);
-	}
-
-	public void	UpdateTileBadUpload(DataGame2.c_tile upTile) {
-		variant_materials[upTile.posY, upTile.posX] = materials[upTile.tileColor];
-		tiles [upTile.posY, upTile.posX].GetComponent<Renderer> ().material = variant_materials [upTile.posY, upTile.posX];
-		GenerateResrc(upTile);
-	}
-
 	void	_DeleteResrc(int type, GameObject tile) {
 		Transform delete = tile.transform.FindChild (resrcName [type]);
 		if (delete)
@@ -172,14 +154,19 @@ public class GenerateMap2 : MonoBehaviour {
 	public void	UpdateResrcGetDrop(DataGame2.c_tile newTile, int newNbr, int typeResrc) {
 		GameObject tile = GameObject.Find ("Tile(" + newTile.posY + ", " + newTile.posX + ")");
 
-		if (newNbr > newTile.resrcs[typeResrc]) {
+		if (newNbr > newTile.resrcs[typeResrc] && newTile.resrcs[typeResrc] == 0) {
 			Debug.LogWarning ("CreateResrc");
 			newTile.resrcs[typeResrc] = newNbr;
 		}
-		else if (newNbr < newTile.resrcs[typeResrc]) {
+		else if (newNbr < newTile.resrcs[typeResrc] && newNbr == 0) {
 			newTile.resrcs[typeResrc] = newNbr;
 			if (newNbr == 0)
 				_DeleteResrc(typeResrc, tile);
 		}
+	}
+
+	public void UpdateResrcBadUpload(DataGame2.c_tile tileData, Transform tile) {
+		tile.GetComponent<Renderer>().material = variant_materials[tileData.posY, tileData.posX];
+		GenerateResrc (tileData);
 	}
 }

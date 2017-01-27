@@ -32,12 +32,12 @@ public class Player : MonoBehaviour {
 	private Transform					lvlPizza;
 	private GameObject					nameUI;
 
-	private DataGame					_scriptDataGame;
+	private DataGame2					_scriptDataGame;
 	private AudioSource					[]audiosrcs;
 
 	// Use this for initialization
 	void Awake () {
-		_scriptDataGame = GameObject.Find ("Client(Clone)").GetComponent<DataGame> ();
+		_scriptDataGame = GameObject.Find ("Client(Clone)").GetComponent<DataGame2> ();
 		anim = GetComponent<Animator> ();
 		_orientation = new int[2];
 		_inventory = new int[7];
@@ -62,8 +62,7 @@ public class Player : MonoBehaviour {
 		_orientation[1] = DEFAULT;
 		_level = level;
 		_teamName = teamName;
-		transform.localScale = new Vector3((float)_level, (float)_level, (float)_level);
-		transform.position = new Vector3 (transform.position.x, (9 + _level) * transform.position.y / 10, transform.position.z);
+		transform.position = new Vector3 (transform.position.x, 2.5f, transform.position.z);
 	}
 	
 	public int		GetID(){
@@ -231,7 +230,7 @@ public class Player : MonoBehaviour {
 
 	Color			MyColorTeam(){
 		Color color = Color.white;
-		foreach(DataGame.c_team team in _scriptDataGame.teamName)
+		foreach(DataGame2.c_team team in _scriptDataGame.teamName)
 		{
 			if (team.name == _teamName)
 				return (team.color);

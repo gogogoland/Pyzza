@@ -19,6 +19,7 @@ public class DataGame2 : MonoBehaviour {
 		public int							[]resrcs;
 	};
 	public List<c_tile>						dataTiles;
+	public string							[]typeResrc;
 	public int								unitTime = 0;
 	public class c_team
 	{
@@ -36,11 +37,6 @@ public class DataGame2 : MonoBehaviour {
 	private GameObject						clone_player;
 	private GameObject						clone_egg;
 	private GameObject						invok_obj;
-
-	private string							[]typeResrc;
-
-	private bool							update = false;
-	private Vector2							vectupdate = new Vector2(-1, -1);
 
 	private GameObject						victory;
 	private bool							startSceneGame = true;
@@ -89,10 +85,12 @@ public class DataGame2 : MonoBehaviour {
 
 	bool			GetOrDropResrcUpdate(string []cmd){
 		foreach(c_tile tile in dataTiles){
-			for (int data = 0; data < tile.resrcs.Length; data++) {
-				if (tile.resrcs [data] != int.Parse (cmd [3 + data])) {
-					GameObject.Find ("GenerateMap").GetComponent<GenerateMap2> ().UpdateResrcGetDrop(tile, int.Parse (cmd [3 + data]), data);
-					return (true);
+			if (tile.posX == int.Parse(cmd[1]) && tile.posY == int.Parse(cmd[2])) {
+				for (int data = 0; data < tile.resrcs.Length; data++) {
+					if (tile.resrcs [data] != int.Parse (cmd [3 + data])) {
+						GameObject.Find ("GenerateMap").GetComponent<GenerateMap2> ().UpdateResrcGetDrop (tile, int.Parse (cmd [3 + data]), data);
+						return (true);
+					}
 				}
 			}
 		}
@@ -109,18 +107,15 @@ public class DataGame2 : MonoBehaviour {
 			tmp.resrcs[data] = int.Parse(cmd[3+data]);
 		}
 		tmp.tileColor = (cmd.Length == 11) ? int.Parse (cmd [10]) : 0;
-		if (update == true && vectupdate.x != -1 && vectupdate.y != -1) {
-			GameObject.Find ("GenerateMap").GetComponent<GenerateMap2>().UpdateTileBadUpload(tmp);
-		}
 		dataTiles.Add (tmp);
 	}
 
 	public void		TileContent(string []cmd) {
 		if (cmd.Length < 10 && cmd.Length > 11)
 			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
-		if (GetOrDropResrcUpdate (cmd))
-			return;
 		GenerateTilesMap (cmd);
+		if (SceneManager.GetActiveScene().name == "Game" && GetOrDropResrcUpdate (cmd))
+			return;
 	}
 
 	void			InvockBubbleTalk(Transform player, string talk, int typeBubble){
@@ -143,13 +138,6 @@ public class DataGame2 : MonoBehaviour {
 		if (invoc.gameObject)
 			Destroy (invoc.gameObject);
 	}
-
-	public void		UpdateTile(int x, int y) {
-		update = true;
-		vectupdate.x = x;
-		vectupdate.y = y;
-	}
-
 
 	public void		TeamName(string []cmd) {
 		if (cmd.Length != 2)

@@ -11,7 +11,7 @@ public class GameUI : MonoBehaviour {
 
 	private GameObject	_infoTime;
 	private int			_infoUnitTime;
-	private DataGame	_scriptData;
+	private DataGame2	_scriptData;
 	private Client		_scriptClient;
 	private Slider		_slider;
 	private Text		_timeUI;
@@ -25,7 +25,7 @@ public class GameUI : MonoBehaviour {
 		GameObject client = GameObject.Find ("Client(Clone)");
 		_contentMsgInfo = GameObject.Find ("MsgContent").transform;
 		_scrollviewMsgInfo = GameObject.Find ("MsgScrollView").transform;
-		_scriptData = client.GetComponent<DataGame>();
+		_scriptData = client.GetComponent<DataGame2>();
 		_scriptClient = client.GetComponent<Client> ();
 		_slider = GameObject.Find ("SliderTime").GetComponent<Slider> ();
 		_timeUI = GameObject.Find ("timeCurrent").GetComponent<Text> ();
