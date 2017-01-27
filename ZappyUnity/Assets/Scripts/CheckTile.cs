@@ -6,7 +6,6 @@ public class CheckTile : MonoBehaviour {
 	
 	private int					coordX;
 	private int					coordY;
-	private bool				check = false;
 	private Client				scriptClient;
 	private DataGame2			scriptData;
 	private GenerateMap2		scriptMap;
@@ -18,21 +17,26 @@ public class CheckTile : MonoBehaviour {
 		coordX = (int)(transform.position.x / 10);
 		coordY = (int)(-transform.position.z / 10);
 	}
-	
+
+	DataGame2.c_tile	DataTile(){
+		foreach (DataGame2.c_tile tileData in scriptData.dataTiles) {
+			if (tileData.posX == coordX && tileData.posY == coordY)
+				return (tileData);
+		}
+		return (null);
+	}
+
 	// Update is called once per frame
 	void Update () {
-		if (!check) {
-			if (GetComponent<Renderer> ().material.mainTexture == null) {
-				scriptClient.SendBCT (coordX, coordY);Debug.LogWarning ("plop2");
-				foreach (DataGame2.c_tile tileData in scriptData.dataTiles) {
-					if (tileData.posX == coordX && tileData.posY == coordY) {
-						scriptMap.UpdateResrcBadUpload (tileData, transform);
-						Debug.LogWarning ("plop");
-						break;
-					}
-				}
-			}
-			check = true;
-		}
+		if (GetComponent<Renderer> ().material.mainTexture == null) {
+			Debug.LogWarning ("NoMaterial");
+			scriptClient.SendBCT (coordX, coordY);
+			DataGame2.c_tile tileData = DataTile ();
+			if (tileData != null)
+				GetComponent<Renderer> ().material = scriptMap.UpdateResrcBadUpload (tileData);
+			else
+				Debug.LogWarning ("TileData = null");
+		} else
+			this.enabled = false;
 	}
 }

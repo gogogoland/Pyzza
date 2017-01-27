@@ -165,8 +165,9 @@ public class GenerateMap2 : MonoBehaviour {
 		}
 	}
 
-	public void UpdateResrcBadUpload(DataGame2.c_tile tileData, Transform tile) {
-		tile.GetComponent<Renderer>().material = variant_materials[tileData.posY, tileData.posX];
+	public Material UpdateResrcBadUpload(DataGame2.c_tile tileData) {
+		Debug.LogWarning ("UpdateResrc");
 		GenerateResrc (tileData);
+		return (materials[tileData.tileColor]);
 	}
 }
