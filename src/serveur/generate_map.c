@@ -6,12 +6,11 @@
 /*   By: nd-heyge <nd-heyge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 17:09:02 by nd-heyge          #+#    #+#             */
-/*   Updated: 2016/10/21 23:13:55 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 18:54:17 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
-#include <stdlib.h>
 
 static const char	*g_log_map_data =
 {

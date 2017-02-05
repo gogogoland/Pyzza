@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 15:18:57 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/23 00:19:18 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 18:52:21 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	command_pose(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	ook = false;
 	while (r < 7 && clt->current_cmd && strncmp(g_cmd_pose[r], clt->current_cmd,
 							ft_strlen(clt->current_cmd)))
-//							ft_strlen(g_cmd_pose[r])))
 		r++;
 	erasecur_cmd(clt);
 	oldtonew_cmd(clt);

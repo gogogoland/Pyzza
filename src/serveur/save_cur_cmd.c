@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/28 17:06:12 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/22 17:32:52 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 19:02:00 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ void		oldtonew_cmd(t_client *clt)
 		clt->current_cmd = ft_strdup(clt->fornext_cmd);
 		ft_memdel((void **)&clt->fornext_cmd);
 	}
-	return;
+	return ;
 }
 
 void		erasecur_cmd(t_client *clt)
 {
 	if (clt && clt->current_cmd)
 		ft_memdel((void **)&clt->current_cmd);
-	return;
+	return ;
 }

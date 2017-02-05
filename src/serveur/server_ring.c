@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 15:45:44 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/17 20:34:04 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 18:58:49 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ void		ring_recv(t_server *srv, t_cmd cmd, t_ring *ring, int who)
 	while (++limit < ring->len && ring->command && ring->command[i])
 		i = (i + 1) % ring->len;
 	i = ring->end ? i + (ring->len * !i) - 1 : i;
-	//if (ring->end != 0)
-	//	i = (!i ? ring->len : i) - 1;
-	//printf("end = %i, i = %i. len = %i\n", ring->end, i, ring->len);
 	if (cmd.end - cmd.beg == 0)
 		return ;
 	if ((limit == ring->len && ring->end == 0)
@@ -51,7 +48,6 @@ void		ring_recv(t_server *srv, t_cmd cmd, t_ring *ring, int who)
 	}
 	!ring->end && asprintf(&log, g_srv_ring_msg[5 + (who > 0)], who * ((who > 0)
 				- (who < 0)), ring->command[i]) > 0 ? server_log(srv, log) : 0;
-	//printf("end = %i, cur = %i.\n", ring->end, ring->cur);
 	log ? ft_memdel((void **)&log) : 0;
 }
 

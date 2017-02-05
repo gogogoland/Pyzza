@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 14:06:53 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/25 19:58:10 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 19:00:14 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,16 @@ static const char	*g_cmd_death[] =
 	"Socket %i closed.\n"
 };
 
-
 static const int	g_cmd_death_acolytes[8] =
 {
-		0,
-		1,
-		1,
-		3,
-		3,
-		5,
-		5,
-		0
+	0,
+	1,
+	1,
+	3,
+	3,
+	5,
+	5,
+	0
 };
 
 static void	command_death_log(t_server *srv, int type, char *ip, int port)

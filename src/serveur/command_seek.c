@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/21 23:11:08 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 18:52:59 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,71 +23,6 @@ static const char	*g_cmd_seek[] =
 	"thystame",
 	"joueur"
 };
-
-//TODO : DELETE ?
-/*
-static char	*command_seek_transfer(char *wt, int n, char *arg)
-{
-	bool	new;
-	char	*ret;
-
-	new = false;
-	if (!arg)
-		arg = ft_itoa(n);
-	else
-		new = !new;
-	ret = ft_strcjoin(wt, arg, ' ');
-	ft_memdel((void **)&wt);
-	if (!new)
-		ft_memdel((void **)&arg);
-	return (ret);
-}
-
-static char	*command_seek_copy(char *wt, t_client *clt, int res, int type)
-{
-	char	*new;
-
-	if (!type)
-	{
-		asprintf(&new, "%s | %i", wt, res);
-		ft_memdel((void **)&wt);
-	}
-	else if (type == 1)
-	{
-		asprintf(&new, "%s %i", wt, res);
-		ft_memdel((void **)&wt);
-	}
-	else if (type == 2)
-	{
-		asprintf(&new, "%s %i %i", wt, clt->name, clt->team);
-		ft_memdel((void **)&wt);
-	}
-	return (new);
-}
-
-static char	*command_seek_add(t_server *srv, t_coord pos, int s, char *wt)
-{
-	int			i;
-	t_client	*clt;
-
-	i = 0;
-	clt = srv->clt;
-	if (wt)
-		wt = command_seek_copy(wt, NULL, srv->map[pos.y][pos.x][0], 0);
-	else
-		asprintf(&wt, "%i", srv->map[pos.y][pos.x][0]);
-	while (++i < 7)
-		wt = command_seek_copy(wt, NULL, srv->map[pos.y][pos.x][i], 1);
-	while (clt)
-	{
-		if (clt->socket && clt->socket != s
-				&& clt->pos.x == pos.x && clt->pos.y == pos.y)
-			wt = command_seek_copy(wt, clt, -1, 2);
-		clt = clt->next;
-	}
-	return (wt);
-}
-*/
 
 static char	*command_seek_copy(char *wt, int type)
 {

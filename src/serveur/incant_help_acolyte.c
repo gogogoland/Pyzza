@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/25 19:56:10 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 19:04:19 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,9 @@ static bool	incant_init_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 		clt->acolyte = (int *)malloc(lim_acolyte * sizeof(int));
 		while (aco && lim_acolyte)
 		{
-			if (aco->lvl == clt->lvl && aco->name > 0 && aco->socket > 0
-					&& !aco->casting && aco->name != clt->name
-					&& aco->pos.y == clt->pos.y && aco->pos.x == clt->pos.x
-					&& aco->time <= 0.0f)
+			if (aco->lvl == clt->lvl && aco->socket > 0 && aco->time <= 0.0f
+					&& !aco->casting && aco->name != clt->name && aco->name > 0
+					&& aco->pos.y == clt->pos.y && aco->pos.x == clt->pos.x)
 			{
 				aco->casting = true;
 				clt->acolyte[fix_lim_acolyte - lim_acolyte] = aco->name;

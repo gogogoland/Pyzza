@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/01 23:49:42 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 19:21:19 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,6 @@ static void		clear_and_set(t_fds *fds, t_server *srv)
 	fds->max++;
 }
 
-//	TODO
-//	*	check exception
-//	*	check signal
-//	*	close and free all
-//	*	exit player
 int				main(int argc, char **argv)
 {
 	clock_t		tim;
@@ -118,8 +113,6 @@ int				main(int argc, char **argv)
 		clk = ret > 0 ? (float)((clock() - tim) / CLOCKS_PER_SEC) : -1.0f;
 		send_client(fds, srv, clk);
 		tim = !((clock() - tim) / CLOCKS_PER_SEC) ? tim : clock();
-		/*exception(fds, srv);*/
 	}
-	//close_server(srv, fds);
 	return (ret);
 }

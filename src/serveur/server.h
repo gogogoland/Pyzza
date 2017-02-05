@@ -6,11 +6,11 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/19 00:56:35 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 19:20:53 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef server_H
+#ifndef SERVER_H
 # define SERVER_H
 
 # include "libft.h"
@@ -57,10 +57,6 @@
 # define TIME_MAX 100
 
 # define NBR_RESRC_CASE_MAX 7
-
-/*
-** [0] : -p, [1] : -x, [2] : -y, [3] : -c, [4] -t [5] -b
-*/ 
 
 typedef struct sockaddr_in	t_sokadr_in;
 typedef struct sockaddr		t_sokadr;
@@ -150,113 +146,127 @@ typedef struct				s_server
 	bool					bonus_fork;
 }							t_server;
 
-void		ring_recv(t_server *srv, t_cmd cmd, t_ring *ring, int socket);
-int			ring_recv_allow(t_cmd cmd, t_ring *ring, int cur);
-char		*ring_send(t_server *srv, t_ring *ring);
-t_ring		*ring_init(t_server *srv, int len);
-void		ring_zero(t_ring *ring);
-void		ring_kill(t_ring *ring);
+void						ring_recv(t_server *srv, t_cmd cmd,
+										t_ring *ring, int socket);
+int							ring_recv_allow(t_cmd cmd, t_ring *ring, int cur);
+char						*ring_send(t_server *srv, t_ring *ring);
+t_ring						*ring_init(t_server *srv, int len);
+void						ring_zero(t_ring *ring);
+void						ring_kill(t_ring *ring);
 
-t_client	*client_init(t_server *srv);
-void		client_init_data(t_client *clt, t_server *srv);
-void		client_zero(t_client *clt, t_fds *fds, t_server *srv);
-void		client_kill(t_client *clt, t_fds *fds);
+t_client					*client_init(t_server *srv);
+void						client_init_data(t_client *clt,
+											t_server *srv);
+void						client_zero(t_client *clt, t_fds *fds,
+										t_server *srv);
+void						client_kill(t_client *clt, t_fds *fds);
 
-t_gfx		*graphe_init(t_server *srv);
-t_gfx		*graphe_news(t_server *srv, t_gfx *prev, t_fds *fds, int s);
-void		graphe_kill(t_server *srv, t_gfx *gfx, t_fds *fds, bool gfxtoclt);
+t_gfx						*graphe_init(t_server *srv);
+t_gfx						*graphe_news(t_server *srv, t_gfx *prev, t_fds *fds,
+										int s);
+void						graphe_kill(t_server *srv, t_gfx *gfx, t_fds *fds,
+										bool gfxtoclt);
 
-t_server	*init_map(t_server *srv);
-void		kill_map(t_server *srv);
+t_server					*init_map(t_server *srv);
+void						kill_map(t_server *srv);
 
-void		generate_map(t_server *srv, int nbr_resrc_case);
+void						generate_map(t_server *srv, int nbr_resrc_case);
 
-bool		parser(int ac, char **av, t_server *srv);
-bool		parser_int(int ac, char **av, t_server *srv);
-bool		parser_team(int ac, char **av, t_server *srv);
-t_server	*server_create(int argc, char **argv);
-void		server_log(t_server *srv, const char *msg);
+bool						parser(int ac, char **av, t_server *srv);
+bool						parser_int(int ac, char **av, t_server *srv);
+bool						parser_team(int ac, char **av, t_server *srv);
+t_server					*server_create(int argc, char **argv);
+void						server_log(t_server *srv, const char *msg);
 
-bool		recv_client(t_fds *fds, t_server *srv, int ret);
-void		send_client(t_fds *fds, t_server *srv, float tom);
-bool		save_cur_cmd(t_client *clt, char *msg, int action);
-void		oldtonew_cmd(t_client *clt);
-void		erasecur_cmd(t_client *clt);
-void		send_client_action(t_server *srv, t_client *clt, bool ok);
-void		send_graphe_action(t_server *srv, char *msg, int spec,
-								t_client *clt);
+bool						recv_client(t_fds *fds, t_server *srv, int ret);
+void						send_client(t_fds *fds, t_server *srv, float tom);
+bool						save_cur_cmd(t_client *clt, char *msg, int action);
+void						oldtonew_cmd(t_client *clt);
+void						erasecur_cmd(t_client *clt);
+void						send_client_action(t_server *srv, t_client *clt,
+												bool ok);
+void						send_graphe_action(t_server *srv, char *msg,
+												int spec, t_client *clt);
 
-void		command_forward(t_fds *fds, t_server *srv,
+void						command_forward(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_eject(t_fds *fds, t_server *srv,
+void						command_eject(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_forward(t_fds *fds, t_server *srv,
+void						command_forward(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_inventory(t_fds *fds, t_server *srv,
+void						command_inventory(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_left(t_fds *fds, t_server *srv,
+void						command_left(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_lvlup(t_fds *fds, t_server *srv,
+void						command_lvlup(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_msg(t_fds *fds, t_server *srv,
+void						command_msg(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-bool		msg_save(t_client *clt, char *msg);
-void		command_pose(t_fds *fds, t_server *srv,
+bool						msg_save(t_client *clt, char *msg);
+void						command_pose(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_right(t_fds *fds, t_server *srv,
+void						command_right(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_seek(t_fds *fds, t_server *srv,
+void						command_seek(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_take(t_fds *fds, t_server *srv,
+void						command_take(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_incant(t_fds *fds, t_server *srv,
+void						command_incant(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-bool		incant_process(t_client *cllt, t_server *srv);
-void		incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte,
-								int state);
-bool		incant_help_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
-void		incant_lvlup_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
-void		incant_reset_acolyte(t_server *srv, t_client *clt, int lim_acolyte);
-void		command_fork(t_fds *fds, t_server *srv,
+bool						incant_process(t_client *cllt, t_server *srv);
+void						incant_msg_acolyte(t_server *srv, t_client *clt,
+												int lim_acolyte, int state);
+bool						incant_help_acolyte(t_server *srv, t_client *clt,
+												int lim_acolyte);
+void						incant_lvlup_acolyte(t_server *srv, t_client *clt,
+												int lim_acolyte);
+void						incant_reset_acolyte(t_server *srv, t_client *clt,
+												int lim_acolyte);
+void						command_fork(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_nbr_co(t_fds *fds, t_server *srv,
+void						command_nbr_co(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_death(t_fds *fds, t_server *srv,
+void						command_death(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
-void		command_eat(t_fds *fds, t_server *srv,
+void						command_eat(t_fds *fds, t_server *srv,
 								t_client *clt, char *cmd);
 
-void		command_player(t_fds *fds, t_server *srv,
+void						command_player(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void		command_graphe(t_fds *fds, t_server *srv,
+void						command_graphe(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void		command_size(t_fds *fds, t_server *srv,
+void						command_size(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void		command_time_server(t_fds *fds, t_server *srv,
+void						command_time_server(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void		command_time_change(t_fds *fds, t_server *srv,
+void						command_time_change(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void		command_player_inv(t_fds *fds, t_server *srv,
+void						command_player_inv(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void		command_player_lvl(t_fds *fds, t_server *srv,
+void						command_player_lvl(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void		command_player_pos(t_fds *fds, t_server *srv,
+void						command_player_pos(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void		command_map(t_fds *fds, t_server *srv,
+void						command_map(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void		command_box(t_fds *fds, t_server *srv,
+void						command_box(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-void		command_team_name(t_fds *fds, t_server *srv,
+void						command_team_name(t_fds *fds, t_server *srv,
 								t_gfx *gfx, char *cmd);
-int			command_get_int(int i, char *cmd);
-void		command_box_content(t_gfx *gfx, int x, int y, int *box);
-void		command_graphical_bad_parameters(t_fds *fds, t_server *srv,
-											t_gfx *gfx, char *cmd);
+int							command_get_int(int i, char *cmd);
+void						command_box_content(t_gfx *gfx, int x, int y,
+												int *box);
+void						command_graphical_bad_parameters(t_fds *fds,
+															t_server *srv,
+															t_gfx *gfx,
+															char *cmd);
 
-void		command_void(t_fds *fds, t_server *srv, t_client *clt, char *cmd);
+void						command_void(t_fds *fds, t_server *srv,
+										t_client *clt, char *cmd);
 
-char		*command_write_msg(t_client *clt, int action, int n, char *pbc);
-char		*command_write_msg_incant_end(t_client *clt);
-char		*command_write_msg_end_fork(t_client *frk);
+char						*command_write_msg(t_client *clt, int action,
+												int n, char *pbc);
+char						*command_write_msg_incant_end(t_client *clt);
+char						*command_write_msg_end_fork(t_client *frk);
 
 #endif

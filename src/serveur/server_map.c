@@ -6,13 +6,12 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:04:01 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/14 17:14:29 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 18:58:25 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-//	TODO put it to return void
 t_server	*init_map(t_server *srv)
 {
 	int		z;

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:51:14 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/20 12:21:04 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 18:57:29 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,30 +67,13 @@ static t_server	*server_init_data(int ac, char **av)
 	return (init_map(srv));
 }
 
-/*static char	*tcp(void)
-{
-	char	*tcp_str;
-
-	if (!(tcp_str = (char *)malloc(4 * sizeof(char))))
-		return (NULL);
-	tcp_str = "tcp\0";
-	server_log(tcp_str);
-	return (tcp_str);
-}*/
-
-//	TODO
-//	*	IPv6
-//	*	TCP error
-//	*	open file for log
 t_server		*server_create(int argc, char **argv)
 {
 	int					sso;
 	t_server			*srv;
 	struct protoent		*proto;
 	struct sockaddr_in	sin;
-	//char	*tcp;
 
-	//tcp = strdup("tcp");
 	sso = 1;
 	if (!(srv = server_init_data(argc, argv)) || srv->socket == -1)
 		return (srv);

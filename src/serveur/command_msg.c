@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:50:09 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/23 00:26:22 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/05 18:51:48 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static void		msg_send_player(int org, char *msg, int socket)
 		ft_memdel((void **)&pos);
 	}
 }
-//Check clt->current_cmd ?
+
 void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	int			org;
