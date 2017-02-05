@@ -778,6 +778,9 @@ class IA(Thread):
 
 			#Check if he is dead or if he is leader.
 			if new_msg != None:
+				if new_msg == '':
+					print("[SERVER DISCONNECTED]")
+					return
 				table = new_msg.split('\n')
 				for msg in table:
 					if msg == "":
