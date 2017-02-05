@@ -1,0 +1,465 @@
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+public class DataGame2 : MonoBehaviour {
+
+	public Animator							anim;
+	public Sprite							[]bubbleTex;
+	public int								height;
+	public int								width;
+	public class c_tile
+	{
+		public int							posX;
+		public int							posY;
+		public int							tileColor;
+		public int							[]resrcs;
+	};
+	public List<c_tile>						dataTiles;
+	public string							[]typeResrc;
+	public int								unitTime = 0;
+	public class c_team
+	{
+		public string						name;
+		public Color						color;
+	};
+	public List<c_team>						teamName;
+	public List<GameObject>					players;
+	public List<GameObject>					eggs;
+	public bool								colorChanged = false;
+
+	private GameObject						egg_obj;
+	private GameObject						player_obj;
+	private GameObject						bubble_obj;
+	private GameObject						clone_player;
+	private GameObject						clone_egg;
+	private GameObject						invok_obj;
+
+	private GameObject						victory;
+	private bool							startSceneGame = true;
+	private GameUI							scriptUI;
+
+	void	Awake()
+	{
+		player_obj = Resources.Load ("Prefabs/Player") as GameObject;
+		egg_obj = Resources.Load ("Prefabs/Egg") as GameObject;
+		bubble_obj = Resources.Load ("Prefabs/BubbleTalk") as GameObject;
+		invok_obj = Resources.Load ("Prefabs/Invocation") as GameObject;
+	}
+
+	public void		Init(){
+		dataTiles = new List<c_tile> ();
+		teamName = new List<c_team> ();
+		players = new List<GameObject> ();
+		eggs = new List<GameObject> ();
+		typeResrc = new string[7];
+		typeResrc[0] = "Food";
+		typeResrc[1] = "Linemate";
+		typeResrc[2] = "Deraumere";
+		typeResrc[3] = "Sibur";
+		typeResrc[4] = "Mendiane";
+		typeResrc[5] = "Phiras";
+		typeResrc[6] = "Thystame";
+	}
+
+	public void		MapSize(string []cmd) {
+		if (cmd.Length != 3)
+			throw new Exception("Donnees de la map erronees");
+		width = int.Parse (cmd [1]);
+		height = int.Parse (cmd [2]);
+	}
+
+	Vector3			CoordCase(int x, int y, bool egg){
+		Vector3 coord = Vector3.zero;
+		coord.x = x * 10;
+		coord.z = -y * 10;
+		if (egg)
+			coord.y = 1.5f;
+		else
+			coord.y = 2.5f;
+		return coord;
+	}
+
+	bool			GetOrDropResrcUpdate(string []cmd){
+		foreach(c_tile tile in dataTiles){
+			if (tile.posX == int.Parse(cmd[1]) && tile.posY == int.Parse(cmd[2])) {
+				for (int data = 0; data < tile.resrcs.Length; data++) {
+					if (tile.resrcs [data] != int.Parse (cmd [3 + data])) {
+						GameObject.Find ("GenerateMap").GetComponent<GenerateMap2> ().UpdateResrcGetDrop (tile, int.Parse (cmd [3 + data]), data);
+						return (true);
+					}
+				}
+			}
+		}
+		return (false);
+	}
+
+	void			GenerateTilesMap(string []cmd){
+		c_tile	tmp = new c_tile();
+
+		tmp.posX = int.Parse(cmd[1]);
+		tmp.posY = int.Parse(cmd[2]);
+		tmp.resrcs = new int[7];
+		for (int data = 0; data < 7; data++) {
+			tmp.resrcs[data] = int.Parse(cmd[3+data]);
+		}
+		tmp.tileColor = (cmd.Length == 11) ? int.Parse (cmd [10]) : 0;
+		dataTiles.Add (tmp);
+	}
+
+	public void		TileContent(string []cmd) {
+		if (cmd.Length < 10 && cmd.Length > 11)
+			throw new Exception("Donnees de tuiles erronees" + cmd.Length);
+		GenerateTilesMap (cmd);
+		if (SceneManager.GetActiveScene().name == "Game" && GetOrDropResrcUpdate (cmd))
+			return;
+	}
+
+	void			InvockBubbleTalk(Transform player, string talk, int typeBubble){
+		GameObject cloneBubble = GameObject.Instantiate(bubble_obj, player.transform.position, Quaternion.identity, GameObject.Find ("CanvasTalk").transform) as GameObject;
+
+		cloneBubble.transform.GetChild(0).GetComponent<Text>().text = talk;
+		cloneBubble.GetComponent<BubbleTalk>().posPlayer = player;
+		cloneBubble.GetComponent<Image> ().sprite = bubbleTex[typeBubble];
+	}
+
+	void			InvockPentacle(int x, int z) {
+		GameObject clone = GameObject.Instantiate(invok_obj, Vector3.zero, Quaternion.identity, GameObject.Find ("Tile(" + z + ", " + x + ")").transform) as GameObject;
+		clone.transform.localPosition = Vector3.up * 0.1f;
+	}
+
+	void			DestroyPentacle(int x, int z) {
+		Transform invoc = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)");
+		if (!invoc)
+			return ;
+		if (invoc.gameObject)
+			Destroy (invoc.gameObject);
+	}
+
+	public void		TeamName(string []cmd) {
+		if (cmd.Length != 2)
+			throw new Exception("Donnees du nom d'equipe erronees");
+		c_team	team = new c_team ();
+		team.color = new Color( UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0.78f );
+		team.name = cmd [1];
+		teamName.Add (team);
+	}
+
+	public void		PlayerNew(string []cmd) {
+		if (cmd.Length != 7)
+			throw new Exception("Donnees d'un joueur erronees");
+		clone_player = GameObject.Instantiate(player_obj, CoordCase(int.Parse (cmd[2]), int.Parse (cmd[3]), false), Quaternion.identity) as GameObject;
+		Player script = clone_player.GetComponent<Player> ();
+		script.PlayerNew(int.Parse (cmd [1].Substring (1, cmd [1].Length - 1)),
+			int.Parse (cmd[2]),
+			int.Parse (cmd[3]),
+			int.Parse (cmd[4]),
+			int.Parse (cmd[5]),
+			cmd[6]);
+		if (SceneManager.GetActiveScene().name == "Game")
+			scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " apparait en [" + script.GetPosX() + ", " + script.GetPosY() + "]");
+		players.Add(clone_player);
+	}
+
+	public void		PlayerPositionOrientation(string []cmd){
+		if (cmd.Length != 5)
+			throw new Exception("Donnees d'orientions d'un joueur erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.SetPosOrient(int.Parse (cmd[2]),
+					int.Parse (cmd[3]),
+					int.Parse (cmd[4]));
+				break ;
+			}
+		}
+	}
+
+	public void		PlayerLevel(string []cmd){
+		if (cmd.Length != 3)
+			throw new Exception("Donnees du level d'un joueur erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.SetLevel(int.Parse (cmd[2]));
+				break ;
+			}
+		}
+	}
+
+	public void		PlayerInventory(string []cmd){
+		if (cmd.Length != 11)
+			throw new Exception("Donnees de l'inventaire d'un joueur erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				for (int obj=0; obj < script.GetInventory().Length; obj++) {
+					script.SetResource(obj, int.Parse (cmd[obj + 4]));
+				}
+				break ;
+			}
+		}
+	}
+
+	public void		PlayerExpulse(string []cmd){
+		if (cmd.Length != 2)
+			throw new Exception("Donnees d'expulsion d'un joueur erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.PlaySound ("Expulse");
+				InvockBubbleTalk(player.transform, "FUS ROH DA !", 1);
+				//				scriptUI.AddMsgInfo("Expulsion du joueur #" + script.GetID());
+				break ;
+			}
+		}
+	}
+
+	public void		PlayerBroadCast(string []cmd){
+		if (cmd.Length <= 1)
+			throw new Exception("Donnees du broadcast d'un joueur erronees");
+		string talk = "...";
+
+		if (cmd.Length != 2) {
+			int 	word;
+			talk = "";
+			for (word = 2; word < cmd.Length - 1; word++)
+				talk += cmd[word] + " ";
+			talk += cmd[word];
+		}
+
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				if (cmd.Length >= 3) {
+					script.PlaySound ("meow" + UnityEngine.Random.Range (1, 3));
+					InvockBubbleTalk(player.transform, talk, 0);
+					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " dit : " + talk);
+				}
+				break ;
+			}
+		}
+	}
+
+	public void		PlayerIncantBegin(string []cmd){
+		if (cmd.Length < 5)
+			throw new Exception("Donnees du debut de l'incantation erronees");
+		InvockPentacle (int.Parse (cmd [1]), int.Parse (cmd [2]));
+		for (int id = 4; id < cmd.Length; id++) {
+			foreach (GameObject player in players) {
+				Player script = player.GetComponent<Player>();
+
+				if (script.GetPosX() == int.Parse (cmd[1])
+					&& script.GetPosY() == int.Parse (cmd[2])
+					&& script.GetID() == int.Parse (cmd [id].Substring (1, cmd [id].Length - 1))){
+					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " incante au level: " + cmd [3] + " en [" + cmd[1] + ", " + cmd[2] + "]");
+				}
+			}
+		}
+	}
+
+	public void		PlayerIncantEnd(string []cmd){
+		if (cmd.Length != 4)
+			throw new Exception("Donnees de la fin de l'incantation erronees");
+		DestroyPentacle(int.Parse (cmd [1]), int.Parse (cmd [2]));
+		if (int.Parse (cmd [3]) == 0)
+			scriptUI.AddMsgInfo ("L'incantation [" + cmd [1] + ", " + cmd [2] + "] est un echec");
+		else
+			scriptUI.AddMsgInfo ("L'incantation [" + cmd [1] + ", " + cmd [2] + "] est une reussite");
+	}
+
+	public void		PlayerForkEgg(string []cmd){
+		if (cmd.Length != 2)
+			throw new Exception("Donnees de la ponte d'un oeuf erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				InvockBubbleTalk(player.transform, "Je pond un oeuf", 2);
+				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pond un oeuf");
+				break ;
+			}
+		}
+	}
+
+
+	public void		PlayerGet(string []cmd){
+		if (cmd.Length != 3)
+			throw new Exception("Donnees d'une action sur une ressource erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.SetObjConcern(int.Parse (cmd[2]));
+				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " prend " + int.Parse (cmd[2]));
+				break ;
+			}
+		}
+	}
+
+	public void		PlayerDrop(string []cmd) {
+		if (cmd.Length != 3)
+			throw new Exception("Donnees d'un drop d'une ressource erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				script.SetObjConcern(int.Parse (cmd[2]));
+				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pose " + int.Parse (cmd[2]));
+			}
+		}
+	}
+
+
+	public void		PlayerDie(string []cmd) {
+		if (cmd.Length != 2)
+			throw new Exception("Donnees de la mort d'un joueur erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " meurt");
+				script.PlaySound ("CatDie");
+				script.Die ();
+				players.Remove(player);
+				break ;
+			}
+		}
+	}
+
+	public void		EggNew(string []cmd){
+		if (cmd.Length != 5)
+			throw new Exception("Donnees d'un oeuf erronees");
+		clone_egg = GameObject.Instantiate(egg_obj, CoordCase(int.Parse (cmd[3]), int.Parse (cmd[4]), true), Quaternion.identity) as GameObject;
+
+		Egg script = clone_egg.GetComponent<Egg> ();
+		if (script == null)
+			Debug.LogError ("!!!");
+		script.EggNew(int.Parse (cmd [1].Substring (1, cmd [1].Length - 1)),
+			int.Parse (cmd [2].Substring (1, cmd [2].Length - 1)),
+			int.Parse (cmd [3]),
+			int.Parse (cmd [4]));
+		eggs.Add(clone_egg);
+	}
+
+	public void		EggHatch(string []cmd){
+		if (cmd.Length != 2)
+			throw new Exception("Donnees de l'eclosion d'un oeuf erronees");
+		foreach (GameObject egg in eggs) {
+			Egg script = egg.GetComponent<Egg> ();
+			if (!script)
+
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos");
+				script.Hatch();
+				break ;
+			}
+		}
+	}
+
+	public void		EggBorn(string []cmd){
+		if (cmd.Length != 2)
+			throw new Exception("Donnees de connexion d'un joueur sur un oeuf erronees");
+		foreach (GameObject egg in eggs) {
+			Egg script = egg.GetComponent<Egg> ();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				//				scriptUI.AddMsgInfo("Un joueur est nee a partir de l'oeuf #" + script.GetID());
+				script.Die(true);
+				eggs.Remove(egg);
+				break ;
+			}
+		}
+	}
+
+	public void		EggDie(string []cmd){
+		if (cmd.Length != 2)
+			throw new Exception("Donnees de la mort d'un oeuf erronees");
+		foreach (GameObject egg in eggs) {
+			Egg script = egg.GetComponent<Egg> ();
+			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos mais pourri");
+				script.Die(false);
+				eggs.Remove(egg);
+				break ;
+			}
+		}
+	}
+
+	public void		ServerGetTime(string []cmd) {
+		if (cmd.Length != 2)
+			throw new Exception("Donnees de l'unite de temps erronees");
+		unitTime = int.Parse (cmd [1]);
+	}
+
+	public void		ServerEndGame(string []cmd) {
+		if (cmd.Length != 2)
+			throw new Exception("Donnees de la fin de partie erronees");
+		victory.SetActive (true);
+		Text text = victory.transform.GetChild (1).GetComponent<Text> ();
+		text.text = cmd [1];
+		foreach (c_team team in teamName) {
+			if (team.name == cmd [1]) {
+				victory.GetComponent<Image> ().color = new Color (1.0f - team.color.r, 1.0f - team.color.g, 1.0f - team.color.b);
+				text.color = team.color;
+				break ;
+			}
+		}
+		scriptUI.AddMsgInfo("Victoire de l'equipe : " + cmd[1]);
+	}
+
+	public void		ServerMessage(string []cmd, bool error) {
+		if (error) {
+			scriptUI.AddMsgInfo("Pizza le Hutt s'enerve : Je ne comprends pas ton langage !");
+			return ;
+		}
+		string talk = "...";
+
+		if (cmd.Length != 1) {
+			int 	word;
+			talk = "";
+			for (word = 1; word < cmd.Length - 1; word++)
+				talk += cmd[word] + " ";
+			talk += cmd[word];
+		}
+		scriptUI.AddMsgInfo("Pizza le Hutt dit : " + talk);
+	}
+
+	public void		PlayerEat (string[]cmd) {
+		if (cmd.Length != 2)
+			throw new Exception("Donnees du dejeuner du joueur erronees");
+		foreach (GameObject player in players) {
+			Player script = player.GetComponent<Player>();
+			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				InvockBubbleTalk(player.transform, "* miam *", 2);
+				script.PlaySound ("Eat");
+				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " mange");
+				break ;
+			}
+		}
+	}
+
+	void			InputColorTeamChanged() {
+		if (Input.GetKey(KeyCode.C)) {
+			foreach(c_team team in teamName)
+				team.color = new Color (UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0.78f);
+			colorChanged = true;
+		}
+	}
+
+
+	// Use this for initialization
+	void StartSceneGame () {
+		if (SceneManager.GetActiveScene().name == "Game" && startSceneGame == true) {
+			victory = GameObject.Find ("Canvas/Victory");
+			scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+			victory.SetActive (false);
+			startSceneGame = false;
+		}
+	}
+
+	// Update is called once per frame
+	void Update () {
+		StartSceneGame ();
+		InputColorTeamChanged ();
+	}
+}
