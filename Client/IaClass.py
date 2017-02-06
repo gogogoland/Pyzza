@@ -67,7 +67,7 @@ class IA(Thread):
 			"elevation en cour"
 		]
 
-		self.Sate = 756#1008
+		self.Sate = 756*9/9#1008
 		self.Eat = 126
 		self.data['Team'] = team
 		self.data['Name'] = str(random.randint(10000000,99999999))
@@ -379,7 +379,7 @@ class IA(Thread):
 				elif irsc == 6:
 					if self.data['Hung'] + ((self.data['Inv'][0] - 10) * self.Eat) + (self.Eat * box[index][self.ressources[irsc]]) > self.Sate:
 						box[index][self.ressources[irsc]] -= (self.data['Hung'] + ((self.data['Inv'][0] - 10) * self.Eat) + (box[index][self.ressources[irsc]] * self.Eat) - self.Sate) / self.Eat
-					if tmp_ressource > 0:
+					if tmp_ressource > 0 and box[index][self.ressources[irsc]] > 0:
 						tmp_ressource += box[index][self.ressources[irsc]]
 					elif box[index][self.ressources[irsc]] > 0:
 						tmp_ressource = 1
@@ -396,7 +396,7 @@ class IA(Thread):
 		if nbr_ressource[0] == 0:
 			self.data['X'] = random.randint(-5,5)
 			self.data['Y'] = random.randint(-5,5)
-			print(str(self.data['Name']) + " NOT FOUND: X=" + str(self.data['X']) + " Y=" + str(self.data['Y']))
+			#print(str(self.data['Name']) + " NOT FOUND: X=" + str(self.data['X']) + " Y=" + str(self.data['Y']))
 		#Get list of ressource and coord of box
 		else:
 			#print("Nbr_rsc : " + str(nbr_ressource[1]))
@@ -413,7 +413,7 @@ class IA(Thread):
 					x += 1
 			self.data['X'] = x
 			self.data['Y'] = y
-			print(str(self.data['Name']) + " HAS FOUND: X=" + str(self.data['X']) + " Y=" + str(self.data['Y']) + " RSC:", end='')
+			#print(str(self.data['Name']) + " HAS FOUND: X=" + str(self.data['X']) + " Y=" + str(self.data['Y']) + " RSC:", end='')
 			i = 0
 			while i < 7:
 				print(" " + self.ressources[i] + ":" + str(self.data['Rsc'][self.ressources[i]]), end='')
@@ -604,6 +604,7 @@ class IA(Thread):
 		#if is hungry (< 0) eat to be sate
 		if self.data['Hung'] >= lim_food:
 			self.data['IsHungry'] = False
+			self.Sate = 756
 
 		#prevent acolyte if master is going to eat
 		if self.data['InvocName'] == self.data['Name'] and self.data['Action'][0] < 0 and self.data['Hung'] < 0:

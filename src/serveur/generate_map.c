@@ -6,7 +6,7 @@
 /*   By: nd-heyge <nd-heyge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 17:09:02 by nd-heyge          #+#    #+#             */
-/*   Updated: 2017/02/05 18:54:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/06 01:13:53 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ static void		ft_assign_collect(t_server *srv, int y, int x, int nbr)
 	int			r_collect;
 
 	r_collect = ft_rand_range(0, 100);
-	if (r_collect < 15)
+	if (r_collect < 50)
 		srv->map[y][x][0] += nbr;
-	else if (r_collect < 65)
+	else if (r_collect < 100)
 	{
 		r_collect = ft_rand_resrc();
 		if (r_collect != -1)
@@ -80,6 +80,7 @@ void			generate_map(t_server *srv, int nbr_resrc_case)
 		{
 			ft_assign_tile(srv, y, x);
 			r = ft_rand_range(1, nbr_resrc_case);
+			r = nbr_resrc_case;
 			while (++nbr < r)
 				ft_assign_collect(srv, y, x, nbr);
 			if (asprintf(&log, g_log_map_data, y, x, srv->map[y][x][0],
