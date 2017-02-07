@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/07 16:01:48 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 18:53:45 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void		client_init_data(t_client *clt, t_server *srv)
 	clt->team = -1;
 	clt->lvl = 1;
 	clt->tolvl = 0;
-	clt->time = 0.0f;
-	clt->health = 0.0f;
+	clt->time = 0;
+	clt->health = 0;
 	clt->current_cmd = NULL;
 	clt->fornext_cmd = NULL;
 	clt->acolyte = NULL;

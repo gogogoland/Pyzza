@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/07 16:05:17 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 19:48:13 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft.h"
 
+# include <sys/time.h>
 # include <stdbool.h>
 # include <arpa/inet.h>
 # include <ctype.h>
@@ -54,7 +55,7 @@
 # define C_MAX 100
 
 # define TIME_MIN 0
-# define TIME_MAX 100
+# define TIME_MAX 200
 
 # define NBR_RESRC_CASE_MAX 7
 
@@ -117,8 +118,8 @@ typedef struct				s_client
 	int						lvl;
 	int						tolvl;
 	int						action;
-	float					time;
-	float					health;
+	int						time;
+	int						health;
 	char					*current_cmd;
 	char					*fornext_cmd;
 	int						*acolyte;
@@ -175,11 +176,12 @@ void						generate_map(t_server *srv, int nbr_resrc_case);
 bool						parser(int ac, char **av, t_server *srv);
 bool						parser_int(int ac, char **av, t_server *srv);
 bool						parser_team(int ac, char **av, t_server *srv);
+int							server_time(struct timeval *time);
 t_server					*server_create(int argc, char **argv);
 void						server_log(t_server *srv, const char *msg);
 
 bool						recv_client(t_fds *fds, t_server *srv, int ret);
-void						send_client(t_fds *fds, t_server *srv, float tom);
+void						send_client(t_fds *fds, t_server *srv, int tim);
 bool						save_cur_cmd(t_client *clt, char *msg, int action);
 void						oldtonew_cmd(t_client *clt);
 void						erasecur_cmd(t_client *clt);

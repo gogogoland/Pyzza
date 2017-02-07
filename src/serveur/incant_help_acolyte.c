@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/05 19:04:19 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 18:57:56 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static bool	incant_init_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 		clt->acolyte = (int *)malloc(lim_acolyte * sizeof(int));
 		while (aco && lim_acolyte)
 		{
-			if (aco->lvl == clt->lvl && aco->socket > 0 && aco->time <= 0.0f
+			if (aco->lvl == clt->lvl && aco->socket > 0 && aco->time <= 0
 					&& !aco->casting && aco->name != clt->name && aco->name > 0
 					&& aco->pos.y == clt->pos.y && aco->pos.x == clt->pos.x)
 			{
@@ -50,7 +50,7 @@ static bool	incant_check_acolyte(t_server *srv, t_client *clt, int lim_acolyte)
 	while (++i < lim_acolyte)
 	{
 		player = srv->clt;
-		while (player && !(player->time <= 0.0f
+		while (player && !(player->time <= 0
 				&& clt->acolyte[i] == player->name && player->socket > 0
 				&& player->lvl == clt->lvl && player->casting
 				&& player->pos.x == clt->pos.x && player->pos.y == clt->pos.y))

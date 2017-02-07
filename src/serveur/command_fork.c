@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:25:40 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/07 16:23:03 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 20:01:10 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void		command_fork(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	srv->old_player_max++;
 	new->pos.x = clt->pos.x;
 	new->pos.y = clt->pos.y;
-	new->health = 1260.0f / (float)srv->time;
-	new->time = 600.0f / (float)srv->time;
+	new->health = 1260000000 / srv->time;
+	new->time = 600000000 / srv->time;
 	new->action = command_fork_void(fds, cmd);
 	new->team = clt->team;
 	new->fork = true;

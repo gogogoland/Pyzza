@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:32:12 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/05 19:21:19 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 19:40:53 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,17 +91,16 @@ static void		clear_and_set(t_fds *fds, t_server *srv)
 
 int				main(int argc, char **argv)
 {
-	clock_t		tim;
-	t_server	*srv;
-	float		clk;
-	t_fds		*fds;
-	int			ret;
+	struct timeval	tim;
+	t_server		*srv;
+	t_fds			*fds;
+	int				ret;
 
 	fds = (t_fds *)malloc(sizeof(t_fds));
 	ret = 0;
 	if (!(srv = server_create(argc, argv)) || srv->socket < 0)
 		return (return_msg(srv ? NULL : g_err_msg[0], srv ? srv->socket : -1));
-	tim = clock();
+	gettimeofday(&tim, NULL);
 	while (ret >= 0)
 	{
 		if (!(srv->clt = set_clients_list(srv)))
@@ -110,9 +109,7 @@ int				main(int argc, char **argv)
 		if ((ret = select(fds->max, &fds->rd, &fds->wr, &fds->ex, NULL)) < 0)
 			return (return_msg(g_err_msg[1], ret));
 		recv_client(fds, srv, ret);
-		clk = ret > 0 ? (float)((clock() - tim) / CLOCKS_PER_SEC) : -1.0f;
-		send_client(fds, srv, clk);
-		tim = !((clock() - tim) / CLOCKS_PER_SEC) ? tim : clock();
+		send_client(fds, srv, server_time(&tim));
 	}
 	return (ret);
 }
