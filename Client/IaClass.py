@@ -726,12 +726,18 @@ class IA():
 
 			try:
 				read, _, _= select.select([self.client.sock], [], [], 0)
-			except (select.error, socket.timeout) as err:
+			except (select.error, socket.timeout, ConnectionResetError) as err:
+				print(err)
 				self.client.sock.close()
 				return
 
-			for cl in read:
-				new_msg = cl.recv(1023).decode('ascii')
+			try:
+				for cl in read:
+					new_msg = cl.recv(1023).decode('ascii')
+
+			except ConnectionResetError as err:
+				print(err)
+				return
 
 			#Check if he is dead or if he is leader.
 			if new_msg != None:
