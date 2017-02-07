@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/05 19:20:53 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:05:17 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,9 +260,6 @@ void						command_graphical_bad_parameters(t_fds *fds,
 															t_server *srv,
 															t_gfx *gfx,
 															char *cmd);
-
-void						command_void(t_fds *fds, t_server *srv,
-										t_client *clt, char *cmd);
 
 char						*command_write_msg(t_client *clt, int action,
 												int n, char *pbc);

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 16:00:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/28 18:57:40 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:06:03 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 
 void	command_eat(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
-	int		i;
-	int		rsc;
 	bool	ook;
-	char	**tab;
 
+	(void)cmd;
+	(void)fds;
 	ook = false;
 	if (clt->pos.rsc[0] > 0)
 	{

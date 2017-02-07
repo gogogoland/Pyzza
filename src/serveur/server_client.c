@@ -6,17 +6,11 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 16:18:55 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/19 00:00:32 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:01:48 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
-
-static const char	*g_mcl[] =
-{
-	"Player client from ip %s , port %d has disconnected.\n",
-	"Reached client limit's.\n",
-};
 
 void		client_init_data(t_client *clt, t_server *srv)
 {

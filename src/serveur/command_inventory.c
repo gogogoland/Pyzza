@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:32:11 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/20 17:43:37 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:09:00 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ void	command_inventory(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	char	*tmp;
 	char	*rsc;
 
+	(void)fds;
+	(void)cmd;
+	(void)srv;
 	i = -1;
 	tmp = NULL;
 	rsc = NULL;

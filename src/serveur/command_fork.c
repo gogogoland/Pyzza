@@ -6,13 +6,20 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:25:40 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/27 15:45:03 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:23:03 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-void	command_fork(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
+static int	command_fork_void(t_fds *fds, char *cmd)
+{
+	(void)fds;
+	(void)cmd;
+	return (-1);
+}
+
+void		command_fork(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	t_client	*cur;
 	t_client	*new;
@@ -33,7 +40,7 @@ void	command_fork(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	new->pos.y = clt->pos.y;
 	new->health = 1260.0f / (float)srv->time;
 	new->time = 600.0f / (float)srv->time;
-	new->action = -1;
+	new->action = command_fork_void(fds, cmd);
 	new->team = clt->team;
 	new->fork = true;
 	new->mom = clt->name;

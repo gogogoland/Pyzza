@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 14:06:53 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/05 19:00:14 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:04:04 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ static void	command_death_fork(t_fds *fds, t_server *srv, t_client *clt)
 
 void		command_death(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
+	(void)cmd;
 	clt->health = 0.0f;
 	if (clt->action == 10)
 	{

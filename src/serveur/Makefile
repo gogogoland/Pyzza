@@ -6,7 +6,7 @@
 #    By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/26 19:02:12 by tbalea            #+#    #+#              #
-#    Updated: 2017/01/17 01:33:23 by tbalea           ###   ########.fr        #
+#    Updated: 2017/02/07 16:03:32 by tbalea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,6 @@ SRC = ft_atoi.c\
 	  server_map.c\
 	  server_log.c\
 	  save_cur_cmd.c\
-	  command_void.c\
 	  command_death.c\
 	  command_eat.c\
 	  command_eject.c\
@@ -104,6 +103,9 @@ CCC = gcc
 RMF = rm -f
 
 all: $(NAME)
+
+%.o:%.c
+	$(CCC) $(FLG) -c $< -o $@
 
 $(NAME): $(OBJ)
 	$(CCC) $(FLG) $(OBJ) $(GDB) -o $(NAME)

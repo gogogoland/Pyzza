@@ -6,19 +6,11 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 19:38:10 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/05 19:07:55 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:02:16 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
-
-static const char	*g_scr[] =
-{
-	"Error accept %d client\n",
-	"New client from ip %s, port %d.\n",
-	"Client tried to connect, but malloc failed.\n",
-	"Client disconnected , ip %s , port %d.\n"
-};
 
 static void	client_concatenate(t_server *srv, char *cmd, t_ring *ring, int who)
 {
@@ -44,7 +36,6 @@ static void	client_command(t_fds *fds, t_server *srv, int s)
 {
 	t_client	*clt;
 	t_gfx		*gfx;
-	int			i;
 	int			rd_len;
 	char		buffer[1024];
 

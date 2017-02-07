@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:14:43 by tbalea            #+#    #+#             */
-/*   Updated: 2016/09/20 20:01:35 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:07:31 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	command_forward(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	t_coord	mv;
 
+	(void)fds;
+	(void)cmd;
 	mv.x = (clt->sens - 2) % 2;
 	mv.y = (clt->sens - 1) % 2;
 	mv.x = (clt->pos.x + mv.x) < 0 ? srv->plateau.x - 1 : mv.x;

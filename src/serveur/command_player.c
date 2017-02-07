@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/22 16:17:46 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:20:03 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ static void		command_player_send_welcome(t_server *srv, t_client *clt)
 void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 {
 	int			t;
-	char		*team;
 	t_client	*new;
 
 	gfx->isgfx ? send(gfx->socket, g_cmd_plr[2], strlen(g_cmd_plr[2]), 0) : 0;

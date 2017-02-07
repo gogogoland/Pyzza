@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:40:06 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/25 17:44:14 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:19:00 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ static bool	incant_interrupt(t_client *clt, t_server *srv)
 	int			i;
 	int			stop;
 	t_client	*player;
-	int			n_player;
 
 	i = 0;
 	player = srv->clt;
@@ -48,6 +47,8 @@ void		command_incant(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	int			i;
 	int			lvlup;
 
+	(void)cmd;
+	(void)fds;
 	i = 0;
 	lvlup = 1;
 	lvlup = (incant_interrupt(clt, srv)) ? 0 : 1;

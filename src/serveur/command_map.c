@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:47:39 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/14 17:06:08 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:20:19 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ void		command_map(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	int			x;
 	int			y;
 	int			child;
-	char		*box;
-	t_client	*clt;
 
 	if (!gfx->isgfx)
 		command_player(fds, srv, gfx, cmd);

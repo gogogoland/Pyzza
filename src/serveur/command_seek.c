@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 20:07:59 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/05 18:52:59 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:18:23 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,13 @@ static int	command_seek_int(int sens, int pos, t_coord see, int srv)
 	return (r);
 }
 
+static int	command_seek_void(char *cmd, t_fds *fds)
+{
+	(void)fds;
+	(void)cmd;
+	return (-1);
+}
+
 void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	t_coord	see;
@@ -95,7 +102,7 @@ void		command_seek(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 
 	wt = NULL;
 	tmp = NULL;
-	see.y = -1;
+	see.y = command_seek_void(cmd, fds);
 	sens.x = (clt->sens + 1) % 4;
 	sens.y = (clt->sens + 2) % 4;
 	while (++see.y <= clt->lvl)

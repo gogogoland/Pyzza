@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:50:09 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/05 18:51:48 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:10:33 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static int		command_msg_org_dir(t_coord tc, t_client *cur)
 {
 	int		origin;
 
+	origin = 0;
 	if (!tc.x && !tc.y)
 		return (0);
 	else if (tc.y == -1 && tc.x == 0)
@@ -67,9 +68,10 @@ static void		msg_send_player(int org, char *msg, int socket)
 void			command_msg(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	int			org;
-	t_coord		min;
 	t_client	*cur;
 
+	(void)fds;
+	(void)cmd;
 	cur = srv->clt;
 	while (clt->current_cmd && cur)
 	{
