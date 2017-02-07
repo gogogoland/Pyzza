@@ -6,7 +6,7 @@
 /*   By: nd-heyge <nd-heyge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 17:09:02 by nd-heyge          #+#    #+#             */
-/*   Updated: 2017/02/06 01:13:53 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 22:29:37 by croy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void		ft_assign_collect(t_server *srv, int y, int x, int nbr)
 
 	r_collect = ft_rand_range(0, 100);
 	if (r_collect < 50)
-		srv->map[y][x][0] += nbr;
+		srv->map[y][x][0] += nbr*10;
 	else if (r_collect < 100)
 	{
 		r_collect = ft_rand_resrc();
