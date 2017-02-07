@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:40:06 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/25 17:44:14 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 18:56:09 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,10 @@ static bool	incant_interrupt(t_client *clt, t_server *srv)
 	int			i;
 	int			stop;
 	t_client	*player;
-	int			n_player;
 
 	i = 0;
 	player = srv->clt;
-	stop = (clt->health > 0.0f) ? 0 : 1;
+	stop = (clt->health > 0) ? 0 : 1;
 	stop = (clt->lvl < 8) ? stop : 1;
 	stop = incant_help_acolyte(srv, clt, g_cmd_incant[clt->lvl - 1][0]) ? stop :
 			1;
@@ -48,6 +47,8 @@ void		command_incant(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	int			i;
 	int			lvlup;
 
+	(void)cmd;
+	(void)fds;
 	i = 0;
 	lvlup = 1;
 	lvlup = (incant_interrupt(clt, srv)) ? 0 : 1;
@@ -59,14 +60,14 @@ void		command_incant(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 
 bool		incant_process(t_client *clt, t_server *srv)
 {
-	if (clt && clt->time == 0.0f)
+	if (clt && clt->time <= 0)
 		return (false);
 	else if (clt && clt->action == 13 && incant_interrupt(clt, srv))
 	{
 		incant_msg_acolyte(srv, clt, g_cmd_incant[clt->lvl - 1][0], -1);
 		incant_reset_acolyte(srv, clt, g_cmd_incant[clt->lvl - 1][0]);
 		clt->action = 0;
-		clt->time = 0.0f;
+		clt->time = 0;
 		return (false);
 	}
 	return (true);

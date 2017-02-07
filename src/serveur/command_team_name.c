@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:33:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/22 16:18:07 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:21:40 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	command_team_name(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	char		*team;
 	int			i;
 
+	(void)fds;
+	(void)cmd;
 	i = -1;
 	team = NULL;
 	while (srv && srv->team && srv->team[++i])

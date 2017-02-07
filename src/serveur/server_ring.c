@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 15:45:44 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/05 18:58:49 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:02:28 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void		ring_recv(t_server *srv, t_cmd cmd, t_ring *ring, int who)
 	char	*log;
 	int		limit;
 	int		i;
-	int		len;
 
 	log = NULL;
 	limit = -1;

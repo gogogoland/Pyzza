@@ -1,19 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server_log.c                                       :+:      :+:    :+:   */
+/*   server_time.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/05/16 15:13:07 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/07 16:05:06 by tbalea           ###   ########.fr       */
+/*   Created: 2017/02/07 17:57:30 by tbalea            #+#    #+#             */
+/*   Updated: 2017/02/07 20:11:14 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-void	server_log(t_server *srv, const char *msg)
+int	server_time(struct timeval *time)
 {
-	(void)srv;
-	write(1, msg, strlen(msg));
+	long int		diffsec;
+	int				diff;
+	struct timeval	renchon;
+
+	diff = 0;
+	diffsec = 0;
+	diff -= time->tv_usec;
+	diffsec -= time->tv_sec;
+	gettimeofday(&renchon, NULL);
+	diffsec += renchon.tv_sec;
+	diff += diffsec * 1000000 + renchon.tv_usec;
+	if (diff > 0)
+		gettimeofday(time, NULL);
+	return (diff > 0 ? diff : 0);
 }

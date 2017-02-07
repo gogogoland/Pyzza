@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 16:33:10 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/27 15:34:43 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 18:57:22 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void		command_graphe(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	command_team_name(fds, srv, gfx, cmd);
 	while (clt)
 	{
-		if ((clt->health > 0.0f || clt->time > 0.0f) && (clt_com = clt->socket ?
+		if ((clt->health > 0 || clt->time > 0) && (clt_com = clt->socket ?
 					command_write_msg(clt, 8, 0, srv->team[clt->team]) :
 					command_write_msg_end_fork(clt)))
 		{

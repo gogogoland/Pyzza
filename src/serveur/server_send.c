@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 18:38:03 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/22 22:46:19 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 19:57:51 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,40 +80,40 @@ static const char	*g_clt_cmd[] =
 	"incantation"
 };
 
-static const float	g_cmd_time[] =
+static const int	g_cmd_time[] =
 {
-	0.0f,
-	1.0f,
-	7.0f,
-	7.0f,
-	7.0f,
-	7.0f,
-	7.0f,
-	7.0f,
-	7.0f,
-	7.0f,
-	7.0f,
-	42.0f,
-	300.0f
+	0,
+	1000000,
+	7000000,
+	7000000,
+	7000000,
+	7000000,
+	7000000,
+	7000000,
+	7000000,
+	7000000,
+	7000000,
+	42000000,
+	300000000
 };
 
-static char	*time_lapse(t_fds *fds, t_server *srv, float tim)
+static char	*time_lapse(t_fds *fds, t_server *srv, int tim)
 {
 	t_client	*clt;
 
 	clt = srv->clt;
 	while (clt)
 	{
-		if (clt->time > 0.0f && clt->time <= tim && clt->fork && !clt->socket)
+		if (clt->time > 0 && clt->time <= tim && clt->fork && !clt->socket)
 		{
 			srv->egg--;
 			send_graphe_action(srv, command_write_msg(clt, 2, 0, 0), 0, 0);
 		}
-		if ((clt->time -= tim) < 0.0f)
-			clt->time = 0.0f;
-		if ((clt->health -= tim) < 0.0f)
-			clt->health = 0.0f;
-		if (clt->health <= 0.0f && (clt->fork || clt->socket))
+		if ((clt->time -= tim) < 0)
+			clt->time = 0;
+		if ((clt->health -= tim) < 0)
+			clt->health = 0;
+		if (clt->health <= 0 && (clt->fork || clt->socket))
 			g_tfc[13](fds, srv, clt, NULL);
 		clt = clt->next;
 	}
@@ -126,20 +126,20 @@ static int	time_action(int n, t_client *clt, t_server *srv)
 
 	if (!clt)
 		return (0);
-	action = (clt->time == 0.0f && clt->action > 0) ? clt->action : 0;
-	if (clt->time == 0.0f && !clt->socket)
+	action = (clt->time == 0 && clt->action > 0) ? clt->action : 0;
+	if (clt->time == 0 && !clt->socket)
 	{
 		srv->egg--;
 		send_graphe_action(srv, command_write_msg(clt, 2, 0, NULL), 0, NULL);
 	}
-	if (clt->time == 0.0f && (clt->action = n < 13 ? n + 1 : 0) == 12)
+	if (clt->time == 0 && (clt->action = n < 13 ? n + 1 : 0) == 12)
 		send_graphe_action(srv, command_write_msg(clt, 1, 0, NULL), 0, NULL);
-	if (clt->time == 0.0f && n < 13)
-		clt->time = g_cmd_time[n] * (1.0f / (float)srv->time);
+	if (clt->time <= 0 && n < 13)
+		clt->time = g_cmd_time[n] / srv->time;
 	return (action);
 }
 
-void		send_client(t_fds *fds, t_server *srv, float tim)
+void		send_client(t_fds *fds, t_server *srv, int tim)
 {
 	int			n;
 	char		*cmd;
@@ -147,7 +147,7 @@ void		send_client(t_fds *fds, t_server *srv, float tim)
 	t_client	*clt;
 
 	cmd = time_lapse(fds, srv, tim);
-	while (tim >= 0.0f && --fds->max > 0 && !(n = 0))
+	while (tim >= 0 && --fds->max > 0 && !(n = 0))
 	{
 		if (!(clt = srv->clt) && !FD_ISSET(fds->max, &fds->wr))
 			continue ;

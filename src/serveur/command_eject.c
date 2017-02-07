@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:01:54 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/22 17:19:50 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:06:47 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void			command_eject(t_fds *fds, t_server *srv, t_client *clt, \
 	bool		ok;
 	char		*msg;
 
+	(void)fds;
+	(void)cmd;
 	ok = false;
 	msg = NULL;
 	cur = srv->clt;

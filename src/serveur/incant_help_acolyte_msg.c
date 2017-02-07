@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 15:25:11 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/05 19:01:24 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 18:58:06 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void		incant_msg_acolyte(t_server *srv, t_client *clt, int lim_acolyte,
 
 	msg = NULL;
 	if ((error = asprintf(&msg, g_msg_acolyte[state + 1], clt->lvl)) > 0)
-		clt->health > 0.0f ? send(clt->socket, msg, ft_strlen(msg), 0) : 0;
+		clt->health > 0 ? send(clt->socket, msg, ft_strlen(msg), 0) : 0;
 	state ? incant_msg_acolyte_graphic_end(srv, clt, lim_acolyte)
 			: incant_msg_acolyte_graphic_begin(srv, clt, lim_acolyte);
 	while (error > 0 && clt->acolyte && lim_acolyte--)

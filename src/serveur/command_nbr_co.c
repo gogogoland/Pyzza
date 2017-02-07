@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 17:20:37 by tbalea            #+#    #+#             */
-/*   Updated: 2017/01/18 23:17:49 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:19:48 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	command_nbr_co(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 	char		*msg;
 	t_client	*cur;
 
+	(void)fds;
+	(void)cmd;
 	cur = srv->clt;
 	msg = NULL;
 	co = 0;

@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/06 20:55:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/22 16:17:46 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 20:08:25 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static t_client	*command_player_get_valide_client(int t, t_server *srv)
 	t_client	*new;
 
 	new = srv->clt;
-	while (new && (new->socket || new->time > 0.0f
+	while (new && (new->socket || new->time > 0
 					|| (new->team >= 0 && new->team != t)))
 		new = new->next;
 	if (new && new->team == t)
@@ -89,7 +89,6 @@ static void		command_player_send_welcome(t_server *srv, t_client *clt)
 void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 {
 	int			t;
-	char		*team;
 	t_client	*new;
 
 	gfx->isgfx ? send(gfx->socket, g_cmd_plr[2], strlen(g_cmd_plr[2]), 0) : 0;
@@ -106,7 +105,7 @@ void			command_player(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	new->sin = gfx->sin;
 	new->len = gfx->len;
 	new->team = t;
-	new->health = new->fork ? new->health : 1260.0f / (float)srv->time;
+	new->health = new->fork ? new->health : 1260000000 / srv->time;
 	command_player_log(srv, 1, new, NULL);
 	fds->max = new->socket > fds->max - 1 ? new->socket + 1 : fds->max;
 	graphe_kill(srv, gfx, fds, true);

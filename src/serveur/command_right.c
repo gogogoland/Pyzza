@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 14:27:34 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/20 17:07:53 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:07:36 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void		command_right(t_fds *fds, t_server *srv, t_client *clt, char *cmd)
 {
 	char	*msg;
 
+	(void)fds;
+	(void)cmd;
 	clt->sens = (clt->sens + 3) % 4;
 	send_client_action(srv, clt, true);
 	msg = write_msg_cmd_right(clt);

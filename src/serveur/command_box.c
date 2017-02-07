@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/30 20:32:23 by tbalea            #+#    #+#             */
-/*   Updated: 2016/10/14 17:14:55 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/07 16:20:37 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void		command_box(t_fds *fds, t_server *srv, t_gfx *gfx, char *cmd)
 	int			x;
 	int			y;
 
+	(void)fds;
 	i = 0;
 	x = -1;
 	y = -1;
