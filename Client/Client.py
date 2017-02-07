@@ -53,7 +53,5 @@ if __name__ == "__main__":
     checkIP(args.ip)
     checkPort(args.port)
     checkTeam(args.team)
-    sock = IA(args.ip, args.port, args.team)
-	#only work on main thread
     signal.signal(signal.SIGINT, signal_handler)
-    sock.start()
+    sock = IA(args.ip, args.port, args.team)

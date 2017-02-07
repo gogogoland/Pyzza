@@ -1,12 +1,11 @@
 from SocketClass import Socket
-from threading import Thread
+import multiprocessing as mp
 import sys, select, socket, random, signal, os
 
-class IA(Thread):
+class IA():
 
 	def __init__(self, ip, port, team):
 		
-		Thread.__init__(self)
 
 		#Init of IA Class
 		self.data = {
@@ -67,7 +66,7 @@ class IA(Thread):
 			"elevation en cour"
 		]
 
-		self.Sate = 756*9/9#1008
+		self.Sate = 756*9/8#1008
 		self.Eat = 126
 		self.data['Team'] = team
 		self.data['Name'] = str(random.randint(10000000,99999999))
@@ -109,7 +108,7 @@ class IA(Thread):
 		]
 
 		#Add IA thought time
-		self.cmd_time_late = 15#14.5
+		self.cmd_time_late = 14.5
 
 		#Time action if fail
 		self.time_acti = 0
@@ -120,7 +119,7 @@ class IA(Thread):
 		self.view_data = ""
 
 		#Limit number of necessary player
-		self.limitThread = 8
+		self.limitThread = 16
 
 		#Limit of level
 		self.limitLevel = 8
@@ -133,6 +132,7 @@ class IA(Thread):
 
 		#Send Team
 		self.client.sock.send((self.data['Team'] + '\n').encode())
+		self.run()
 		
 
 	#First connection of the client and creation of new client connection
@@ -155,7 +155,7 @@ class IA(Thread):
 
 			#Connect other client
 			elif self.data['Action'][1] == 4:
-				new_thread = IA(self.client.ip, self.client.port, self.client.team)
+				new_thread = mp.Process(target=self.__init__, args=(self.client.ip, self.client.port, self.client.team))
 				new_thread.start()
 				self.data['Action'][1] = 1 + (self.data['Eggs'] > 0)
 				self.data['Eggs'] -= 1
@@ -187,17 +187,6 @@ class IA(Thread):
 	def getMate(self, msg):
 		if msg != None and self.Bmsg[4] in msg and self.data['Team'] in msg:
 			allnames = msg.split()
-			#if self.data['Name'] in allnames[3]:
-			#	Old_name = self.data['Name']
-			#	while self.data['Name'] in allnames[3] or self.data['Name'] in self.data['Mate']:
-			#		self.data['Name'] = str(random.randint(10000000,99999999))
-			#	if Old_name in self.data['Mate']:
-			#		self.data['Mate'].remove(Old_name)
-			#	self.client.sock.send((self.cmd[8] + self.data['Name'] + " " + self.Bmsg[5] + Old_name + ' \n').encode())
-			#	self.data['Hung'] -= self.cmd_time[8] + self.cmd_time_late
-			#for var in msg.split():
-			#	if not var in self.data['Mate'] and var.isdigit():
-			#		self.data['Mate'].append(var)
 
 	#Server message for command send (for multithread / other client connection)
 	def	handleData(self, msg):
@@ -219,12 +208,9 @@ class IA(Thread):
 				self.data['Action'][1] = 0 if self.data['Action'][2] != 0 else -1
 
 		if self.Bmsg[4] in msg and self.data['Team'] in msg:
-			#TODO Add new name delete old name
 			for var in msg.split():
 				if var.isdigit() and len(str(var)) == 8 and var not in self.data['Mate']:
 					self.data['Mate'].append(var)
-			#print("MATE = " + str(self.data['Mate']))
-			#print("MSG = " + str(msg))
 
 		if self.data['Action'][0] < 0 and self.act == True:
 			ami = ''
@@ -239,7 +225,6 @@ class IA(Thread):
 
 	#Set path to follow from X, Y coord
 	def getPath(self):
-		#print("X = " + str(self.data['X']) + ", Y = " + str(self.data['Y']))
 		turn = 0
 		while (self.data['Y'] > 0):
 			self.data['Move'].append(0)
@@ -284,18 +269,9 @@ class IA(Thread):
 			if self.data['InvocName'] is not None:
 				return
 			self.view_data = ""
-			#~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~#
 			self.client.sock.send((self.cmd[3] + self.cmd[4]).encode())
 			print(str(self.data['Name']) + ", send (" + str(self.data['Hung']) + ") : " + self.cmd[3] + self.cmd[4], end='')
-			#self.client.sock.send((self.cmd[3] + self.cmd[8] + self.data['Name'] + ' ' + self.Bmsg[9] + '\n').encode())
-			#self.client.sock.send((self.cmd[3]).encode())
-			#self.client.sock.send((self.cmd[8] + self.data['Name'] + ' ' + self.Bmsg[9] + '\n').encode())
-			#print(str(self.data['Name']) + ", send (" + str(self.data['Hung']) + ") : " + self.cmd[3] + self.cmd[8] + str(self.data['Name']) + ' ' + self.Bmsg[9])
-			#print(str(self.data['Name']) + ", send (" + str(self.data['Hung']) + ") : " + self.cmd[3], end='')
-			#print(str(self.data['Name']) + ", send (" + str(self.data['Hung']) + ") : " + self.cmd[8] + str(self.data['Name']) + ' ' + self.Bmsg[9])
-			#~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~#
 			self.data['Hung'] -= self.cmd_time[3] + self.cmd_time_late
-			#self.data['Hung'] -= self.cmd_time[8] + self.cmd_time_late
 			self.data['Hung'] -= self.cmd_time[4] + self.cmd_time_late
 			self.data['Action'][0] = 7
 
@@ -306,11 +282,9 @@ class IA(Thread):
 		isit = True
 		i = 0
 		while i < 7 and isit is True:
-			#isit = True if self.ressources[i] in msg else False
 			if self.ressources[i] not in msg:
 				isit = False
 			i += 1
-		#isit = isit if '|' not in msg and self.Mcmd[0] not in msg else False
 		if ('|' in msg or self.Mcmd[0] in msg) and (',' and self.Mcmd[0]) not in msg:
 			isit = False
 		if isit is True:
@@ -338,7 +312,6 @@ class IA(Thread):
 
 		self.data['Action'][0] = -1
 		if self.data['InvocName'] is not None:
-			print(str(self.data['Name']) + ", DON'T USE VIEWDATA, GOT NAME : " + str(self.data['InvocName']))
 			return
 		tmp_ressource = 0
 		nbr_ressource = [0, 0]
@@ -578,23 +551,6 @@ class IA(Thread):
 				self.data['Action'][0] = -1
 			self.time_left = 0
 
-#		#Check if the current caster was the first
-#		elif self.data['InvocName'] is not None and self.data['Action'][0] < 0 and self.data['Action'][2] == 0:
-#			self.client.sock.send((self.cmd[8] + self.data['Name'] + self.Bmsg[8] + self.data['InvocName'] +  '\n').encode())
-#			self.data['Hung'] -= self.cmd_time[8] + self.cmd_time_late
-#			self.data['Action'][2] = 1
-
-#		#If the current caster was not the first one
-#		elif self.data['InvocName'] is not None and self.data['Action'][0] < 0 and self.data['Action'][2] == 1:
-#			self.data['InvocName'] = None
-#			#print("3.5: " + self.data['Name'] + " has no master.")
-#			self.data['Move'] = []
-#			self.data['X'] = 0
-#			self.data['Y'] = 0
-#			if self.data['Action'][0] == 6:
-#				self.data['Action'][0] = -1
-#			self.data['Action'][2] = 0
-
 	#Change current action to look for food
 	def Hungry(self):
 		#set current limit of sate stade
@@ -772,7 +728,7 @@ class IA(Thread):
 				read, _, _= select.select([self.client.sock], [], [], 0)
 			except (select.error, socket.timeout) as err:
 				self.client.sock.close()
-				break
+				return
 
 			for cl in read:
 				new_msg = cl.recv(1023).decode('ascii')
