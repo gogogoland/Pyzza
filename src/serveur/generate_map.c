@@ -6,7 +6,7 @@
 /*   By: nd-heyge <nd-heyge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 17:09:02 by nd-heyge          #+#    #+#             */
-/*   Updated: 2017/02/07 22:29:37 by croy             ###   ########.fr       */
+/*   Updated: 2017/02/08 18:49:31 by nd-heyge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void		ft_assign_collect(t_server *srv, int y, int x, int nbr)
 
 	r_collect = ft_rand_range(0, 100);
 	if (r_collect < 50)
-		srv->map[y][x][0] += nbr*10;
+		srv->map[y][x][0] += nbr * 10;
 	else if (r_collect < 100)
 	{
 		r_collect = ft_rand_resrc();
@@ -79,7 +79,6 @@ void			generate_map(t_server *srv, int nbr_resrc_case)
 		while (++x < srv->plateau.x && (nbr = -1))
 		{
 			ft_assign_tile(srv, y, x);
-			r = ft_rand_range(1, nbr_resrc_case);
 			r = nbr_resrc_case;
 			while (++nbr < r)
 				ft_assign_collect(srv, y, x, nbr);

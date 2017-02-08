@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 12:39:04 by tbalea            #+#    #+#             */
-/*   Updated: 2017/02/07 19:48:13 by tbalea           ###   ########.fr       */
+/*   Updated: 2017/02/08 18:44:59 by nd-heyge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,8 @@ typedef struct				s_client
 	int						lvl;
 	int						tolvl;
 	int						action;
-	int						time;
-	int						health;
+	long long int			time;
+	long long int			health;
 	char					*current_cmd;
 	char					*fornext_cmd;
 	int						*acolyte;

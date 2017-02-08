@@ -15,6 +15,7 @@ public class Client : MonoBehaviour {
 	public bool								newTime = false;
 	public int								newTimeValue = 0;
 	public float							sendRate = 10.0f;
+	public bool 							_inUpdate = false;
 	
 	private const string					GRAPHIC =	"GRAPHIC\n";
 	private const string					MCT =		"mct\n";
@@ -94,27 +95,27 @@ public class Client : MonoBehaviour {
 			case "bct" : _scriptData.TileContent(cutCmd);break;
 			case "tna" : _scriptData.TeamName(cutCmd);break;
 			case "pnw" : _scriptData.PlayerNew(cutCmd);break;
-			case "ppo" : _scriptData.PlayerPositionOrientation(cutCmd);break;
-			case "plv" : _scriptData.PlayerLevel(cutCmd);break;
-			case "pin" : _scriptData.PlayerInventory(cutCmd);break;
-			case "pex" : _scriptData.PlayerExpulse(cutCmd);break;
-			case "pbc" : _scriptData.PlayerBroadCast(cutCmd);break;
-			case "pic" : _scriptData.PlayerIncantBegin(cutCmd);break;
-			case "pie" : _scriptData.PlayerIncantEnd(cutCmd);break;
-			case "pfk" : _scriptData.PlayerForkEgg(cutCmd);break;
-			case "pdr" : _scriptData.PlayerDrop(cutCmd);break;
-			case "pgt" : _scriptData.PlayerGet(cutCmd);break;
-			case "pdi" : _scriptData.PlayerDie(cutCmd);break;
+			case "ppo" :if (_inUpdate) { _scriptData.PlayerPositionOrientation(cutCmd);} break;
+			case "plv" :if (_inUpdate) { _scriptData.PlayerLevel(cutCmd);} break;
+			case "pin" :if (_inUpdate) { _scriptData.PlayerInventory(cutCmd);} break;
+			case "pex" :if (_inUpdate) { _scriptData.PlayerExpulse(cutCmd);} break;
+			case "pbc" :if (_inUpdate) { _scriptData.PlayerBroadCast(cutCmd);} break;
+			case "pic" :if (_inUpdate) { _scriptData.PlayerIncantBegin(cutCmd);} break;
+			case "pie" :if (_inUpdate) { _scriptData.PlayerIncantEnd(cutCmd);} break;
+			case "pfk" :if (_inUpdate) { _scriptData.PlayerForkEgg(cutCmd);} break;
+			case "pdr" :if (_inUpdate) { _scriptData.PlayerDrop(cutCmd);} break;
+			case "pgt" :if (_inUpdate) { _scriptData.PlayerGet(cutCmd);} break;
+			case "pdi" :if (_inUpdate) { _scriptData.PlayerDie(cutCmd);} break;
 			case "enw" : _scriptData.EggNew(cutCmd);break;
-			case "eht" : _scriptData.EggHatch(cutCmd);break;
-			case "ebo" : _scriptData.EggBorn(cutCmd);break;
-			case "edi" : _scriptData.EggDie(cutCmd);break;
+			case "eht" :if (_inUpdate) { _scriptData.EggHatch(cutCmd);} break;
+			case "ebo" :if (_inUpdate) { _scriptData.EggBorn(cutCmd);} break;
+			case "edi" :if (_inUpdate) { _scriptData.EggDie(cutCmd);} break;
 			case "sgt" : _scriptData.ServerGetTime(cutCmd);break;
-			case "seg" : _scriptData.ServerEndGame(cutCmd);break;
-			case "smg" : _scriptData.ServerMessage(cutCmd, false);break;
-			case "suc" : _scriptData.ServerMessage(cutCmd, true);break;
-			case "sbp" : _scriptData.ServerMessage(cutCmd, true);break;
-			case "pet" : _scriptData.PlayerEat(cutCmd);break ;
+			case "seg" :if (_inUpdate) { _scriptData.ServerEndGame(cutCmd);} break;
+			case "smg" :if (_inUpdate) { _scriptData.ServerMessage(cutCmd, false);} break;
+			case "suc" :if (_inUpdate) { _scriptData.ServerMessage(cutCmd, true);} break;
+			case "sbp" :if (_inUpdate) { _scriptData.ServerMessage(cutCmd, true);} break ;
+			case "pet" :if (_inUpdate) { _scriptData.PlayerEat (cutCmd);} break ;
 			default : break;
 			}
 		}
@@ -136,7 +137,7 @@ public class Client : MonoBehaviour {
 //				Debug.Log(rtfContent);
 				DataDistribution();
 				DontDestroyOnLoad(gameObject);
-				for (int player=0; player < _scriptData.players.Count; player++)
+				for (int player = 0; player < _scriptData.players.Count; player++)
 					DontDestroyOnLoad(_scriptData.players [player]);
 				for (int egg = 0; egg < _scriptData.eggs.Count; egg++)
 					DontDestroyOnLoad(_scriptData.eggs [egg]);
@@ -178,7 +179,7 @@ public class Client : MonoBehaviour {
 	// Update is called once per frame
 	void		Update () {
 		try {
-			if (SceneManager.GetActiveScene().name == "Game") {
+			if (SceneManager.GetActiveScene().name == "Game" && _inUpdate) {
 				CheckData();
 				if (rtfContent != null)
 					DataDistribution();

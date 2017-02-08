@@ -138,6 +138,7 @@ public class GenerateMap2 : MonoBehaviour {
 		GenerateAllTiles();
 		InitResrc();
 		Destroy(lineTmp);
+		_scriptData.GetComponent<Client> ()._inUpdate = true;
 	}
 	
 	// Update is called once per frame

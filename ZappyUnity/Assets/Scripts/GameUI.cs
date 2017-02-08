@@ -56,5 +56,6 @@ public class GameUI : MonoBehaviour {
 		if (bar)
 			bar.value = 0.0f;
 		Canvas.ForceUpdateCanvases();
+
 	}
 }

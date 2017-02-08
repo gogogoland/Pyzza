@@ -127,6 +127,7 @@ public class DataGame2 : MonoBehaviour {
 	}
 
 	void			InvockPentacle(int x, int z) {
+
 		GameObject clone = GameObject.Instantiate(invok_obj, Vector3.zero, Quaternion.identity, GameObject.Find ("Tile(" + z + ", " + x + ")").transform) as GameObject;
 		clone.transform.localPosition = Vector3.up * 0.1f;
 	}
@@ -146,6 +147,8 @@ public class DataGame2 : MonoBehaviour {
 		team.color = new Color( UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0.78f );
 		team.name = cmd [1];
 		teamName.Add (team);
+		if (SceneManager.GetActiveScene ().name == "Game")
+			Debug.Log ("OUI");
 	}
 
 	public void		PlayerNew(string []cmd) {
@@ -159,8 +162,11 @@ public class DataGame2 : MonoBehaviour {
 			int.Parse (cmd[4]),
 			int.Parse (cmd[5]),
 			cmd[6]);
-		if (SceneManager.GetActiveScene().name == "Game")
-			scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " apparait en [" + script.GetPosX() + ", " + script.GetPosY() + "]");
+		if (SceneManager.GetActiveScene ().name == "Game") {
+			if (!scriptUI)
+				scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI> ();
+			scriptUI.AddMsgInfo ("Joueur #" + script.GetID () + " apparait en [" + script.GetPosX () + ", " + script.GetPosY () + "]");
+		}
 		players.Add(clone_player);
 	}
 
@@ -212,7 +218,9 @@ public class DataGame2 : MonoBehaviour {
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.PlaySound ("Expulse");
 				InvockBubbleTalk(player.transform, "FUS ROH DA !", 1);
-				//				scriptUI.AddMsgInfo("Expulsion du joueur #" + script.GetID());
+//				if (!scriptUI)
+//					scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+//				scriptUI.AddMsgInfo("Expulsion du joueur #" + script.GetID());
 				break ;
 			}
 		}
@@ -237,7 +245,9 @@ public class DataGame2 : MonoBehaviour {
 				if (cmd.Length >= 3) {
 					script.PlaySound ("meow" + UnityEngine.Random.Range (1, 3));
 					InvockBubbleTalk(player.transform, talk, 0);
-					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " dit : " + talk);
+					if (!scriptUI)
+						scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+					scriptUI.AddMsgInfo ("Joueur #" + script.GetID () + " dit : " + talk);
 				}
 				break ;
 			}
@@ -255,7 +265,9 @@ public class DataGame2 : MonoBehaviour {
 				if (script.GetPosX() == int.Parse (cmd[1])
 					&& script.GetPosY() == int.Parse (cmd[2])
 					&& script.GetID() == int.Parse (cmd [id].Substring (1, cmd [id].Length - 1))){
-					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " incante au level: " + cmd [3] + " en [" + cmd[1] + ", " + cmd[2] + "]");
+					if (!scriptUI)
+						scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pour le level: " + (int.Parse(cmd [3]) + 1) + " en [" + cmd[1] + ", " + cmd[2] + "]");
 				}
 			}
 		}
@@ -265,10 +277,15 @@ public class DataGame2 : MonoBehaviour {
 		if (cmd.Length != 4)
 			throw new Exception("Donnees de la fin de l'incantation erronees");
 		DestroyPentacle(int.Parse (cmd [1]), int.Parse (cmd [2]));
-		if (int.Parse (cmd [3]) == 0)
+		if (int.Parse (cmd [3]) == 0) {
+			if (!scriptUI)
+				scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI> ();
 			scriptUI.AddMsgInfo ("L'incantation [" + cmd [1] + ", " + cmd [2] + "] est un echec");
-		else
+		} else {
+			if (!scriptUI)
+				scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI> ();
 			scriptUI.AddMsgInfo ("L'incantation [" + cmd [1] + ", " + cmd [2] + "] est une reussite");
+		}
 	}
 
 	public void		PlayerForkEgg(string []cmd){
@@ -278,7 +295,9 @@ public class DataGame2 : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				InvockBubbleTalk(player.transform, "Je pond un oeuf", 2);
-				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pond un oeuf");
+//				if (!scriptUI)
+//					scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pond un oeuf");
 				break ;
 			}
 		}
@@ -293,7 +312,9 @@ public class DataGame2 : MonoBehaviour {
 
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.SetObjConcern(int.Parse (cmd[2]));
-				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " prend " + int.Parse (cmd[2]));
+//				if (!scriptUI)
+//					scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " prend " + int.Parse (cmd[2]));
 				break ;
 			}
 		}
@@ -306,7 +327,9 @@ public class DataGame2 : MonoBehaviour {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				script.SetObjConcern(int.Parse (cmd[2]));
-				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pose " + int.Parse (cmd[2]));
+//				if (!scriptUI)
+//					scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+//				scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pose " + int.Parse (cmd[2]));
 			}
 		}
 	}
@@ -318,6 +341,8 @@ public class DataGame2 : MonoBehaviour {
 		foreach (GameObject player in players) {
 			Player script = player.GetComponent<Player>();
 			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
+				if (!scriptUI)
+					scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
 				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " meurt");
 				script.PlaySound ("CatDie");
 				script.Die ();
@@ -350,7 +375,9 @@ public class DataGame2 : MonoBehaviour {
 			if (!script)
 
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos");
+//				if (!scriptUI) 
+//					scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos");
 				script.Hatch();
 				break ;
 			}
@@ -363,7 +390,9 @@ public class DataGame2 : MonoBehaviour {
 		foreach (GameObject egg in eggs) {
 			Egg script = egg.GetComponent<Egg> ();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				//				scriptUI.AddMsgInfo("Un joueur est nee a partir de l'oeuf #" + script.GetID());
+//				if (!scriptUI)
+//					scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+//				scriptUI.AddMsgInfo("Un joueur est nee a partir de l'oeuf #" + script.GetID());
 				script.Die(true);
 				eggs.Remove(egg);
 				break ;
@@ -377,7 +406,9 @@ public class DataGame2 : MonoBehaviour {
 		foreach (GameObject egg in eggs) {
 			Egg script = egg.GetComponent<Egg> ();
 			if (script.GetID() == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
-				//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos mais pourri");
+//				if (!scriptUI)
+//					scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+//				scriptUI.AddMsgInfo("L'oeuf #" + script.GetID() + " eclos mais pourri");
 				script.Die(false);
 				eggs.Remove(egg);
 				break ;
@@ -404,11 +435,15 @@ public class DataGame2 : MonoBehaviour {
 				break ;
 			}
 		}
+		if (!scriptUI)
+			scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
 		scriptUI.AddMsgInfo("Victoire de l'equipe : " + cmd[1]);
 	}
 
 	public void		ServerMessage(string []cmd, bool error) {
 		if (error) {
+			if (!scriptUI)
+				scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
 			scriptUI.AddMsgInfo("Pizza le Hutt s'enerve : Je ne comprends pas ton langage !");
 			return ;
 		}
@@ -421,6 +456,8 @@ public class DataGame2 : MonoBehaviour {
 				talk += cmd[word] + " ";
 			talk += cmd[word];
 		}
+		if (!scriptUI)
+			scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
 		scriptUI.AddMsgInfo("Pizza le Hutt dit : " + talk);
 	}
 
@@ -432,7 +469,9 @@ public class DataGame2 : MonoBehaviour {
 			if (script.GetID () == int.Parse (cmd [1].Substring (1, cmd [1].Length - 1))) {
 				InvockBubbleTalk(player.transform, "* miam *", 2);
 				script.PlaySound ("Eat");
-				//				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " mange");
+//				if (!scriptUI)
+//					scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+//				scriptUI.AddMsgInfo("Joueur #" + script.GetID () + " mange");
 				break ;
 			}
 		}
@@ -451,7 +490,7 @@ public class DataGame2 : MonoBehaviour {
 	void StartSceneGame () {
 		if (SceneManager.GetActiveScene().name == "Game" && startSceneGame == true) {
 			victory = GameObject.Find ("Canvas/Victory");
-			scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
+//			scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
 			victory.SetActive (false);
 			startSceneGame = false;
 		}
