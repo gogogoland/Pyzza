@@ -147,9 +147,11 @@ public class GenerateMap2 : MonoBehaviour {
 	}
 
 	void	_DeleteResrc(int type, GameObject tile) {
-		Transform delete = tile.transform.FindChild (resrcName [type]);
-		if (delete)
-			Destroy (delete.gameObject);
+		if (tile) {
+			Transform delete = tile.transform.FindChild (resrcName [type]);
+			if (delete)
+				Destroy (delete.gameObject);
+		}
 	}
 
 	public void	UpdateResrcGetDrop(DataGame2.c_tile newTile, int newNbr, int typeResrc) {

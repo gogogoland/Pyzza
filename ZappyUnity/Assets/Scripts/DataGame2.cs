@@ -147,8 +147,6 @@ public class DataGame2 : MonoBehaviour {
 		team.color = new Color( UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 0.78f );
 		team.name = cmd [1];
 		teamName.Add (team);
-		if (SceneManager.GetActiveScene ().name == "Game")
-			Debug.Log ("OUI");
 	}
 
 	public void		PlayerNew(string []cmd) {
