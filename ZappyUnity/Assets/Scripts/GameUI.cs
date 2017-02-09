@@ -17,6 +17,8 @@ public class GameUI : MonoBehaviour {
 	private Text		_timeUI;
 	private Transform	_contentMsgInfo;
 
+	private int 		TOO_MUCH_LETTER = 75;
+
 	// Use this for initialization
 	void					Start () {
 		information_case = GameObject.Find ("Information");
@@ -46,7 +48,11 @@ public class GameUI : MonoBehaviour {
 	public void 			AddMsgInfo(string msg) {
 		Transform	firstmsg = _contentMsgInfo.transform.GetChild (0);
 
-		_contentMsgInfo.transform.position = Vector3.zero;
+//		_contentMsgInfo.transform.position = Vector3.zero;
+		if (msg.Length >= TOO_MUCH_LETTER) {
+			msg = msg.Remove (TOO_MUCH_LETTER);
+			msg += " (...)";
+		}
 		firstmsg.GetComponent<Text> ().text = msg;
 		firstmsg.SetAsLastSibling ();
 //		GameObject cloneMsgInfo = GameObject.Instantiate (_msgInfo, Vector3.zero, Quaternion.identity, _contentMsgInfo) as GameObject;

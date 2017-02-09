@@ -127,17 +127,22 @@ public class DataGame2 : MonoBehaviour {
 	}
 
 	void			InvockPentacle(int x, int z) {
-
-		GameObject clone = GameObject.Instantiate(invok_obj, Vector3.zero, Quaternion.identity, GameObject.Find ("Tile(" + z + ", " + x + ")").transform) as GameObject;
-		clone.transform.localPosition = Vector3.up * 0.1f;
+		GameObject tiletile = GameObject.Find ("Tile(" + z + ", " + x + ")");
+		if (tiletile) {
+			GameObject clone = GameObject.Instantiate (invok_obj, Vector3.zero, Quaternion.identity, tiletile.transform) as GameObject;
+			clone.transform.localPosition = Vector3.up * 0.1f;
+		}
 	}
 
 	void			DestroyPentacle(int x, int z) {
-		Transform invoc = GameObject.Find ("Tile(" + z + ", " + x + ")").transform.FindChild("Invocation(Clone)");
-		if (!invoc)
-			return ;
-		if (invoc.gameObject)
-			Destroy (invoc.gameObject);
+		GameObject tiletile = GameObject.Find ("Tile(" + z + ", " + x + ")");
+		if (tiletile) {
+			Transform invoc = tiletile.transform.FindChild("Invocation(Clone)");
+			if (!invoc)
+				return ;
+			if (invoc.gameObject)
+				Destroy (invoc.gameObject);
+		}
 	}
 
 	public void		TeamName(string []cmd) {

@@ -46,10 +46,11 @@ public class MoveCamera : MonoBehaviour {
 	void		Start () {
 		cloneBorderCamera = new GameObject[9];
 		scriptmap = GameObject.Find("GenerateMap").GetComponent<GenerateMap2>();
+		DataGame2	scriptData = GameObject.Find("Client(Clone)").GetComponent<DataGame2>();
 		tile_x = scriptmap.tile_obj.transform.localScale.x;
 		tile_z = scriptmap.tile_obj.transform.localScale.z;
-		height = scriptmap.height;
-		width = scriptmap.width;
+		height = scriptData.height;
+		width = scriptData.width;
 		GenerateCameras();
 		CenterCamera();
 		MiniMap ();

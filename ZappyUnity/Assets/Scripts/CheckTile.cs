@@ -28,7 +28,7 @@ public class CheckTile : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (GetComponent<Renderer> ().material.mainTexture == null) {
+		if (GetComponent<Renderer> ().material.mainTexture == null && scriptClient.inUpdate) {
 			Debug.LogWarning ("NoMaterial");
 			scriptClient.SendBCT (coordX, coordY);
 			DataGame2.c_tile tileData = DataTile ();

@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class GenerateMap2 : MonoBehaviour {
 
-	public int 						height;
-	public int						width;
 	public GameObject				tile_obj;
 	public GameObject				food_obj;
 	public GameObject				ressources_obj;
@@ -25,8 +23,6 @@ public class GenerateMap2 : MonoBehaviour {
 
 	void	Awake() {
 		_scriptData = GameObject.Find ("Client(Clone)").GetComponent<DataGame2>();
-		height = _scriptData.height;
-		width = _scriptData.width;
 		resrcName = new string[7];
 		resrcName[0] = "Food";
 		resrcName[1] = "Linemate";
@@ -39,18 +35,23 @@ public class GenerateMap2 : MonoBehaviour {
 	}
 
 	void		AssignTilesColor() {
-		variant_materials = new Material[height, width];
+		variant_materials = new Material[_scriptData.height, _scriptData.width];
 
-		for (int tile = 0; tile < _scriptData.dataTiles.Count; tile++)
-			variant_materials[_scriptData.dataTiles[tile].posY, _scriptData.dataTiles[tile].posX] = materials[_scriptData.dataTiles [tile].tileColor];
+		for (int tile = 0; tile < _scriptData.dataTiles.Count; tile++) {
+			int tilecolor = _scriptData.dataTiles [tile].tileColor;
+			Material toto = materials [tilecolor];
+			int x = _scriptData.dataTiles [tile].posX;
+			int y = _scriptData.dataTiles [tile].posY;
+			variant_materials [y, x] = toto;
+		}
 	}
 
 	void InitMap()
 	{
 		map = new GameObject("Map");
 		lineTmp = new GameObject("Lines");
-		lines = new GameObject[height];
-		for (int z = 0; z < height; z++) {
+		lines = new GameObject[_scriptData.height];
+		for (int z = 0; z < _scriptData.height; z++) {
 			lines[z] = GameObject.Instantiate(lineTmp, map.transform.position, Quaternion.identity, map.transform) as GameObject;
 			lines[z].name = "Lines (" + z + ")";
 		}
@@ -58,11 +59,11 @@ public class GenerateMap2 : MonoBehaviour {
 
 	void	GenerateAllTiles() {
 		Vector3		vec = Vector3.zero;
-		tiles = new GameObject[height, width];
+		tiles = new GameObject[_scriptData.height, _scriptData.width];
 
-		for (int z = 0; z < height; z++)
+		for (int z = 0; z < _scriptData.height; z++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < _scriptData.width; x++)
 			{
 				vec.x = x * tile_obj.transform.localScale.x * 10;
 				vec.z = -z * tile_obj.transform.localScale.z * 10;
@@ -138,7 +139,7 @@ public class GenerateMap2 : MonoBehaviour {
 		GenerateAllTiles();
 		InitResrc();
 		Destroy(lineTmp);
-		_scriptData.GetComponent<Client> ()._inUpdate = true;
+		_scriptData.GetComponent<Client> ().inUpdate = true;
 	}
 	
 	// Update is called once per frame

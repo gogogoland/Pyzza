@@ -15,7 +15,8 @@ public class Client : MonoBehaviour {
 	public bool								newTime = false;
 	public int								newTimeValue = 0;
 	public float							sendRate = 10.0f;
-	public bool 							_inUpdate = false;
+	public bool 							inUpdate = false;
+	public bool								activeScriptGenerate = false;
 	
 	private const string					GRAPHIC =	"GRAPHIC\n";
 	private const string					MCT =		"mct\n";
@@ -95,27 +96,27 @@ public class Client : MonoBehaviour {
 			case "bct" : _scriptData.TileContent(cutCmd);break;
 			case "tna" : _scriptData.TeamName(cutCmd);break;
 			case "pnw" : _scriptData.PlayerNew(cutCmd);break;
-			case "ppo" :if (_inUpdate) { _scriptData.PlayerPositionOrientation(cutCmd);} break;
-			case "plv" :if (_inUpdate) { _scriptData.PlayerLevel(cutCmd);} break;
-			case "pin" :if (_inUpdate) { _scriptData.PlayerInventory(cutCmd);} break;
-			case "pex" :if (_inUpdate) { _scriptData.PlayerExpulse(cutCmd);} break;
-			case "pbc" :if (_inUpdate) { _scriptData.PlayerBroadCast(cutCmd);} break;
-			case "pic" :if (_inUpdate) { _scriptData.PlayerIncantBegin(cutCmd);} break;
-			case "pie" :if (_inUpdate) { _scriptData.PlayerIncantEnd(cutCmd);} break;
-			case "pfk" :if (_inUpdate) { _scriptData.PlayerForkEgg(cutCmd);} break;
-			case "pdr" :if (_inUpdate) { _scriptData.PlayerDrop(cutCmd);} break;
-			case "pgt" :if (_inUpdate) { _scriptData.PlayerGet(cutCmd);} break;
-			case "pdi" :if (_inUpdate) { _scriptData.PlayerDie(cutCmd);} break;
+			case "ppo" :if (inUpdate) { _scriptData.PlayerPositionOrientation(cutCmd);} break;
+			case "plv" :if (inUpdate) { _scriptData.PlayerLevel(cutCmd);} break;
+			case "pin" :if (inUpdate) { _scriptData.PlayerInventory(cutCmd);} break;
+			case "pex" :if (inUpdate) { _scriptData.PlayerExpulse(cutCmd);} break;
+			case "pbc" :if (inUpdate) { _scriptData.PlayerBroadCast(cutCmd);} break;
+			case "pic" :if (inUpdate) { _scriptData.PlayerIncantBegin(cutCmd);} break;
+			case "pie" :if (inUpdate) { _scriptData.PlayerIncantEnd(cutCmd);} break;
+			case "pfk" :if (inUpdate) { _scriptData.PlayerForkEgg(cutCmd);} break;
+			case "pdr" :if (inUpdate) { _scriptData.PlayerDrop(cutCmd);} break;
+			case "pgt" :if (inUpdate) { _scriptData.PlayerGet(cutCmd);} break;
+			case "pdi" :if (inUpdate) { _scriptData.PlayerDie(cutCmd);} break;
 			case "enw" : _scriptData.EggNew(cutCmd);break;
-			case "eht" :if (_inUpdate) { _scriptData.EggHatch(cutCmd);} break;
-			case "ebo" :if (_inUpdate) { _scriptData.EggBorn(cutCmd);} break;
-			case "edi" :if (_inUpdate) { _scriptData.EggDie(cutCmd);} break;
+			case "eht" :if (inUpdate) { _scriptData.EggHatch(cutCmd);} break;
+			case "ebo" :if (inUpdate) { _scriptData.EggBorn(cutCmd);} break;
+			case "edi" :if (inUpdate) { _scriptData.EggDie(cutCmd);} break;
 			case "sgt" : _scriptData.ServerGetTime(cutCmd);break;
-			case "seg" :if (_inUpdate) { _scriptData.ServerEndGame(cutCmd);} break;
-			case "smg" :if (_inUpdate) { _scriptData.ServerMessage(cutCmd, false);} break;
-			case "suc" :if (_inUpdate) { _scriptData.ServerMessage(cutCmd, true);} break;
-			case "sbp" :if (_inUpdate) { _scriptData.ServerMessage(cutCmd, true);} break ;
-			case "pet" :if (_inUpdate) { _scriptData.PlayerEat (cutCmd);} break ;
+			case "seg" :if (inUpdate) { _scriptData.ServerEndGame(cutCmd);} break;
+			case "smg" :if (inUpdate) { _scriptData.ServerMessage(cutCmd, false);} break;
+			case "suc" :if (inUpdate) { _scriptData.ServerMessage(cutCmd, true);} break;
+			case "sbp" :if (inUpdate) { _scriptData.ServerMessage(cutCmd, true);} break ;
+			case "pet" :if (inUpdate) { _scriptData.PlayerEat (cutCmd);} break ;
 			default : break;
 			}
 		}
@@ -179,13 +180,19 @@ public class Client : MonoBehaviour {
 	// Update is called once per frame
 	void		Update () {
 		try {
-			if (SceneManager.GetActiveScene().name == "Game" && _inUpdate) {
-				CheckData();
-				if (rtfContent != null)
-					DataDistribution();
-				if (Time.time > nextSend) {
-					nextSend = Time.time + sendRate;
-					DemandInfo();
+			if (SceneManager.GetActiveScene().name == "Game") {
+				if (!activeScriptGenerate) {
+					GameObject.Find("GenerateMap").GetComponent<GenerateMap2>().enabled = true;
+					activeScriptGenerate = true;
+				}
+				if (inUpdate) {
+					CheckData();
+					if (rtfContent != null)
+						DataDistribution();
+					if (Time.time > nextSend) {
+						nextSend = Time.time + sendRate;
+						DemandInfo();
+					}
 				}
 			}
 		}
