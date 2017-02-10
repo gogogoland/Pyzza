@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
 
 	private Dictionary<int, Color>		colorParticleDrop;
 	private GameObject					playername_obj;
+	private GameObject					invok_obj;
 
 	[SerializeField]private int			_id;
 	[SerializeField]private int			_posX;
@@ -29,11 +30,15 @@ public class Player : MonoBehaviour {
 	private int							Xmax;
 	private int							Ymax;
 
-	private Transform					lvlPizza;
 	private GameObject					nameUI;
 
 	private DataGame2					_scriptDataGame;
 	private AudioSource					[]audiosrcs;
+
+	private SpriteRenderer 				flagMiniMap;
+	private SpriteRenderer 				flag;
+	private SpriteRenderer				lvlPizza;
+
 
 	// Use this for initialization
 	void Awake () {
@@ -49,9 +54,12 @@ public class Player : MonoBehaviour {
 		colorParticleDrop.Add (4, Color.black);
 		colorParticleDrop.Add (5, Color.green);
 		colorParticleDrop.Add (6, Color.red);
-		lvlPizza = transform.GetChild (1).transform.GetChild (0);
+		lvlPizza = transform.FindChild ("Flag").transform.GetChild (0).GetComponent<SpriteRenderer> ();
 		playername_obj = Resources.Load ("Prefabs/PlayerName") as GameObject;
+		invok_obj = Resources.Load ("Prefabs/Invocation") as GameObject;
 		audiosrcs = GetComponentsInChildren<AudioSource> ();
+		flagMiniMap = transform.FindChild ("FlagMiniMap").GetComponent<SpriteRenderer> ();
+		flag = transform.FindChild ("Flag").GetComponent<SpriteRenderer> ();
 	}
 
 	public void		PlayerNew(int id, int posX, int posY, int orientation, int level, string teamName) {
@@ -214,14 +222,26 @@ public class Player : MonoBehaviour {
 			PlaySound ("LevelUp");
 			particleLvl.transform.localPosition = Vector3.zero;
 			Destroy (particleLvl, particleLvl.GetComponent<ParticleSystem> ().main.startLifetimeMultiplier);
-			lvlPizza.GetComponent<SpriteRenderer> ().sprite = lvlPizzaSprite [_level - 1];
+			lvlPizza.sprite = lvlPizzaSprite [_level - 1];
 			if (_level == 9)
-				lvlPizza.GetComponent<SpriteRenderer> ().color = Color.red;
+				lvlPizza.color = Color.red;
 		} else {
 			PlaySound ("FailedLvlUp");
 		}
+		DestroyPentacle ();
 	}
 
+	public void		InvockPentacle() {
+		GameObject pentacle = GameObject.Instantiate (invok_obj, transform);
+		pentacle.transform.localPosition = new Vector3(0, -transform.position.y / 10, 0);
+	}
+
+	void			DestroyPentacle() {
+		Transform		pentacle = transform.FindChild ("Invocation(Clone)");
+
+		if (pentacle)
+			Destroy (pentacle.gameObject);
+	}
 
 	public void		Animate(int etat){
 		anim.SetInteger("Etat", etat);
@@ -242,9 +262,9 @@ public class Player : MonoBehaviour {
 		Animate (0);
 
 		Color color = MyColorTeam ();
-		transform.GetChild (0).GetComponent<SpriteRenderer> ().color = color;
+		flagMiniMap.color = color;
 		color.a = 1.0f;
-		transform.GetChild (1).GetComponent<SpriteRenderer> ().color = color;
+		flag.color = color;
 		Xmax = _scriptDataGame.width - 1;
 		Ymax = _scriptDataGame.height - 1;
 		nameUI = GameObject.Instantiate (playername_obj, transform.position, Quaternion.identity, GameObject.Find ("CanvasTalk").transform) as GameObject;
@@ -254,9 +274,9 @@ public class Player : MonoBehaviour {
 	void			Update(){
 		if (_scriptDataGame.colorChanged) {
 			Color color = MyColorTeam ();
-			transform.GetChild (0).GetComponent<SpriteRenderer> ().color = color;
+			flagMiniMap.color = color;
 			color.a = 1.0f;
-			transform.GetChild (1).GetComponent<SpriteRenderer> ().color = color;
+			flag.color = color;
 		}
 	}
 

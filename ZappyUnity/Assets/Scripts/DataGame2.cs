@@ -36,7 +36,6 @@ public class DataGame2 : MonoBehaviour {
 	private GameObject						bubble_obj;
 	private GameObject						clone_player;
 	private GameObject						clone_egg;
-	private GameObject						invok_obj;
 
 	private GameObject						victory;
 	private bool							startSceneGame = true;
@@ -47,7 +46,7 @@ public class DataGame2 : MonoBehaviour {
 		player_obj = Resources.Load ("Prefabs/Player") as GameObject;
 		egg_obj = Resources.Load ("Prefabs/Egg") as GameObject;
 		bubble_obj = Resources.Load ("Prefabs/BubbleTalk") as GameObject;
-		invok_obj = Resources.Load ("Prefabs/Invocation") as GameObject;
+
 	}
 
 	public void		Init(){
@@ -124,25 +123,6 @@ public class DataGame2 : MonoBehaviour {
 		cloneBubble.transform.GetChild(0).GetComponent<Text>().text = talk;
 		cloneBubble.GetComponent<BubbleTalk>().posPlayer = player;
 		cloneBubble.GetComponent<Image> ().sprite = bubbleTex[typeBubble];
-	}
-
-	void			InvockPentacle(int x, int z) {
-		GameObject tiletile = GameObject.Find ("Tile(" + z + ", " + x + ")");
-		if (tiletile) {
-			GameObject clone = GameObject.Instantiate (invok_obj, Vector3.zero, Quaternion.identity, tiletile.transform) as GameObject;
-			clone.transform.localPosition = Vector3.up * 0.1f;
-		}
-	}
-
-	void			DestroyPentacle(int x, int z) {
-		GameObject tiletile = GameObject.Find ("Tile(" + z + ", " + x + ")");
-		if (tiletile) {
-			Transform invoc = tiletile.transform.FindChild("Invocation(Clone)");
-			if (!invoc)
-				return ;
-			if (invoc.gameObject)
-				Destroy (invoc.gameObject);
-		}
 	}
 
 	public void		TeamName(string []cmd) {
@@ -260,17 +240,17 @@ public class DataGame2 : MonoBehaviour {
 	public void		PlayerIncantBegin(string []cmd){
 		if (cmd.Length < 5)
 			throw new Exception("Donnees du debut de l'incantation erronees");
-		InvockPentacle (int.Parse (cmd [1]), int.Parse (cmd [2]));
 		for (int id = 4; id < cmd.Length; id++) {
 			foreach (GameObject player in players) {
 				Player script = player.GetComponent<Player>();
 
 				if (script.GetPosX() == int.Parse (cmd[1])
 					&& script.GetPosY() == int.Parse (cmd[2])
-					&& script.GetID() == int.Parse (cmd [id].Substring (1, cmd [id].Length - 1))){
+					&& script.GetID() == int.Parse (cmd [id].Substring (1, cmd [id].Length - 1))) {
 					if (!scriptUI)
 						scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI>();
 					scriptUI.AddMsgInfo("Joueur #" + script.GetID() + " pour le level: " + (int.Parse(cmd [3]) + 1) + " en [" + cmd[1] + ", " + cmd[2] + "]");
+					script.InvockPentacle ();
 				}
 			}
 		}
@@ -279,7 +259,6 @@ public class DataGame2 : MonoBehaviour {
 	public void		PlayerIncantEnd(string []cmd){
 		if (cmd.Length != 4)
 			throw new Exception("Donnees de la fin de l'incantation erronees");
-		DestroyPentacle(int.Parse (cmd [1]), int.Parse (cmd [2]));
 		if (int.Parse (cmd [3]) == 0) {
 			if (!scriptUI)
 				scriptUI = GameObject.Find ("Canvas").GetComponent<GameUI> ();

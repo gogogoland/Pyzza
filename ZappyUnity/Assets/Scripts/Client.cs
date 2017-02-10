@@ -57,6 +57,7 @@ public class Client : MonoBehaviour {
 	void		WhoIAm(){
 		if (_socket.Connected) {
 			Send(GRAPHIC);
+			Debug.Log ("si + de 1 alors c'est ma faute");
 			error.text = "Success !";
 			error.color = Color.green;
 		}
@@ -129,8 +130,8 @@ public class Client : MonoBehaviour {
 		_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		try {
 			_socket.Connect(inputIP, ip);
+			WhoIAm();
 			while (rtfContent == null) {
-				WhoIAm();
 				CheckData();
 			}
 			if (rtfContent != null)
