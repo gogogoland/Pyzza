@@ -184,8 +184,8 @@ public class Player : MonoBehaviour {
 		Vector3 target = new Vector3 (posX * 10, transform.position.y, transform.position.z);
 		float t = 0.0f;
 		while (t < 1) {
-			t += Time.deltaTime;
-			transform.position = Vector3.Lerp (transform.position, target, t);
+			t += Time.deltaTime / (7/_scriptDataGame.unitTime);
+			transform.position = Vector3.MoveTowards (transform.position, target, t / 10);
 			_posX = posX;
 			yield return null;
 		}
@@ -202,8 +202,8 @@ public class Player : MonoBehaviour {
 		Vector3 target = new Vector3 (transform.position.x, transform.position.y, posY * -10.0f);
 		float t = 0.0f;
 		while (t < 1) {
-			t += Time.deltaTime;
-			transform.position = Vector3.Lerp (transform.position, target, t);
+			t += Time.deltaTime / (7/_scriptDataGame.unitTime);
+			transform.position = Vector3.MoveTowards (transform.position, target, t / 10);
 			_posY = posY;
 			yield return null;
 		}
@@ -287,7 +287,7 @@ public class Player : MonoBehaviour {
 	public void		Die() {
 		Animate (3);
 	}
-	
+
 	public void		DestroyMe()
 	{
 		Destroy (nameUI);

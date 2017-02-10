@@ -57,7 +57,6 @@ public class Client : MonoBehaviour {
 	void		WhoIAm(){
 		if (_socket.Connected) {
 			Send(GRAPHIC);
-			Debug.Log ("si + de 1 alors c'est ma faute");
 			error.text = "Success !";
 			error.color = Color.green;
 		}
@@ -89,7 +88,7 @@ public class Client : MonoBehaviour {
 		string	[]cutBlockData = rtfContent.Split ('\n');
 
 		for (int line = 0; line < cutBlockData.Length; line++) {
-			Debug.Log (cutBlockData[line]);
+//			Debug.Log (cutBlockData[line]);
 			string []cutCmd = cutBlockData[line].Split(' ');
 			switch (cutCmd[0]) {
 			case "Bienvenue" : _scriptData.Init();break;
@@ -107,7 +106,7 @@ public class Client : MonoBehaviour {
 			case "pfk" :if (inUpdate) { _scriptData.PlayerForkEgg(cutCmd);} break;
 			case "pdr" :if (inUpdate) { _scriptData.PlayerDrop(cutCmd);} break;
 			case "pgt" :if (inUpdate) { _scriptData.PlayerGet(cutCmd);} break;
-			case "pdi" :if (inUpdate) { _scriptData.PlayerDie(cutCmd);} break;
+			case "pdi" :Debug.Log (cutBlockData[line]);if (inUpdate) { _scriptData.PlayerDie(cutCmd);} break;
 			case "enw" : _scriptData.EggNew(cutCmd);break;
 			case "eht" :if (inUpdate) { _scriptData.EggHatch(cutCmd);} break;
 			case "ebo" :if (inUpdate) { _scriptData.EggBorn(cutCmd);} break;
