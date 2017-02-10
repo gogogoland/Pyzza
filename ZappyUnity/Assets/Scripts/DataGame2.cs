@@ -330,7 +330,7 @@ public class DataGame2 : MonoBehaviour {
 				script.PlaySound ("CatDie");
 				script.Die ();
 				players.Remove(player);
-				break ;
+				return ;
 			}
 		}
 	}

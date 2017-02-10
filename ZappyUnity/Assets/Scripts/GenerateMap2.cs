@@ -35,8 +35,10 @@ public class GenerateMap2 : MonoBehaviour {
 	}
 
 	void		AssignTilesColor() {
-		variant_materials = new Material[_scriptData.height, _scriptData.width];
-
+		while (_scriptData.height == 0 || _scriptData.width == 0)
+			Debug.LogWarning("height and width no-loading");
+		if (_scriptData.height != 0 && _scriptData.width != 0)
+			variant_materials = new Material[_scriptData.height, _scriptData.width];
 		for (int tile = 0; tile < _scriptData.dataTiles.Count; tile++) {
 			int tilecolor = _scriptData.dataTiles [tile].tileColor;
 			Material toto = materials [tilecolor];

@@ -71,6 +71,8 @@ public class Player : MonoBehaviour {
 		_level = level;
 		_teamName = teamName;
 		transform.position = new Vector3 (transform.position.x, 2.5f, transform.position.z);
+		lvlPizza.sprite = lvlPizzaSprite [_level - 1];
+
 	}
 	
 	public int		GetID(){

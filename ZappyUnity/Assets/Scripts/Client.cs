@@ -23,7 +23,7 @@ public class Client : MonoBehaviour {
 	private const string					BCT = 		"bct ";
 	private const string					PPO =		"ppo #";
 	private const string					PLV =		"plv #";
-	private const string					PIN =		"pin #";
+	private const string					PIN =		"pin ";
 	private const string					SGT =		"sgt\n";
 	private const string					SST =		"sst ";
 	private string							rtfContent = null;
@@ -95,7 +95,7 @@ public class Client : MonoBehaviour {
 			case "msz" : _scriptData.MapSize(cutCmd);break;
 			case "bct" : _scriptData.TileContent(cutCmd);break;
 			case "tna" : _scriptData.TeamName(cutCmd);break;
-			case "pnw" : _scriptData.PlayerNew(cutCmd);break;
+			case "pnw" : _scriptData.PlayerNew (cutCmd);SendPIN(cutCmd);break;
 			case "ppo" :if (inUpdate) { _scriptData.PlayerPositionOrientation(cutCmd);} break;
 			case "plv" :if (inUpdate) { _scriptData.PlayerLevel(cutCmd);} break;
 			case "pin" :if (inUpdate) { _scriptData.PlayerInventory(cutCmd);} break;
@@ -162,6 +162,10 @@ public class Client : MonoBehaviour {
 
 	public void SendBCT(int x, int y){
 		Send (BCT + x + " " + y + "\n");
+	}
+
+	public void SendPIN(string []cmd) {		
+		Send (PIN + cmd [1] + "\n");
 	}
 
 	void		DemandInfo() {
