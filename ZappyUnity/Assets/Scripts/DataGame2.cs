@@ -120,6 +120,7 @@ public class DataGame2 : MonoBehaviour {
 	void			InvockBubbleTalk(Transform player, string talk, int typeBubble){
 		GameObject cloneBubble = GameObject.Instantiate(bubble_obj, player.transform.position, Quaternion.identity, GameObject.Find ("CanvasTalk").transform) as GameObject;
 
+		cloneBubble.transform.localScale *= 0.75f;
 		cloneBubble.transform.GetChild(0).GetComponent<Text>().text = talk;
 		cloneBubble.GetComponent<BubbleTalk>().posPlayer = player;
 		cloneBubble.GetComponent<Image> ().sprite = bubbleTex[typeBubble];
