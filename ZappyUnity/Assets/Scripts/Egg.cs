@@ -46,6 +46,7 @@ public class Egg : MonoBehaviour {
 	public void	Hatch()
 	{
 		anim.SetInteger ("Etat", 1);
+		Debug.LogWarning ("L'oeuf #" + GetID() + " est bien pourri");
 	}
 
 	public void	Die(bool playerAlive)
@@ -54,6 +55,7 @@ public class Egg : MonoBehaviour {
 			anim.SetInteger("Etat", 3);
 		else
 			anim.SetInteger("Etat", 2);
+		Debug.LogWarning ("L'oeuf #" + GetID() + " est bien mort");
 	}
 	
 	void Update(){

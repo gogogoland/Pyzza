@@ -110,7 +110,7 @@ public class Client : MonoBehaviour {
 			case "enw" : _scriptData.EggNew(cutCmd);break;
 			case "eht" :if (inUpdate) { _scriptData.EggHatch(cutCmd);} break;
 			case "ebo" :if (inUpdate) { _scriptData.EggBorn(cutCmd);} break;
-			case "edi" :if (inUpdate) { _scriptData.EggDie(cutCmd);} break;
+			case "edi" :Debug.Log (cutBlockData[line]);if (inUpdate) { _scriptData.EggDie(cutCmd);} break;
 			case "sgt" : _scriptData.ServerGetTime(cutCmd);break;
 			case "seg" :if (inUpdate) { _scriptData.ServerEndGame(cutCmd);} break;
 			case "smg" :if (inUpdate) { _scriptData.ServerMessage(cutCmd, false);} break;

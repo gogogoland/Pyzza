@@ -38,6 +38,7 @@ public class Player : MonoBehaviour {
 	private SpriteRenderer 				flagMiniMap;
 	private SpriteRenderer 				flag;
 	private SpriteRenderer				lvlPizza;
+	private bool						isZombie = false;
 
 
 	// Use this for initialization
@@ -287,7 +288,9 @@ public class Player : MonoBehaviour {
 	}
 
 	public void		Die() {
+		isZombie = true;
 		Animate (3);
+		Debug.LogWarning ("Le joueur #" + GetID() + " est bien mort");
 	}
 
 	public void		DestroyMe()
